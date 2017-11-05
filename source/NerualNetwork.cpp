@@ -148,15 +148,15 @@ void NeuralNetwork::backwards_propagation(vector<double> *target_values) {
 	}
 
 	// calculate hidden layer gradients
-	for (int i = layers.size() - 2; i > 0; i--) {
-		for (int j = 0; j < layers[i].size(); j++) {
+	for (size_t i = layers.size() - 2; i > 0; i--) {
+		for (size_t j = 0; j < layers[i].size(); j++) {
 			layers[i][j]->calculate_hidden_gradients();
 		}
 	}
 
 	// update connection weights
 	//    cout << "updating input weights" << endl;
-	for (int i = layers.size() - 1; i > 0; i--) {
+	for (int i = (int)layers.size() - 1; i > 0; i--) {
 		//        cout << "\tupdating layer [" << i << "]" << endl;
 		for (int j = 0; j < layers[i].size(); j++) {
 			if (i == layers.size() - 1) {
