@@ -5,25 +5,6 @@ using namespace std;
 
 // cleaning images
 
-void segment_image(cv::Mat& source_image, vector<cv::Mat>& destination_vector, int divide_x, int divide_y) {
-	// get the size of the image
-	int source_x = source_image.cols;
-	int source_y = source_image.rows;
-
-	// get the size of each new image
-	int segment_x = source_x / divide_x;
-	int segment_y = source_y / divide_y;
-
-	// for each segment we want to create
-	for (int i = 0; i < divide_x; i++) {
-		for (int j = 0; j < divide_y; j++) {
-
-			// cut a segment of the image out and store it in the vector
-			destination_vector.push_back(source_image(cv::Rect(i * segment_x, j * segment_y, segment_x, segment_y)));
-		}
-	}
-}
-
 double distance(double x1, double y1, double x2, double y2) {
 	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
@@ -77,6 +58,110 @@ void binary_threshold_auto(cv::Mat& source_image, cv::Mat& target_image) {
 
 	// operate on the target image using the average threshold worked out by the other function
 	binary_threshold(source_image, target_image, avg);
+}
+
+void gaussian_blur(cv::Mat & source_image, cv::Mat & target_image, int neighbourhood_size){
+	cout << "Gaussian blur with neighbourhood [" << neighbourhood_size << "]" << endl;
+
+	// define the maximum distance a pixel can be from another by using the neighbourhood size
+	double max = distance(0, 0, neighbourhood_size / 2 + 1, neighbourhood_size / 2 + 1);
+
+	// for all pixels in the image
+	for (int i = 0; i < source_image.rows; i++) {
+		for (int j = 0; j < source_image.cols; j++) {
+			double total = 0;
+			int sample_count = 0;
+			double total_distance_weight = 0;
+
+			// for all pixels within the neighbourhood
+			for (int k = -(neighbourhood_size / 2); k < (neighbourhood_size / 2) + 1; k++) {
+				for (int l = -(neighbourhood_size / 2); l < (neighbourhood_size / 2) + 1; l++) {
+
+					// check that the pixel is within the correct range
+					if (j + l > -1 && j + l < source_image.cols && i + k > -1 && i + k < source_image.rows) {
+
+						// note that the pixel is valid and that we are using it within the total
+						sample_count += 1;
+
+						// calculate the distance between the current pixel and the current neighbourhood pixel
+						// a greater distance will be lower because we are subtracting it from the max distance
+						double distance_weight = max - distance(j, i, j + l, i + k);
+
+						// add the calculated distance to the total distance
+						total_distance_weight += distance_weight;
+
+						// add to the total the pixel's value * the distance weight
+						total += source_image.at<float>(cv::Point(j + l, i + k)) * distance_weight;
+					}
+				}
+			}
+
+			// divide the total by the total distance weight of the neighbour hood to get the weighted average
+			total /= total_distance_weight;
+
+			// set the current pixel to the neighbourhood's weighted average
+			target_image.at<float>(cv::Point(j, i)) = total;
+		}
+	}
+}
+
+// 
+
+void segment_image_squares(cv::Mat& source_image, vector<cv::Mat>& destination_vector, int divide_x, int divide_y) {
+	// get the size of the image
+	int source_x = source_image.cols;
+	int source_y = source_image.rows;
+
+	// get the size of each new image
+	int segment_x = source_x / divide_x;
+	int segment_y = source_y / divide_y;
+
+	// for each segment we want to create
+	for (int i = 0; i < divide_x; i++) {
+		for (int j = 0; j < divide_y; j++) {
+
+			// cut a segment of the image out and store it in the vector
+			destination_vector.push_back(source_image(cv::Rect(i * segment_x, j * segment_y, segment_x, segment_y)));
+		}
+	}
+}
+
+cv::Point adjacent_map[] = {cv::Point(-1, -1), cv::Point(0, -1), cv::Point(1, -1),
+							cv::Point(-1, 0),                    cv::Point(1, 0),
+							cv::Point(-1, 1), cv::Point(0, 1), cv::Point(1, 1) };
+
+void f(cv::Mat& s, cv::Mat& c, int x, int y) {
+	
+	s.at<float>(cv::Point(x, y)) = 0.5;
+	c.at<float>(cv::Point(x, y)) = 0.0;
+
+	for (cv::Point p: adjacent_map) {
+		if (x + p.x > -1 && y + p.y > -1 && x + p.x < s.cols && y + p.y < s.rows) {
+			if (s.at<float>(cv::Point(x + p.x, y + p.y)) == 0.0) {
+				f(s, c, x + p.x, y + p.y);
+			}
+		}
+	}
+}
+
+void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destination){
+	// assumes that the image is in black(1.0) and white(0.0);
+	cout << "Segmenting image into islands" << endl;
+
+	for (int i = 0; i < source_image.cols; i++) {
+		for (int j = 0; j < source_image.rows; j++) {
+			if (source_image.at<float>(j, i) == 0.0) {
+				ImageSegment is = { cv::Mat::ones(source_image.size(), CV_32F), 0, 0 };
+				f(source_image, is.m, i, j);
+				destination.emplace_back(is);
+			}
+		}
+	}
+
+	for (ImageSegment is: destination) {
+		cv::imshow("i", is.m);
+		cv::waitKey();
+	}
 }
 
 
