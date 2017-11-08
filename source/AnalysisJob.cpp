@@ -16,7 +16,7 @@ AnalysisJob::AnalysisJob(string file_name){
 void AnalysisJob::run() {
 	segment_image_islands(analysis_source, image_segments);
 	for (ImageSegment is : image_segments) {
-		is.m = crop_segment(is.m, 10);
+		crop_segment(is, 10);
 		cv::imshow("i", is.m);
 		cv::waitKey();
 	}

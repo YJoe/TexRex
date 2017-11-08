@@ -203,16 +203,20 @@ int find_feature(cv::Mat& source_segment, int flag) {
 	return -1;
 }
 
-cv::Mat crop_segment(cv::Mat& source_segment, int padding) {
+void crop_segment(ImageSegment& source_segment, int padding) {
 	
-	int min_x = find_feature(source_segment, X_MIN);
-	int max_x = find_feature(source_segment, X_MAX) + 1;
-	int min_y = find_feature(source_segment, Y_MIN);
-	int max_y = find_feature(source_segment, Y_MAX) + 1;
+	// find the minimum and maximums of the island
+	int min_x = find_feature(source_segment.m, X_MIN);
+	int max_x = find_feature(source_segment.m, X_MAX) + 1;
+	int min_y = find_feature(source_segment.m, Y_MIN);
+	int max_y = find_feature(source_segment.m, Y_MAX) + 1;
 
-	cv::Mat croppedImage = source_segment(cv::Rect(min_x - padding, min_y - padding, max_x - min_x + padding * 2, max_y - min_y + padding * 2));
+	// remember where the image was taken from the source image
+	source_segment.x = min_x;
+	source_segment.y = min_y;
 
-	return croppedImage;
+	// crop the segment to remove white space
+	source_segment.m = source_segment.m(cv::Rect(min_x - padding, min_y - padding, max_x - min_x + padding * 2, max_y - min_y + padding * 2));
 }
 
 
