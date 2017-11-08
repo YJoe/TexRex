@@ -5,7 +5,7 @@ using namespace std;
 
 // cleaning images
 
-double distance(double x1, double y1, double x2, double y2) {
+float distance(float x1, float y1, float x2, float y2) {
 	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
@@ -64,14 +64,14 @@ void gaussian_blur(cv::Mat & source_image, cv::Mat & target_image, int neighbour
 	cout << "Gaussian blur with neighbourhood [" << neighbourhood_size << "]" << endl;
 
 	// define the maximum distance a pixel can be from another by using the neighbourhood size
-	double max = distance(0, 0, neighbourhood_size / 2 + 1, neighbourhood_size / 2 + 1);
+	float max = distance((float)0, (float)0, (float)(neighbourhood_size / 2 + 1), (float)(neighbourhood_size / 2 + 1));
 
 	// for all pixels in the image
 	for (int i = 0; i < source_image.rows; i++) {
 		for (int j = 0; j < source_image.cols; j++) {
-			double total = 0;
+			float total = 0;
 			int sample_count = 0;
-			double total_distance_weight = 0;
+			float total_distance_weight = 0;
 
 			// for all pixels within the neighbourhood
 			for (int k = -(neighbourhood_size / 2); k < (neighbourhood_size / 2) + 1; k++) {
@@ -85,7 +85,7 @@ void gaussian_blur(cv::Mat & source_image, cv::Mat & target_image, int neighbour
 
 						// calculate the distance between the current pixel and the current neighbourhood pixel
 						// a greater distance will be lower because we are subtracting it from the max distance
-						double distance_weight = max - distance(j, i, j + l, i + k);
+						float distance_weight = max - distance((float)j, (float)i, (float)(j + l), (float)(i + k));
 
 						// add the calculated distance to the total distance
 						total_distance_weight += distance_weight;
