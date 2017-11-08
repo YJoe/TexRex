@@ -5,9 +5,10 @@ using namespace cv;
 
 class AnalysisJob {
 public:
-	AnalysisJob(Mat source);
+	AnalysisJob(string file_name);
 
 	void run();
+	void clean();
 
 	Mat analysis_source;
 	vector<ImageSegment> image_segments;

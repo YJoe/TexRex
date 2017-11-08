@@ -17,10 +17,12 @@ struct ImageSegment {
 // image clean up
 void segment_image_squares(cv::Mat& source_image, vector<cv::Mat>& destination_vector, int divide_x, int divide_y);
 void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destination);
+cv::Mat crop_segment(cv::Mat& source_segment, int padding);
 void binary_threshold(cv::Mat& source_image, cv::Mat& target_image, float threshold);
 float get_image_grey_avg(cv::Mat& source_image);
 void binary_threshold_auto(cv::Mat& source_image, cv::Mat& target_image);
 void gaussian_blur(cv::Mat& source_image, cv::Mat& target_image, int neighbour_hood);
+
 
 // frequency domain
 void take_dft(cv::Mat& source_image, cv::Mat& destination);

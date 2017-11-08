@@ -3,6 +3,8 @@
 using namespace std;
 
 
+enum FEATURE_FLAG{X_MIN, X_MAX, Y_MIN, Y_MAX};
+
 // cleaning images
 
 float distance(float x1, float y1, float x2, float y2) {
@@ -61,7 +63,6 @@ void binary_threshold_auto(cv::Mat& source_image, cv::Mat& target_image) {
 }
 
 void gaussian_blur(cv::Mat & source_image, cv::Mat & target_image, int neighbourhood_size){
-	cout << "Gaussian blur with neighbourhood [" << neighbourhood_size << "]" << endl;
 
 	// define the maximum distance a pixel can be from another by using the neighbourhood size
 	float max = distance((float)0, (float)0, (float)(neighbourhood_size / 2 + 1), (float)(neighbourhood_size / 2 + 1));
@@ -146,7 +147,7 @@ void f(cv::Mat& s, cv::Mat& c, int x, int y) {
 
 void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destination){
 	// assumes that the image is in black(1.0) and white(0.0);
-	cout << "Segmenting image into islands" << endl;
+	cout << "[ImageFun] Island Segments" << endl;
 
 	for (int i = 0; i < source_image.cols; i++) {
 		for (int j = 0; j < source_image.rows; j++) {
@@ -157,11 +158,61 @@ void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destinat
 			}
 		}
 	}
+	
+	cout << "[ImageFun] created [" << destination.size() << "] segments" << endl;
+}
 
-	for (ImageSegment is: destination) {
-		cv::imshow("i", is.m);
-		cv::waitKey();
+int find_feature(cv::Mat& source_segment, int flag) {
+	switch (flag) {
+	case X_MIN:
+		for (int i = 0; i < source_segment.size().width; i++) {
+			for (int j = 0; j < source_segment.size().height; j++) {
+				if (source_segment.at<float>(j, i) == 0.0) {
+					return i;
+				}
+			}
+		}
+		break;
+	case X_MAX:
+		for (int i = source_segment.size().width - 1; i > -1; i--) {
+			for (int j = 0; j < source_segment.size().height; j++) {
+				if (source_segment.at<float>(j, i) == 0.0) {
+					return i;
+				}
+			}
+		}
+		break;
+	case Y_MIN:
+		for (int j = 0; j < source_segment.size().height; j++) {
+			for (int i = 0; i < source_segment.size().width; i++) {
+				if (source_segment.at<float>(j, i) == 0.0) {
+					return j;
+				}
+			}
+		}
+		break;
+	case Y_MAX:
+		for (int j = source_segment.size().height - 1; j > -1; j--) {
+			for (int i = 0; i < source_segment.size().width; i++) {
+				if (source_segment.at<float>(j, i) == 0.0) {
+					return j;
+				}
+			}
+		}
 	}
+	return -1;
+}
+
+cv::Mat crop_segment(cv::Mat& source_segment, int padding) {
+	
+	int min_x = find_feature(source_segment, X_MIN);
+	int max_x = find_feature(source_segment, X_MAX) + 1;
+	int min_y = find_feature(source_segment, Y_MIN);
+	int max_y = find_feature(source_segment, Y_MAX) + 1;
+
+	cv::Mat croppedImage = source_segment(cv::Rect(min_x - padding, min_y - padding, max_x - min_x + padding * 2, max_y - min_y + padding * 2));
+
+	return croppedImage;
 }
 
 
