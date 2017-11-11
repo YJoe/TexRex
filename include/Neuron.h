@@ -15,12 +15,7 @@ public:
 	void add_input_connection(Connection* connection);
 	void add_output_connection(Connection* connection);
 	void print_debug();
-	void calculate_activation_value();
-	void backwards_propagate(double change);
-	double sigmoid(double val);
-	double sigmoid_prime(double val);
 	double get_delta_hidden_sum();
-	void calculate_output_weights();
 	char get_debug_tag();
 	void neuron_feed_forward();
 	double activation_function(double total);

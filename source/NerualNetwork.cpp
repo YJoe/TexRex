@@ -49,13 +49,9 @@ NeuralNetwork::NeuralNetwork(vector<int> *topology) {
 	// define the map, neurons have a list of input connections and output connections, connections have a start neuron and an end neuron
 	int c = 0;
 	for (int i = 0; i < layers.size() - 1; i++) {
-		cout << "\nlayer [" << i << "] to [" << i + 1 << "]" << endl;
 		for (int j = 0; j < layers[i].size(); j++) {
-			cout << "\tneuron j [" << j << "]" << endl;
 			for (int k = 0; k < layers[i + 1].size(); k++) {
-				cout << "\t\tneuron k [" << k << "]" << endl;
-				cout << "\t\t\tplacing connection c [" << c << "]" << endl;
-
+	
 				// if the future neuron we are looking at is not the last one in that layer || the future layer is the output layer
 				if (k != layers[i + 1].size() - 1 || i + 1 == layers.size() - 1) {
 					connections[c].set_start_neuron(layers[i][j]);
@@ -65,22 +61,10 @@ NeuralNetwork::NeuralNetwork(vector<int> *topology) {
 					c++;
 				}
 				else {
-					//                    cout << "\t\t\t\tno connection! the k neuron is a bias neuron!" << endl;
+					//cout << "\t\t\t\tno connection! the k neuron is a bias neuron!" << endl;
 				}
 			}
 		}
-	}
-
-	for (int i = 0; i < layers.size(); i++) {
-		//        cout << "layer" << endl;
-		for (int j = 0; j < layers[i].size(); j++) {
-			//            cout << "\tneuron" << endl;
-			for (int k = 0; k < layers[i][j]->output_connections.size(); k++) {
-				layers[i][j]->output_connections[k]->set_weight(0.4);
-				//                cout << "\t\tconnection [" << layers[i][j]->output_connections[k]->get_weight() << "]" << endl;
-			}
-		}
-
 	}
 }
 
@@ -90,7 +74,7 @@ double NeuralNetwork::rand_zero_point() {
 }
 
 void NeuralNetwork::net_feed_forward(vector<double> *input_values) {
-
+	
 	if ((*input_values).size() != layers[0].size() - 1) {
 		cout << "the training inputs do not match the input layer size" << endl;
 		exit(-1);
@@ -99,12 +83,10 @@ void NeuralNetwork::net_feed_forward(vector<double> *input_values) {
 	// assign all of the input values to the neurons in the input layer
 	for (int i = 0; i < (*input_values).size(); i++) {
 		layers[0][i]->set_output_value((*input_values)[i]);
-		//        cout << "set weight " << (*input_values)[i] << endl;
 	}
 
 	// for everything other than the input layer
 	for (int i = 1; i < layers.size(); i++) {
-		//        cout << "forward propagating layer [" << i << "]" << endl;
 
 		// for all neurons inside that layer
 		for (int j = 0; j < layers[i].size(); j++) {
@@ -125,8 +107,7 @@ void NeuralNetwork::net_feed_forward(vector<double> *input_values) {
 }
 
 void NeuralNetwork::backwards_propagation(vector<double> *target_values) {
-	//    cout << "\nstarting back prop" << endl;
-
+	
 	// calculate error of network
 	error = 0.0;
 
@@ -136,7 +117,7 @@ void NeuralNetwork::backwards_propagation(vector<double> *target_values) {
 	}
 	error /= layers.back().size();
 	error = sqrt(error);
-
+	
 	// measure recent error
 	recent_average_error =
 		(recent_average_error * recent_average_smoothing_factor + error)
@@ -155,17 +136,13 @@ void NeuralNetwork::backwards_propagation(vector<double> *target_values) {
 	}
 
 	// update connection weights
-	//    cout << "updating input weights" << endl;
 	for (int i = (int)layers.size() - 1; i > 0; i--) {
-		//        cout << "\tupdating layer [" << i << "]" << endl;
 		for (int j = 0; j < layers[i].size(); j++) {
 			if (i == layers.size() - 1) {
-				//                cout << "\t\tUpdating input weight of neuron" << endl;
 				layers[i][j]->update_input_weights();
 			}
 			else {
 				if (j < layers[i].size() - 1) {
-					//                    cout << "\t\tUpdating input weight of neuron" << endl;
 					layers[i][j]->update_input_weights();
 				}
 			}
@@ -188,3 +165,4 @@ void NeuralNetwork::print_results() {
 double NeuralNetwork::get_recent_average_error() {
 	return recent_average_error;
 }
+

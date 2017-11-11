@@ -14,6 +14,7 @@ public:
 	void backwards_propagation(vector<double>* target_values);
 	void print_results();
 	double get_recent_average_error();
+	void log(string message);
 private:
 	double error;
 	double recent_average_error;

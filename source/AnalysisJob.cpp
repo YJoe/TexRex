@@ -18,6 +18,7 @@ void AnalysisJob::run() {
 	for (ImageSegment is : image_segments) {
 		crop_segment(is, 10);
 		cv::imshow("i", is.m);
+		cout << "x[" << is.x << "] y[" << is.y << "]" << endl;
 		cv::waitKey();
 	}
 }

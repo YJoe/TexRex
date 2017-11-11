@@ -1,16 +1,16 @@
-__kernel void hello(__global char* string){
-	string[0] = 'H';
-	string[1] = 'e';
-	string[2] = 'l';
-	string[3] = 'l';
-	string[4] = 'o';
-	string[5] = ',';
-	string[6] = ' ';
-	string[7] = 'W';
-	string[8] = 'o';
-	string[9] = 'r';
-	string[10] = 'l';
-	string[11] = 'd';
-	string[12] = '!';
-	string[13] = '\0';
+__kernel void hello(__global char* str){
+	str[0] = 'H';
+	str[1] = 'e';
+	str[2] = 'l';
+	str[3] = 'l';
+	str[4] = 'o';
+	str[5] = ',';
+	str[6] = ' ';
+	str[7] = 'W';
+	str[8] = 'o';
+	str[9] = 'r';
+	str[10] = 'l';
+	str[11] = 'd';
+	str[12] = '!';
+	str[13] = '\0';
 }

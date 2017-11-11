@@ -3,6 +3,7 @@
 
 Connection::Connection(double random_start_point) {
 	set_weight(random_start_point);
+	set_delta_weight(1);
 }
 
 double Connection::get_weight() {
