@@ -12,7 +12,7 @@ OCLFunctions::OCLFunctions(int device_type) {
 	}
 
 	default_platform = all_platforms[0];
-	std::cout << "Using platform: " << default_platform.getInfo<CL_PLATFORM_NAME>() << "\n";
+	std::cout << "Using platform [" << default_platform.getInfo<CL_PLATFORM_NAME>() << "]\n";
 
 	//get default device of the default platform
 	default_platform.getDevices(device_type, &all_devices);
@@ -21,7 +21,7 @@ OCLFunctions::OCLFunctions(int device_type) {
 		exit(1);
 	}
 	default_device = all_devices[0];
-	std::cout << "Using device: " << default_device.getInfo<CL_DEVICE_NAME>() << "\n";
+	std::cout << "Using device [" << default_device.getInfo<CL_DEVICE_NAME>() << "]\n";
 
 	context = cl::Context({ default_device });
 
