@@ -25,27 +25,33 @@ OCLFunctions::OCLFunctions(int device_type) {
 
 	context = cl::Context({ default_device });
 
-	// kernel calculates for each element C=A+B
+	// define source code to be compiled by opencl on runtime
 	std::string kernel_code =
-		"   void __kernel simple_add(global const int* A, __global const int* B, __global int* C){												"
-		"       C[get_global_id(0)] = A[get_global_id(0)] + B[get_global_id(0)];																"
-		"   }																																	"
-		"    																																	"
-		"	void __kernel simple_mul(__global const int* A, __global const int* B, __global int* C){											"
-		"		C[get_global_id(0)] = A[get_global_id(0)] * B[get_global_id(0)];																"
-		"	};																																	"
-		"    																																	"
-		"	void __kernel apply_filter(__global const double* I, int Iw, __global const double* F, int Fw, int Fh, __global double* M, int Mw){	"
-		"       int m = get_global_id(0);																										"
-		"		int s = m % Mw + ((m / Mw) * Iw);																								"
-		"		double temp = 0;																												"
-		"		for (int i = 0; i < Fw; i++) {																									"
-		"			for (int j = 0; j < Fh; j++) {																								"
-		"				temp += I[s + (i + (j * Iw))] * F[i + (j * Fw)];																		"
-		"			}																															"
-		"		}																																"
-		"		M[m] = temp / (Fw * Fh);																										"
-		"	}																																	"
+		"	void __kernel apply_filter(__global const double* image, int image_w, __global const double* filter, int filter_w, int filter_h, __global double* map, int map_w){	"
+		"       int map_space = get_global_id(0);																																"
+		"		int offset = map_space % map_w + ((map_space / map_w) * image_w);																								"
+		"		double temp = 0;																																				"
+		"		for (int i = 0; i < filter_w; i++) {																															"
+		"			for (int j = 0; j < filter_h; j++) {																														"
+		"				temp += image[offset + (i + (j * image_w))] * filter[i + (j * filter_w)];																				"
+		"			}																																							"
+		"		}																																								"
+		"		map[map_space] = temp / (filter_w * filter_h);																													"
+		"	}																																									"
+		"																																										"
+		"	void __kernel pool(__global const double* image, int image_w, int image_h, int sample_size, __global double* map){		"
+		"		int map_space = get_global_id(0);																					"
+		"		int map_offset = map_space * sample_size;																			"
+		"		double max = 0;																										"
+		"		for(int i = 0; i < sample_size; i++){																				"
+		"			for(int j = 0; j < sample_size; j++){																			"
+		"				if(image[map_offset + (i + (j * image_w))] > max){															"
+		"					max = image[map_offset + (i + (j * image_w))];															"
+		"				}																											"
+		"			}																												"
+		"		}																													"
+		"		map[map_space] = max;																								"
+		"	}																														"
 	;
 
 	sources.push_back({ kernel_code.c_str(),kernel_code.length() });
@@ -55,6 +61,21 @@ OCLFunctions::OCLFunctions(int device_type) {
 		std::cout << " Error building: " << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(default_device) << "\n";
 		cin.get();
 		exit(1);
+	}
+}
+
+void vector_to_arr(std::vector<std::vector<double>> &vec, double** arr_ptr) {
+	
+	// allocate space to the pointer
+	(*arr_ptr) = new double[(int)vec[0].size() * (int)vec.size()];
+	int x = 0;
+
+	// cycle through the vector values, assigning them to the array
+	for (int i = 0; i < vec.size(); i++) {
+		for (int j = 0; j < vec[0].size(); j++) {
+			(*arr_ptr)[x] = vec[i][j];
+			x++;
+		}
 	}
 }
 
@@ -71,24 +92,12 @@ void OCLFunctions::apply_filter_convolution(std::vector<std::vector<double>> &im
 	int b_size = b_width * b_height;
 
 	// create a 1d array from vector a
-	double* a_arr = new double[a_size];
-	int x = 0;
-	for (int i = 0; i < image.size(); i++) {
-		for (int j = 0; j < image[0].size(); j++) {
-			a_arr[x] = image[i][j];
-			x++;
-		}
-	}
+	double* a_arr = NULL;
+	vector_to_arr(image, &a_arr);
 
 	// create a 1d array from vector b
-	double* b_arr = new double[b_size];
-	int y = 0;
-	for (int i = 0; i < filter.size(); i++) {
-		for (int j = 0; j < filter[0].size(); j++) {
-			b_arr[y] = filter[i][j];
-			y++;
-		}
-	}
+	double* b_arr = NULL;
+	vector_to_arr(filter, &b_arr);
 
 	// working out the map size
 	int map_width = a_width - b_width + 1;
@@ -139,4 +148,60 @@ void OCLFunctions::apply_filter_convolution(std::vector<std::vector<double>> &im
 	free(a_arr);
 	free(b_arr);
 	free(map);
+}
+
+void OCLFunctions::pooling(std::vector<std::vector<double>>& image, std::vector<std::vector<double>>& target, int sample_size){
+	target.clear();
+
+	// convert the vector into a 1d array
+	double* image_arr = NULL;
+	vector_to_arr(image, &image_arr);
+
+	// work out the size of the array we just created
+	int image_height = (int)image.size();
+	int image_width = (int)image[0].size();
+	int image_size = image_width * image_height;
+
+	// what is the new map size tho?
+	int pooled_width = image_width / sample_size + (image_width % sample_size == 0 ? 0 : 1);
+	int pooled_height = image_height / sample_size + (image_height % sample_size == 0 ? 0 : 1);
+	int pooled_size = pooled_width * pooled_height;
+
+	double* pooled_map = new double[pooled_size];
+
+	cout << "Pooled width [" << pooled_width << "]" << endl;
+	cout << "Pooled height [" << pooled_height << "]" << endl;
+	cout << "Pooled arr [" << pooled_size << "]" << endl;
+
+	// <insert magic opencl stuff here>
+	// create buffers on the device to store image filter and map
+	cl::Buffer image_buffer(context, CL_MEM_READ_WRITE, sizeof(double) * image_size);
+	cl::Buffer pooled_buffer(context, CL_MEM_READ_WRITE, sizeof(double) * pooled_size);
+
+	//create queue to which we will push commands for the device.
+	cl::CommandQueue queue(context, default_device);
+
+	//write arrays A and B to the device
+	queue.enqueueWriteBuffer(image_buffer, CL_TRUE, 0, sizeof(double) * image_size, image_arr);
+
+	//run the kernel
+	cl::Kernel kernel_add = cl::Kernel(program, "pool");
+	kernel_add.setArg(0, image_buffer);
+	kernel_add.setArg(1, image_width);
+	kernel_add.setArg(2, image_height);
+	kernel_add.setArg(3, sample_size);
+	kernel_add.setArg(4, pooled_buffer);
+	queue.enqueueNDRangeKernel(kernel_add, cl::NullRange, cl::NDRange(pooled_size), cl::NullRange);
+	queue.finish();
+
+	//read result map from the device to array map
+	queue.enqueueReadBuffer(pooled_buffer, CL_TRUE, 0, sizeof(double) * pooled_size, pooled_map);
+
+	for (int i = 0; i < pooled_size; i++) {
+		cout << pooled_map[i] << ", "; 
+	}
+	cout << endl;
+
+	free(pooled_map);
+
 }
