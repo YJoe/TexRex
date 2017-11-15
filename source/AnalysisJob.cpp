@@ -8,18 +8,12 @@ AnalysisJob::AnalysisJob(string file_name){
 	cv::imshow("Source", analysis_source);
 
 	clean();
-
-	cv::imshow("Cleaned", analysis_source);
-	waitKey();
 }
 
 void AnalysisJob::run() {
 	segment_image_islands(analysis_source, image_segments);
-	for (ImageSegment is : image_segments) {
-		crop_segment(is, 10);
-		cv::imshow("i", is.m);
-		cout << "x[" << is.x << "] y[" << is.y << "]" << endl;
-		cv::waitKey();
+	for (ImageSegment& is : image_segments) {
+		crop_segment(is, 5);
 	}
 }
 

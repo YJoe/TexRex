@@ -23,6 +23,8 @@ float get_image_grey_avg(cv::Mat& source_image);
 void binary_threshold_auto(cv::Mat& source_image, cv::Mat& target_image);
 void gaussian_blur(cv::Mat& source_image, cv::Mat& target_image, int neighbour_hood);
 
+void get_vector(cv::Mat& source_image, vector<vector<double>>& target_vector);
+void get_image(vector<vector<double>>& source_vector, cv::Mat& target_image);
 
 // frequency domain
 void take_dft(cv::Mat& source_image, cv::Mat& destination);

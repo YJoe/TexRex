@@ -6,7 +6,7 @@
 class OCLFunctions {
 public:
 	OCLFunctions(int device_type);
-	void apply_filter(std::vector<std::vector<double>> &image, std::vector<std::vector<double>> &filter, std::vector<std::vector<double>> &result_map);
+	void apply_filter_convolution(std::vector<std::vector<double>> &image, std::vector<std::vector<double>> &filter, std::vector<std::vector<double>> &result_map);
 
 	std::vector<cl::Platform> all_platforms;
 	cl::Platform default_platform;

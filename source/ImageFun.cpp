@@ -106,6 +106,27 @@ void gaussian_blur(cv::Mat & source_image, cv::Mat & target_image, int neighbour
 	}
 }
 
+void get_vector(cv::Mat& source_image, vector<vector<double>>& target_vector){
+	for (int i = 0; i < source_image.size().height; i++) {
+		vector<double> temp;
+		for (int j = 0; j < source_image.size().width; j++) {
+			temp.emplace_back(source_image.at<float>(i, j));
+		}
+		target_vector.emplace_back(temp);
+	}
+}
+
+void get_image(vector<vector<double>>& source_vector, cv::Mat& target_image) {
+	target_image = cv::Mat::zeros(cv::Size((int)source_vector[0].size(), (int)source_vector.size()), CV_32F);
+	normalize(target_image, target_image, 0, 1, CV_MINMAX);
+
+	for (int i = 0; i < source_vector.size(); i++) {
+		for (int j = 0; j < source_vector[0].size(); j++) {
+			target_image.at<float>(i, j) = (float)source_vector[i][j];
+		}
+	}
+}
+
 // 
 
 void segment_image_squares(cv::Mat& source_image, vector<cv::Mat>& destination_vector, int divide_x, int divide_y) {

@@ -58,7 +58,7 @@ OCLFunctions::OCLFunctions(int device_type) {
 	}
 }
 
-void OCLFunctions::apply_filter(std::vector<std::vector<double>> &image, std::vector<std::vector<double>> &filter, std::vector<std::vector<double>> &result_map) {
+void OCLFunctions::apply_filter_convolution(std::vector<std::vector<double>> &image, std::vector<std::vector<double>> &filter, std::vector<std::vector<double>> &result_map) {
 	
 	// store the true dimensions of the vector
 	int a_height = (int)image.size();
