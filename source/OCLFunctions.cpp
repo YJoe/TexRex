@@ -39,20 +39,51 @@ OCLFunctions::OCLFunctions(int device_type) {
 		"		map[map_space] = temp / (filter_w * filter_h);																													"
 		"	}																																									"
 		"																																										"
-		"	void __kernel pool(__global const double* image, int image_w, int image_h, int sample_size, __global double* map){		"
-		"		int map_space = get_global_id(0);																					"
-		"		int map_offset = map_space * sample_size;																			"
+		"	void __kernel pool(__global const double* image, int image_w, int image_h, int sample_size, __global double* map, int pooled_width){		"
+		"		int g_id = get_global_id(0);																					"
+		"		int fake_x = g_id % pooled_width;																			"
+		"		int fake_y = g_id / pooled_width;																			"
 		"		double max = 0;																										"
 		"		for(int i = 0; i < sample_size; i++){																				"
 		"			for(int j = 0; j < sample_size; j++){																			"
-		"				if(image[map_offset + (i + (j * image_w))] > max){															"
-		"					max = image[map_offset + (i + (j * image_w))];															"
-		"				}																											"
+		"				int fake_pooled_y = fake_y * sample_size + i;																			"
+		"				int fake_pooled_x = fake_x * sample_size + j;																			"
+		"				if(fake_pooled_x < image_w && fake_pooled_y < image_h){																	"
+		"					int index = fake_pooled_x + fake_pooled_y * image_w;																		"
+		"					if(image[index] > max){																				"
+		"						max = image[index];											"
+		"					}												"
+		"				}"																	
 		"			}																												"
 		"		}																													"
-		"		map[map_space] = max;																								"
+		"		map[g_id] = max;																								"
 		"	}																														"
+		"																										"
 	;
+
+	/*int g_id = g;
+	cout << "gid [" << g_id << "]" << endl;
+	int fake_x = g_id / pooled_width;
+	int fake_y = g_id % pooled_width;
+	cout << "fake indexes [" << fake_x << ", " << fake_y << "]" << endl;
+	int max = 0;
+
+	for (int i = 0; i < sample_s; i++) {
+		for (int j = 0; j < sample_s; j++) {
+			int fake_pooled_y = fake_x * sample_s + i;
+			int fake_pooled_x = fake_y * sample_s + j;
+			int index = fake_pooled_x + fake_pooled_y * image_width;
+			if (fake_pooled_y < image_height && fake_pooled_x < image_width) {
+				cout << "\tfake pooled indexes [" << fake_pooled_x << ", " << fake_pooled_y << "] [" << index << "]" << endl;
+				if (image_arr[index] > max) {
+					max = image_arr[index];
+				}
+			}
+		}
+	}
+
+	cout << "\t\tMax is [" << max << "]" << endl;
+	cout << endl;*/
 
 	sources.push_back({ kernel_code.c_str(),kernel_code.length() });
 
@@ -150,7 +181,7 @@ void OCLFunctions::apply_filter_convolution(std::vector<std::vector<double>> &im
 	free(map);
 }
 
-void OCLFunctions::pooling(std::vector<std::vector<double>>& image, std::vector<std::vector<double>>& target, int sample_size){
+void OCLFunctions::pooling(std::vector<std::vector<double>>& image, std::vector<std::vector<double>>& target, int sample_size) {
 	target.clear();
 
 	// convert the vector into a 1d array
@@ -173,6 +204,60 @@ void OCLFunctions::pooling(std::vector<std::vector<double>>& image, std::vector<
 	cout << "Pooled height [" << pooled_height << "]" << endl;
 	cout << "Pooled arr [" << pooled_size << "]" << endl;
 
+	//for (int i = 0; i < pooled_width; i++) {
+	//	for (int j = 0; j < pooled_height; j++) {
+	//		cout << "M [" << i << ", " << j << "]" << endl;
+	//		int m = i + j * pooled_width;
+	//		cout << "m [" << m << "]" << endl;
+	//		int a = m / pooled_width;
+	//		int b = m % pooled_width;
+	//		cout << "M [" << b << ", " << a << "]" << endl;
+	//		for (int k = 0; k < sample_s; k++) {
+	//			for (int l = 0; l < sample_s; l++) {
+	//				int y_index = i * sample_s + k;
+	//				int x_index = j * sample_s + l;
+	//				int index = x_index + y_index * image_width;
+	//				if (y_index < image_height && x_index < image_width) {
+	//					cout << "\tA [" << i * sample_s + k << ", " << j * sample_s + l << "] -> [" << image[i * sample_s + k][j * sample_s + l] << "] [" << index << "]" << endl;
+	//				}
+	//			}
+	//		}
+	//		cout << endl;
+	//	}
+	//}
+
+	//cout << "////////" << endl;
+
+	//for (int g = 0; g < pooled_size; g++) {
+	//	int g_id = g;
+	//	cout << "gid [" << g_id << "]" << endl;
+	//	int fake_x = g_id / pooled_width;
+	//	int fake_y = g_id % pooled_width;
+	//	cout << "fake indexes [" << fake_x << ", " << fake_y << "]" << endl;
+	//	int max = 0;
+
+	//	for (int i = 0; i < sample_s; i++) {
+	//		for (int j = 0; j < sample_s; j++) {
+	//			int fake_pooled_y = fake_x * sample_s + i;
+	//			int fake_pooled_x = fake_y * sample_s + j;
+	//			int index = fake_pooled_x + fake_pooled_y * image_width;
+	//			if (fake_pooled_y < image_height && fake_pooled_x < image_width) {
+	//				cout << "\tfake pooled indexes [" << fake_pooled_x << ", " << fake_pooled_y << "] [" << index << "]" << endl;
+	//				if (image_arr[index] > max) {
+	//					max = image_arr[index];
+	//				}
+	//			}
+	//		}
+	//	}
+
+	//	cout << "\t\tMax is [" << max << "]" << endl;
+	//	cout << endl;
+	//}
+
+	//cout << endl;
+
+	//cin.get();
+
 	// <insert magic opencl stuff here>
 	// create buffers on the device to store image filter and map
 	cl::Buffer image_buffer(context, CL_MEM_READ_WRITE, sizeof(double) * image_size);
@@ -191,12 +276,14 @@ void OCLFunctions::pooling(std::vector<std::vector<double>>& image, std::vector<
 	kernel_add.setArg(2, image_height);
 	kernel_add.setArg(3, sample_size);
 	kernel_add.setArg(4, pooled_buffer);
+	kernel_add.setArg(5, pooled_width);
 	queue.enqueueNDRangeKernel(kernel_add, cl::NullRange, cl::NDRange(pooled_size), cl::NullRange);
 	queue.finish();
 
 	//read result map from the device to array map
 	queue.enqueueReadBuffer(pooled_buffer, CL_TRUE, 0, sizeof(double) * pooled_size, pooled_map);
 
+	cout << "Pooled map" << endl;
 	for (int i = 0; i < pooled_size; i++) {
 		cout << pooled_map[i] << ", "; 
 	}
