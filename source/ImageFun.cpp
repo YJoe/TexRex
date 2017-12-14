@@ -48,7 +48,6 @@ float get_image_grey_avg(cv::Mat& source_image) {
 		}
 	}
 
-	cout << "avg " << avg / (float)(source_image.rows * source_image.cols) << endl;
 	// return the total divided by the pixel count
 	return avg / (float)(source_image.rows * source_image.cols);
 }
@@ -240,6 +239,75 @@ void crop_segment(ImageSegment& source_segment, int padding) {
 	source_segment.m = source_segment.m(cv::Rect(min_x - padding, min_y - padding, max_x - min_x + padding * 2, max_y - min_y + padding * 2));
 }
 
+
+int truncate(int val, int min, int max) {
+	return val > 255 ? 255 : val < 0 ? 255 - val : val;
+}
+
+void draw_frequencies_x(cv::Mat& source) {
+	cv::Mat source_copy = source.clone();
+	cv::cvtColor(source, source_copy, cv::COLOR_GRAY2BGR);
+
+	imshow("F", source_copy);
+
+	int streak = 0;
+	int b = rand() % (255 + 1);
+	int g = rand() % (255 + 1);
+	int r = rand() % (255 + 1);
+	for (int i = 0; i < source_copy.cols; i++) {
+		int total = 0;
+		for (int j = 0; j < source_copy.rows; j++) {
+			if (source.at<uchar>(j, i) == 0) {
+				int temp_b = truncate(source_copy.at<cv::Vec3b>(total, i)[0] - b, 0, 255);
+				int temp_g = truncate(source_copy.at<cv::Vec3b>(total, i)[1] - g, 0, 255);
+				int temp_r = truncate(source_copy.at<cv::Vec3b>(total, i)[2] - r, 0, 255);
+				source_copy.at<cv::Vec3b>(total, i)[0] = temp_b;
+				source_copy.at<cv::Vec3b>(total, i)[1] = temp_g;
+				source_copy.at<cv::Vec3b>(total, i)[2] = temp_r;
+				total += 1;
+			}
+		}
+		if (total == 0) {
+			streak = 0;
+			b = rand() % (255 + 1);
+			g = rand() % (255 + 1);
+			r = rand() % (255 + 1);
+		}
+		else {
+			streak += 1;
+		}
+	}
+
+	streak = 0;
+	b = rand() % (255 + 1);
+	g = rand() % (255 + 1);
+	r = rand() % (255 + 1);
+	for (int i = 0; i < source_copy.rows; i++) {
+		int total = 0;
+		for (int j = 0; j < source_copy.cols; j++) {
+			if (source.at<uchar>(i, j) == 0) {
+				int temp_b = truncate(source_copy.at<cv::Vec3b>(i, total)[0] - b, 0, 255);
+				int temp_g = truncate(source_copy.at<cv::Vec3b>(i, total)[1] - g, 0, 255);
+				int temp_r = truncate(source_copy.at<cv::Vec3b>(i, total)[2] - r, 0, 255);
+				source_copy.at<cv::Vec3b>(i, total)[0] = temp_b;
+				source_copy.at<cv::Vec3b>(i, total)[1] = temp_g;
+				source_copy.at<cv::Vec3b>(i, total)[2] = temp_r;
+				total += 1;
+			}
+		}
+		if (total == 0) {
+			streak = 0;
+			b = rand() % (255 + 1);
+			g = rand() % (255 + 1);
+			r = rand() % (255 + 1);
+		}
+		else {
+			streak += 1;
+		}
+	}
+
+	imshow("F", source_copy);
+}
 
 // frequency domain
 
