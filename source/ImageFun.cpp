@@ -244,7 +244,7 @@ int truncate(int val, int min, int max) {
 	return val > 255 ? 255 : val < 0 ? 255 - val : val;
 }
 
-void draw_frequencies_x(cv::Mat& source) {
+void draw_frequencies(cv::Mat& source) {
 	cv::Mat source_copy = source.clone();
 	cv::cvtColor(source, source_copy, cv::COLOR_GRAY2BGR);
 
