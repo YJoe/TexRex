@@ -152,28 +152,48 @@ cv::Point adjacent_map[] = {cv::Point(-1, -1), cv::Point(0, -1), cv::Point(1, -1
 							cv::Point(-1, 1), cv::Point(0, 1), cv::Point(1, 1) };
 
 void f(cv::Mat& s, cv::Mat& c, int x, int y) {
-	
-	s.at<float>(cv::Point(x, y)) = 0.5;
-	c.at<float>(cv::Point(x, y)) = 0.0;
 
-	for (cv::Point p: adjacent_map) {
-		if (x + p.x > -1 && y + p.y > -1 && x + p.x < s.cols && y + p.y < s.rows) {
-			if (s.at<float>(cv::Point(x + p.x, y + p.y)) == 0.0) {
+	s.at<uchar>(y, x) = 200;
+	c.at<uchar>(y, x) = 0;
+
+	for (cv::Point p : adjacent_map) {
+		if (x + p.x > -1 && x + p.x < c.cols && y + p.y > -1 && y + p.y < c.rows) {
+			if (s.at<uchar>(y + p.y, x + p.x) == 0) {
 				f(s, c, x + p.x, y + p.y);
 			}
 		}
 	}
 }
 
+void find_gravity_center(ImageSegment& segment) {
+	int total_x = 0;
+	int total_y = 0;
+	int count = 0;
+	for (int i = 0; i < segment.m.rows; i++) {
+		for (int j = 0; j < segment.m.cols; j++) {
+			if (segment.m.at<uchar>(i, j) == 0) {
+				count += 1;
+				total_x += j;
+				total_y += i;
+			}
+		}
+	}
+	segment.gravity_x = total_x / count;
+	segment.gravity_y = total_y / count;
+}
+
 void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destination){
 	// assumes that the image is in black(1.0) and white(0.0);
 	cout << "[ImageFun] Island Segments" << endl;
 
-	for (int i = 0; i < source_image.cols; i++) {
-		for (int j = 0; j < source_image.rows; j++) {
-			if (source_image.at<float>(j, i) == 0.0) {
-				ImageSegment is = { cv::Mat::ones(source_image.size(), CV_32F), 0, 0 };
-				f(source_image, is.m, i, j);
+
+	for (int x = 0; x < source_image.cols; x++) {
+		for (int y = 0; y < source_image.rows; y++) {
+			if (source_image.at<uchar>(y, x) == 0) {
+				ImageSegment is = { cv::Mat(source_image.size[0], source_image.size[1], CV_8UC1, cv::Scalar(255)), 0, 0, 0, 0};
+				f(source_image, is.m, x, y);
+				crop_segment(is, 5);
+				find_gravity_center(is);
 				destination.emplace_back(is);
 			}
 		}
@@ -187,7 +207,7 @@ int find_feature(cv::Mat& source_segment, int flag) {
 	case X_MIN:
 		for (int i = 0; i < source_segment.size().width; i++) {
 			for (int j = 0; j < source_segment.size().height; j++) {
-				if (source_segment.at<float>(j, i) == 0.0) {
+				if (source_segment.at<uchar>(j, i) == 0) {
 					return i;
 				}
 			}
@@ -196,7 +216,7 @@ int find_feature(cv::Mat& source_segment, int flag) {
 	case X_MAX:
 		for (int i = source_segment.size().width - 1; i > -1; i--) {
 			for (int j = 0; j < source_segment.size().height; j++) {
-				if (source_segment.at<float>(j, i) == 0.0) {
+				if (source_segment.at<uchar>(j, i) == 0) {
 					return i;
 				}
 			}
@@ -205,7 +225,7 @@ int find_feature(cv::Mat& source_segment, int flag) {
 	case Y_MIN:
 		for (int j = 0; j < source_segment.size().height; j++) {
 			for (int i = 0; i < source_segment.size().width; i++) {
-				if (source_segment.at<float>(j, i) == 0.0) {
+				if (source_segment.at<uchar>(j, i) == 0) {
 					return j;
 				}
 			}
@@ -214,7 +234,7 @@ int find_feature(cv::Mat& source_segment, int flag) {
 	case Y_MAX:
 		for (int j = source_segment.size().height - 1; j > -1; j--) {
 			for (int i = 0; i < source_segment.size().width; i++) {
-				if (source_segment.at<float>(j, i) == 0.0) {
+				if (source_segment.at<uchar>(j, i) == 0) {
 					return j;
 				}
 			}
@@ -236,7 +256,9 @@ void crop_segment(ImageSegment& source_segment, int padding) {
 	source_segment.y = min_y;
 
 	// crop the segment to remove white space
-	source_segment.m = source_segment.m(cv::Rect(min_x - padding, min_y - padding, max_x - min_x + padding * 2, max_y - min_y + padding * 2));
+	cv::Mat temp = source_segment.m(cv::Rect(min_x, min_y, max_x - min_x, max_y - min_y));
+	source_segment.m.release();
+	copyMakeBorder(temp, source_segment.m, padding, padding, padding, padding, cv::BORDER_CONSTANT, 255);
 }
 
 

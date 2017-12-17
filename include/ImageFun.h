@@ -12,6 +12,8 @@ struct ImageSegment {
 	cv::Mat m;
 	int x;
 	int y;
+	int gravity_x;
+	int gravity_y;
 };
 
 // image clean up
