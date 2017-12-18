@@ -7,21 +7,21 @@ OCLFunctions::OCLFunctions(int device_type) {
 	//get all platforms (drivers)
 	cl::Platform::get(&all_platforms);
 	if (all_platforms.size() == 0) {
-		std::cout << " No platforms found. Check OpenCL installation!\n";
+		std::cout << "[OCL] No platforms found. Check OpenCL installation!\n";
 		exit(1);
 	}
 
 	default_platform = all_platforms[0];
-	std::cout << "Using platform [" << default_platform.getInfo<CL_PLATFORM_NAME>() << "]\n";
+	std::cout << "[OCL] Using platform [" << default_platform.getInfo<CL_PLATFORM_NAME>() << "]\n";
 
 	//get default device of the default platform
 	default_platform.getDevices(device_type, &all_devices);
 	if (all_devices.size() == 0) {
-		std::cout << " No devices found. Check OpenCL installation!\n";
+		std::cout << "[OCL] No devices found. Check OpenCL installation!\n";
 		exit(1);
 	}
 	default_device = all_devices[0];
-	std::cout << "Using device [" << default_device.getInfo<CL_DEVICE_NAME>() << "]\n";
+	std::cout << "[OCL] Using device [" << default_device.getInfo<CL_DEVICE_NAME>() << "]\n";
 
 	context = cl::Context({ default_device });
 
@@ -193,70 +193,12 @@ void OCLFunctions::pooling(std::vector<std::vector<double>>& image, std::vector<
 	int image_width = (int)image[0].size();
 	int image_size = image_width * image_height;
 
-	// what is the new map size tho?
+	// what is the new map size
 	int pooled_width = image_width / sample_size + (image_width % sample_size == 0 ? 0 : 1);
 	int pooled_height = image_height / sample_size + (image_height % sample_size == 0 ? 0 : 1);
 	int pooled_size = pooled_width * pooled_height;
 
 	double* pooled_map = new double[pooled_size];
-
-	cout << "Pooled width [" << pooled_width << "]" << endl;
-	cout << "Pooled height [" << pooled_height << "]" << endl;
-	cout << "Pooled arr [" << pooled_size << "]" << endl;
-
-	//for (int i = 0; i < pooled_width; i++) {
-	//	for (int j = 0; j < pooled_height; j++) {
-	//		cout << "M [" << i << ", " << j << "]" << endl;
-	//		int m = i + j * pooled_width;
-	//		cout << "m [" << m << "]" << endl;
-	//		int a = m / pooled_width;
-	//		int b = m % pooled_width;
-	//		cout << "M [" << b << ", " << a << "]" << endl;
-	//		for (int k = 0; k < sample_s; k++) {
-	//			for (int l = 0; l < sample_s; l++) {
-	//				int y_index = i * sample_s + k;
-	//				int x_index = j * sample_s + l;
-	//				int index = x_index + y_index * image_width;
-	//				if (y_index < image_height && x_index < image_width) {
-	//					cout << "\tA [" << i * sample_s + k << ", " << j * sample_s + l << "] -> [" << image[i * sample_s + k][j * sample_s + l] << "] [" << index << "]" << endl;
-	//				}
-	//			}
-	//		}
-	//		cout << endl;
-	//	}
-	//}
-
-	//cout << "////////" << endl;
-
-	//for (int g = 0; g < pooled_size; g++) {
-	//	int g_id = g;
-	//	cout << "gid [" << g_id << "]" << endl;
-	//	int fake_x = g_id / pooled_width;
-	//	int fake_y = g_id % pooled_width;
-	//	cout << "fake indexes [" << fake_x << ", " << fake_y << "]" << endl;
-	//	int max = 0;
-
-	//	for (int i = 0; i < sample_s; i++) {
-	//		for (int j = 0; j < sample_s; j++) {
-	//			int fake_pooled_y = fake_x * sample_s + i;
-	//			int fake_pooled_x = fake_y * sample_s + j;
-	//			int index = fake_pooled_x + fake_pooled_y * image_width;
-	//			if (fake_pooled_y < image_height && fake_pooled_x < image_width) {
-	//				cout << "\tfake pooled indexes [" << fake_pooled_x << ", " << fake_pooled_y << "] [" << index << "]" << endl;
-	//				if (image_arr[index] > max) {
-	//					max = image_arr[index];
-	//				}
-	//			}
-	//		}
-	//	}
-
-	//	cout << "\t\tMax is [" << max << "]" << endl;
-	//	cout << endl;
-	//}
-
-	//cout << endl;
-
-	//cin.get();
 
 	// <insert magic opencl stuff here>
 	// create buffers on the device to store image filter and map
@@ -283,12 +225,14 @@ void OCLFunctions::pooling(std::vector<std::vector<double>>& image, std::vector<
 	//read result map from the device to array map
 	queue.enqueueReadBuffer(pooled_buffer, CL_TRUE, 0, sizeof(double) * pooled_size, pooled_map);
 
-	cout << "Pooled map" << endl;
+	// fill up the map array with the results of the kernel
+	vector<double> temp;
 	for (int i = 0; i < pooled_size; i++) {
-		cout << pooled_map[i] << ", "; 
+		if (i % (pooled_width) == 0) {
+			target.emplace_back(temp);
+		}
+		target.back().emplace_back(pooled_map[i]);
 	}
-	cout << endl;
 
 	free(pooled_map);
-
 }

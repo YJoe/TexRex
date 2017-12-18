@@ -190,7 +190,8 @@ void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destinat
 	for (int x = 0; x < source_image.cols; x++) {
 		for (int y = 0; y < source_image.rows; y++) {
 			if (source_image.at<uchar>(y, x) == 0) {
-				ImageSegment is = { cv::Mat(source_image.size[0], source_image.size[1], CV_8UC1, cv::Scalar(255)), 0, 0, 0, 0};
+				vector<vector<double>> vec;
+				ImageSegment is = { cv::Mat(source_image.size[0], source_image.size[1], CV_8UC1, cv::Scalar(255)), vec, 0, 0, 0, 0};
 				f(source_image, is.m, x, y);
 				crop_segment(is, 5);
 				find_gravity_center(is);

@@ -10,6 +10,7 @@ using namespace std;
 // 
 struct ImageSegment {
 	cv::Mat m;
+	vector<vector<double>> double_m;
 	int x;
 	int y;
 	int gravity_x;
