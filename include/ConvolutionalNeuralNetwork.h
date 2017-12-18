@@ -5,6 +5,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <opencv2/opencv.hpp>
+#include "../include/NeuralNetwork.h"
 
 using namespace std;
 
@@ -26,5 +27,6 @@ private:
 	cv::Size input_size;
 	vector<ConvolutionLayer> convolution_layers;
 	vector<PoolingLayer> pooling_layers;
+	vector<NeuralNetwork> fully_connected_networks;
 	vector<string> layer_type_stack;
 };

@@ -11,7 +11,16 @@
 					]
 				}
 			},
-			{"type" : "P", "details" : {"sample_size" : 3}}
+			{"type" : "P", "details" : {"sample_size" : 3}},
+			{"type" : "F", "details" : {
+				"sub_layers" : 
+					[
+						{"neurons" : 3},
+						{"neurons" : 3},
+						{"neurons" : 3}
+					]
+				}
+			}
 		]
 	}
 }
