@@ -1,10 +1,22 @@
 {"cnn": 
 	{"layers" :
 		[
-			{"type" : "I", "details" : {"input_width" : 10, "input_height" : 10}},
+			{"type" : "I", "details" : {"input_width" : 20, "input_height" : 20}},
 			{"type" : "C", "details" : {
 				"filters" :
 					[
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []}
+					]
+				}
+			},
+			{"type" : "P", "details" : {"sample_size" : 3}},
+			{"type" : "C", "details" : {
+				"filters" :
+					[
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
 						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
 						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
 						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []}

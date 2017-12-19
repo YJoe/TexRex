@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include "..\library\json.hpp"
+#include "../library/json.hpp"
 #include "../include/ConvolutionalNeuralNetwork.h"
 
 using namespace std;
+using namespace cv;
 using json = nlohmann::json;
 
 
@@ -106,9 +107,87 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file) {
 	}
 	cout << "]" << endl;
 
-	cin.get();
-	exit(0);
+	// initialise the results stack
+	for (int i = 1; i < layer_type_stack.size(); i++) {
+		vector<vector<vector<double>>> a_vector_of_images;
+		layer_results_stack.emplace_back(a_vector_of_images);
+	}
+
+	// set up a handle on a device to convolution and pooling operations
+	ocl_functions = OCLFunctions(CL_DEVICE_TYPE_CPU);
+
 }
+
+void ConvolutionalNeuralNetwork::feed_forward(ImageSegment& input_image_segment) {
+	cout << "\nFeeding forward " << endl;
+
+	// scale the image to meet the network input size
+	resize(input_image_segment.m, input_image_segment.m, input_size);
+	input_image_segment.m.convertTo(input_image_segment.m, CV_32FC1, 1.0 / 255.0);
+	
+	// store the image as a vector of doubles and release the image to save space
+	get_vector(input_image_segment.m, input_image_segment.double_m);
+	input_image_segment.m.release();
+
+	// keep track of which convolution pooling and fully connected section we are on
+	int current_conv = 0;
+	int current_pool = 0;
+	int current_full = 0;
+	int layer_result_index = 0;
+
+	// cycle through the layers, the input layer can be ignored
+	for (int i = 1; i < layer_type_stack.size(); i++) {
+		
+		if (layer_type_stack[i] == "C") {
+			cout << "[C] Performing convolution using convolution filter set at index [" << current_conv << "]" << endl;
+			cout << "\tThe last network layer was [" << layer_type_stack[i - 1] << "]" << endl;
+		
+			// if we need to use the input image as the convolution input
+			if (layer_type_stack[i - 1] == "I") {
+				cout << "\tUsing the input image as inputs to convolution" << endl;
+				for (int i = 0; i < convolution_layers[current_conv].filters.size(); i++) {
+					vector<vector<double>> conv_result;
+					cout << "\t\tConvolving the image with filter [" << i << "]" << endl;
+					ocl_functions.apply_filter_convolution(input_image_segment.double_m, convolution_layers[current_conv].filters[i], conv_result);
+				}
+			}
+
+			// if we need to use the last result in the stack as the convolution input
+			else {
+				cout << "\tUsing the results stack index [" << layer_result_index << "]" << endl;
+				for (int i = 0; i < convolution_layers[current_conv].filters.size(); i++) {
+					cout << "\t\tConvolving the results map with filter [" << i << "]" << endl;
+				}
+			}
+			cout << "\tresults of this convolution will be stored in [" << layer_result_index + 1 << "]" << endl;
+
+			current_conv++;
+			layer_result_index++;
+		}
+		else if (layer_type_stack[i] == "P") {
+			cout << "[P] Performing pooling with pooling sample index [" << current_pool << "]" << endl;
+			cout << "\tThe last network layer was [" << layer_type_stack[i - 1] << "]" << endl;
+			
+			if (layer_type_stack[i - 1] == "I") {
+				cout << "\tUsing the input image as inputs to pool" << endl;
+			}
+			else {
+				cout << "\tUsing the results stack index [" << layer_result_index << "]" << endl;
+			}
+			cout << "\tresults of this pool will be stored in [" << layer_result_index + 1 << "]" << endl;
+
+
+			current_pool++;
+			layer_result_index++;
+		}
+		else if (layer_type_stack[i] == "F") {
+			cout << "[F] Performing fully connected [" << current_full << "]" << endl;
+			current_full++;
+			layer_result_index++;
+		}
+	}
+}
+
 
 void ConvolutionalNeuralNetwork::get_random_filter(vector<vector<double>>& filter, int width, int height, double min, double max) {
 

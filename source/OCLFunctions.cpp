@@ -1,3 +1,4 @@
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
 #include "../include/OCLFunctions.h"
 
 using namespace std;
@@ -8,6 +9,7 @@ OCLFunctions::OCLFunctions(int device_type) {
 	cl::Platform::get(&all_platforms);
 	if (all_platforms.size() == 0) {
 		std::cout << "[OCL] No platforms found. Check OpenCL installation!\n";
+		std::cin.get();
 		exit(1);
 	}
 
@@ -18,6 +20,7 @@ OCLFunctions::OCLFunctions(int device_type) {
 	default_platform.getDevices(device_type, &all_devices);
 	if (all_devices.size() == 0) {
 		std::cout << "[OCL] No devices found. Check OpenCL installation!\n";
+		std::cin.get();
 		exit(1);
 	}
 	default_device = all_devices[0];
