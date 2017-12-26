@@ -60,7 +60,7 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 
 					// there is no filter defined so we will just create a new one
 					else {
-						vector<vector<double>> new_filter;
+						vector<vector<float>> new_filter;
 						get_random_filter(new_filter, (*f)["filter_width"], (*f)["filter_height"], -1.0, 1.0);
 						conv_layer.filters.emplace_back(new_filter);
 					}
@@ -116,8 +116,8 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 	resize(input_image_segment.m, input_image_segment.m, input_size);
 	input_image_segment.m.convertTo(input_image_segment.m, CV_32FC1, 1.0 / 255.0);
 
-	// store the image as a vector of doubles and release the image to save space
-	get_vector(input_image_segment.m, input_image_segment.double_m);
+	// store the image as a vector of floats and release the image to save space
+	get_vector(input_image_segment.m, input_image_segment.float_m);
 	input_image_segment.m.release();
 
 	// keep track of which convolution pooling and fully connected section we are on
@@ -137,9 +137,9 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 			if (layer_type_stack[i - 1] == "I") {
 				cout << "\tUsing the input image as inputs to convolution" << endl;
 				for (int i = 0; i < convolution_layers[current_conv].filters.size(); i++) {
-					vector<vector<double>> conv_result;
+					vector<vector<float>> conv_result;
 					cout << "\t\tConvolving the image with filter [" << i << "]" << endl;
-					ocl_functions.apply_filter_convolution(input_image_segment.double_m, convolution_layers[current_conv].filters[i], conv_result);
+					ocl_functions.apply_filter_convolution(input_image_segment.float_m, convolution_layers[current_conv].filters[i], conv_result);
 				}
 			}
 
@@ -179,18 +179,18 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 	}
 }
 
-void ConvolutionalNeuralNetwork::get_random_filter(vector<vector<double>>& filter, int width, int height, double min, double max) {
+void ConvolutionalNeuralNetwork::get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max) {
 
 	for (int i = 0; i < width; i++) {
-		vector<double> filter_line;
+		vector<float> filter_line;
 		for (int j = 0; j < height; j++) {
-			filter_line.emplace_back(double_rand(min, max));
+			filter_line.emplace_back(float_rand(min, max));
 		}
 		filter.emplace_back(filter_line);
 	}
 }
 
-double ConvolutionalNeuralNetwork::double_rand(double min, double max) {
-	double f = (double)rand() / RAND_MAX;
+float ConvolutionalNeuralNetwork::float_rand(float min, float max) {
+	float f = (float)rand() / RAND_MAX;
 	return min + f * (max - min);
 }

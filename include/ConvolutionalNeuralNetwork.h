@@ -9,7 +9,7 @@
 using namespace std;
 
 struct ConvolutionLayer {
-	vector<vector<vector<double>>> filters;
+	vector<vector<vector<float>>> filters;
 };
 
 struct PoolingLayer {
@@ -23,8 +23,8 @@ public:
 	void feed_forward(ImageSegment & input_image);
 
 private:
-	void get_random_filter(vector<vector<double>>& filter, int width, int height, double min, double max);
-	double double_rand(double min, double max);
+	void get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max);
+	float float_rand(float min, float max);
 
 	OCLFunctions ocl_functions;
 	cv::Size input_size;
@@ -32,5 +32,5 @@ private:
 	vector<PoolingLayer> pooling_layers;
 	vector<NeuralNetwork> fully_connected_networks;
 	vector<string> layer_type_stack;
-	vector<vector<vector<vector<double>>>> layer_results_stack;
+	vector<vector<vector<vector<float>>>> layer_results_stack;
 };

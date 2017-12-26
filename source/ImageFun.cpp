@@ -105,9 +105,9 @@ void gaussian_blur(cv::Mat & source_image, cv::Mat & target_image, int neighbour
 	}
 }
 
-void get_vector(cv::Mat& source_image, vector<vector<double>>& target_vector){
+void get_vector(cv::Mat& source_image, vector<vector<float>>& target_vector){
 	for (int i = 0; i < source_image.size().height; i++) {
-		vector<double> temp;
+		vector<float> temp;
 		for (int j = 0; j < source_image.size().width; j++) {
 			temp.emplace_back(source_image.at<float>(i, j));
 		}
@@ -115,7 +115,7 @@ void get_vector(cv::Mat& source_image, vector<vector<double>>& target_vector){
 	}
 }
 
-void get_image(vector<vector<double>>& source_vector, cv::Mat& target_image) {
+void get_image(vector<vector<float>>& source_vector, cv::Mat& target_image) {
 	target_image = cv::Mat::zeros(cv::Size((int)source_vector[0].size(), (int)source_vector.size()), CV_32F);
 	normalize(target_image, target_image, 0, 1, CV_MINMAX);
 
@@ -151,7 +151,7 @@ cv::Point adjacent_map[] = {cv::Point(-1, -1), cv::Point(0, -1), cv::Point(1, -1
 							cv::Point(-1, 0),                    cv::Point(1, 0),
 							cv::Point(-1, 1), cv::Point(0, 1), cv::Point(1, 1) };
 
-void f(cv::Mat& s, cv::Mat& c, int x, int y) {
+void recu(cv::Mat& s, cv::Mat& c, int x, int y) {
 
 	s.at<uchar>(y, x) = 200;
 	c.at<uchar>(y, x) = 0;
@@ -159,7 +159,7 @@ void f(cv::Mat& s, cv::Mat& c, int x, int y) {
 	for (cv::Point p : adjacent_map) {
 		if (x + p.x > -1 && x + p.x < c.cols && y + p.y > -1 && y + p.y < c.rows) {
 			if (s.at<uchar>(y + p.y, x + p.x) == 0) {
-				f(s, c, x + p.x, y + p.y);
+				recu(s, c, x + p.x, y + p.y);
 			}
 		}
 	}
@@ -190,9 +190,9 @@ void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destinat
 	for (int x = 0; x < source_image.cols; x++) {
 		for (int y = 0; y < source_image.rows; y++) {
 			if (source_image.at<uchar>(y, x) == 0) {
-				vector<vector<double>> vec;
+				vector<vector<float>> vec;
 				ImageSegment is = { cv::Mat(source_image.size[0], source_image.size[1], CV_8UC1, cv::Scalar(255)), vec, 0, 0, 0, 0};
-				f(source_image, is.m, x, y);
+				recu(source_image, is.m, x, y);
 				crop_segment(is, 5);
 				find_gravity_center(is);
 				destination.emplace_back(is);

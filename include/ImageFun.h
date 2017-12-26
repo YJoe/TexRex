@@ -10,7 +10,7 @@ using namespace std;
 // 
 struct ImageSegment {
 	cv::Mat m;
-	vector<vector<double>> double_m;
+	vector<vector<float>> float_m;
 	int x;
 	int y;
 	int gravity_x;
@@ -27,8 +27,8 @@ void binary_threshold_auto(cv::Mat& source_image, cv::Mat& target_image);
 void gaussian_blur(cv::Mat& source_image, cv::Mat& target_image, int neighbour_hood);
 void draw_frequencies(cv::Mat& source); 
 
-void get_vector(cv::Mat& source_image, vector<vector<double>>& target_vector);
-void get_image(vector<vector<double>>& source_vector, cv::Mat& target_image);
+void get_vector(cv::Mat& source_image, vector<vector<float>>& target_vector);
+void get_image(vector<vector<float>>& source_vector, cv::Mat& target_image);
 
 // frequency domain
 void take_dft(cv::Mat& source_image, cv::Mat& destination);
