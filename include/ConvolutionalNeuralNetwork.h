@@ -20,11 +20,13 @@ struct PoolingLayer {
 class ConvolutionalNeuralNetwork {
 public:
 	explicit ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl);
-	void feed_forward(ImageSegment & input_image);
+	void feed_forward(ImageSegment& input_image);
+	void backwards_propagate(vector<float>& target_values);
 
 private:
 	void get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max);
 	float float_rand(float min, float max);
+	float error;
 
 	OCLFunctions ocl_functions;
 	cv::Size input_size;

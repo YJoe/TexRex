@@ -6,7 +6,6 @@
 				"filters" :
 					[
 						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
-						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
 						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []}
 					]
 				}
@@ -15,9 +14,6 @@
 			{"type" : "C", "details" : {
 				"filters" :
 					[
-						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
-						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
-						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
 						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
 						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []}
 					]

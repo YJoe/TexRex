@@ -6,7 +6,6 @@
 using namespace std;
 using json = nlohmann::json;
 
-
 ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl) {
 
 	ocl_functions = ocl;
@@ -20,6 +19,11 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 	json cnn_json = json::parse(buffer.str());
 	cout << "Loading config [" << cnn_json.dump() << "]" << endl;
 	
+	// used to work out the size of each element at the last layer before the fully connected network
+	int current_element_width = 0;
+	int current_element_height = 0;
+	int current_layer_element_count = 1;
+
 	// read and create layers
 	json layer_array = cnn_json["cnn"]["layers"];
 	cout << "Reading network json" << endl;
@@ -31,6 +35,8 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 			if (layer_type_stack.size() == 0) {
 				layer_type_stack.emplace_back("I");
 				input_size = cv::Size((*l)["details"]["input_width"], (*l)["details"]["input_height"]);
+				current_element_width = input_size.width;
+				current_element_height = input_size.height;
 			}
 			else {
 				cout << "\t\tYou can't have an input layer here :( inputs must be at the start of the structure" << endl;
@@ -66,6 +72,11 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 					}
 				}
 
+				// keep track of the 2d element width and height
+				current_element_width = current_element_width - (int)conv_layer.filters.back().back().size() + 1;
+				current_element_height = current_element_height - (int)conv_layer.filters.back().size() + 1;
+				current_layer_element_count *= (int)conv_layer.filters.size();
+				
 				// store the convolution layer we just made
 				convolution_layers.emplace_back(conv_layer);
 			}
@@ -77,6 +88,11 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 			layer_type_stack.emplace_back("P");
 			PoolingLayer pooling_layer;
 			pooling_layer.sample_size = (*l)["details"]["sample_size"];
+
+			// keep track of the 2d element width and height
+			current_element_width = current_element_width / pooling_layer.sample_size + (current_element_width % pooling_layer.sample_size == 0 ? 0 : 1);
+			current_element_height = current_element_height / pooling_layer.sample_size + (current_element_height % pooling_layer.sample_size == 0 ? 0 : 1);
+			
 			pooling_layers.emplace_back(pooling_layer);
 		}
 
@@ -87,6 +103,13 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 			
 			// get the topology for this fully connected network
 			vector<int> network_topology;
+			
+			// work out the fully connected network input size from conv and pooling combinations
+			int fully_connected_input_size = current_element_width * current_element_height * current_layer_element_count;
+			cout << "The input to the fully connected network needs to be [" << fully_connected_input_size << "]" << endl;
+			network_topology.emplace_back(fully_connected_input_size);
+
+			// append the rest of the topology as defined in the json file
 			json full_layer_array = (*l)["details"]["sub_layers"];
 			for (json::iterator f = full_layer_array.begin(); f != full_layer_array.end(); ++f) {
 				network_topology.emplace_back((*f)["neurons"]);
@@ -96,7 +119,7 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 			fully_connected_networks.emplace_back(NeuralNetwork(&network_topology));
 		}
 		else {
-			cout << "\tI don't know what layer type [" << (*l)["type"] << "] is" << endl;
+			cout << "\tI don't know what layer type [" << (*l)["type"] << "] is, quitting :(" << endl;
 			cin.get();
 			exit(-1);
 		}
@@ -107,6 +130,25 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 		cout << layer_type_stack[i];
 	}
 	cout << "]" << endl;
+}
+
+bool super_serious_logging = true;
+
+void print_layer(vector<vector<vector<float>>>& layer) {	
+
+	cout << "Result layer size is [" << layer.size() << "]" << endl;
+
+	if (super_serious_logging) {
+		for (int i = 0; i < layer.size(); i++) {
+			for (int j = 0; j < layer[i].size(); j++) {
+				for (int k = 0; k < layer[i][j].size(); k++) {
+					cout << layer[i][j][k] << ", ";
+				}
+				cout << endl;
+			}
+			cout << endl;
+		}
+	}
 }
 
 void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment){
@@ -132,51 +174,131 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 		if (layer_type_stack[i] == "C") {
 			cout << "[C] Performing convolution using convolution filter set at index [" << current_conv << "]" << endl;
 			cout << "\tThe last network layer was [" << layer_type_stack[i - 1] << "]" << endl;
+			vector<vector<vector<float>>> conv_results;
 
 			// if we need to use the input image as the convolution input
 			if (layer_type_stack[i - 1] == "I") {
 				cout << "\tUsing the input image as inputs to convolution" << endl;
-				for (int i = 0; i < convolution_layers[current_conv].filters.size(); i++) {
+				for (int j = 0; j < convolution_layers[current_conv].filters.size(); j++) {
 					vector<vector<float>> conv_result;
 					cout << "\t\tConvolving the image with filter [" << i << "]" << endl;
 					ocl_functions.apply_filter_convolution(input_image_segment.float_m, convolution_layers[current_conv].filters[i], conv_result);
+					conv_results.emplace_back(conv_result);
 				}
+				layer_results_stack.emplace_back(conv_results);
 			}
 
 			// if we need to use the last result in the stack as the convolution input
 			else {
-				cout << "\tUsing the results stack index [" << layer_result_index << "]" << endl;
-				for (int i = 0; i < convolution_layers[current_conv].filters.size(); i++) {
-					cout << "\t\tConvolving the results map with filter [" << i << "]" << endl;
+				vector<vector<vector<float>>> conv_results;
+				cout << "\tUsing the results stack index [" << layer_result_index - 1<< "]" << endl;
+				
+				// for the amount of filters we want to use on this layer
+				for (int j = 0; j < convolution_layers[current_conv].filters.size(); j++) {
+					
+					// for the amount of elements in the previous layer
+					for (int k = 0; k < layer_results_stack[layer_result_index - 1].size(); k++) {
+						vector<vector<float>> conv_result;
+						cout << "\t\tConvolving the results layer [" << i << "][" << k << "] with filter [" << j << "]" << endl;
+						ocl_functions.apply_filter_convolution(layer_results_stack[layer_result_index - 1][k], convolution_layers[current_conv].filters[j], conv_result);
+						conv_results.emplace_back(conv_result);
+					}
 				}
+				layer_results_stack.emplace_back(conv_results);
 			}
-			cout << "\tresults of this convolution will be stored in [" << layer_result_index + 1 << "]" << endl;
+			cout << "\tresults of this convolution are stored in [" << layer_result_index << "]" << endl;
 
 			current_conv++;
 			layer_result_index++;
+
+			print_layer(layer_results_stack.back());
 		}
 		else if (layer_type_stack[i] == "P") {
 			cout << "[P] Performing pooling with pooling sample index [" << current_pool << "]" << endl;
 			cout << "\tThe last network layer was [" << layer_type_stack[i - 1] << "]" << endl;
 
+			vector<vector<vector<float>>> pool_results;
 			if (layer_type_stack[i - 1] == "I") {
+				vector<vector<float>> pool_result;
 				cout << "\tUsing the input image as inputs to pool" << endl;
+				ocl_functions.pooling(input_image_segment.float_m, pool_result, pooling_layers[current_pool].sample_size);
+				
+				// these two seem silly but the layer results stack needs to have a 3d vec pushed back
+				pool_results.emplace_back(pool_result);
+				layer_results_stack.emplace_back(pool_results);
 			}
 			else {
-				cout << "\tUsing the results stack index [" << layer_result_index << "]" << endl;
+				vector<vector<vector<float>>> pool_results;
+				cout << "\tUsing the results stack index [" << layer_result_index - 1 << "]" << endl;
+				for (int j = 0; j < layer_results_stack[layer_result_index - 1].size(); j++) {
+					vector<vector<float>> pool_result;
+					ocl_functions.pooling(layer_results_stack[layer_result_index - 1][j], pool_result, pooling_layers[current_pool].sample_size);
+					pool_results.emplace_back(pool_result);
+				}
+				layer_results_stack.emplace_back(pool_results);
 			}
-			cout << "\tresults of this pool will be stored in [" << layer_result_index + 1 << "]" << endl;
-
+			cout << "\tresults of this pool will be stored in [" << layer_result_index << "]" << endl;
 
 			current_pool++;
 			layer_result_index++;
+
+			print_layer(layer_results_stack.back());
 		}
 		else if (layer_type_stack[i] == "F") {
 			cout << "[F] Performing fully connected [" << current_full << "]" << endl;
+
+			// convert the input data into an array for the fully connected network to use as its input
+			vector<float> input_vec;
+			for (int j = 0; j < layer_results_stack.back().size(); j++) {
+				for (int k = 0; k < layer_results_stack.back()[j].size(); k++) {
+					for (int l = 0; l < layer_results_stack.back()[j][k].size(); l++) {
+						input_vec.emplace_back(layer_results_stack.back()[j][k][l]);
+					}
+				}
+			}
+
+			// forward propagate the fully conencted network
+			fully_connected_networks[current_full].net_feed_forward(&input_vec);
+
+			// increment counters
 			current_full++;
 			layer_result_index++;
 		}
 	}
+
+	cout << "The network results" << endl;
+	fully_connected_networks.back().print_results();
+}
+
+void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_values){
+	
+	// print the targets we want to aim for
+	cout << "Targeting the values [";
+	for (int i = 0; i < target_values.size(); i++) {
+		cout << target_values[i] << ", ";
+	}
+	cout << "]" << endl;
+
+	// print the output of the network
+	vector<float> output_results;
+	fully_connected_networks.back().get_results(output_results);
+	cout << "Output values are [";
+	for (int i = 0; i < output_results.size(); i++) {
+		cout << output_results[i] << ", ";
+	}
+	cout << "]" << endl;
+
+	// calculate error of network
+	error = 0.0;
+	for (int i = 0; i < output_results.size(); i++) {
+		float delta = target_values[i] - output_results[i];
+		error += delta * delta;
+	}
+	error /= output_results.size();
+	error = sqrt(error);
+	cout << "network error [" << error << "]" << endl;
+
+	// 
 }
 
 void ConvolutionalNeuralNetwork::get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max) {

@@ -69,11 +69,11 @@ NeuralNetwork::NeuralNetwork(vector<int> *topology) {
 }
 
 
-double NeuralNetwork::rand_zero_point() {
-	return static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
+float NeuralNetwork::rand_zero_point() {
+	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
 
-void NeuralNetwork::net_feed_forward(vector<double> *input_values) {
+void NeuralNetwork::net_feed_forward(vector<float> *input_values) {
 	
 	if ((*input_values).size() != layers[0].size() - 1) {
 		cout << "the training inputs do not match the input layer size" << endl;
@@ -106,13 +106,13 @@ void NeuralNetwork::net_feed_forward(vector<double> *input_values) {
 	}
 }
 
-void NeuralNetwork::backwards_propagation(vector<double> *target_values) {
+void NeuralNetwork::backwards_propagation(vector<float> *target_values) {
 	
 	// calculate error of network
 	error = 0.0;
 
 	for (int i = 0; i < layers.back().size(); i++) {
-		double delta = (*target_values)[i] - layers.back()[i]->get_output_value();
+		float delta = (*target_values)[i] - layers.back()[i]->get_output_value();
 		error += delta * delta;
 	}
 	error /= layers.back().size();
@@ -150,6 +150,14 @@ void NeuralNetwork::backwards_propagation(vector<double> *target_values) {
 	}
 }
 
+void NeuralNetwork::get_results(vector<float>& output_values){
+	cout << "Getting results" << endl;
+	for (int i = 0; i < layers.back().size(); i++) {
+		cout << layers.back()[i]->get_output_value() << endl;
+		output_values.emplace_back(layers.back()[i]->get_output_value());
+	}
+}
+
 void NeuralNetwork::print_results() {
 
 	cout << "[";
@@ -162,7 +170,7 @@ void NeuralNetwork::print_results() {
 	cout << "]" << endl;
 }
 
-double NeuralNetwork::get_recent_average_error() {
+float NeuralNetwork::get_recent_average_error() {
 	return recent_average_error;
 }
 

@@ -10,17 +10,18 @@ using namespace std;
 class NeuralNetwork {
 public:
 	explicit NeuralNetwork(vector<int>* topology);
-	void net_feed_forward(vector<double> *input_values);
-	void backwards_propagation(vector<double>* target_values);
+	void net_feed_forward(vector<float> *input_values);
+	void backwards_propagation(vector<float>* target_values);
+	void get_results(vector<float>& output_values);
 	void print_results();
-	double get_recent_average_error();
+	float get_recent_average_error();
 	void log(string message);
 private:
-	double error;
-	double recent_average_error;
-	double recent_average_smoothing_factor;
+	float error;
+	float recent_average_error;
+	float recent_average_smoothing_factor;
 	std::vector<Connection> connections;
-	double rand_zero_point();
+	float rand_zero_point();
 	std::vector<std::vector<Neuron*>> layers;
 	std::vector<Neuron> neurons;
 };
