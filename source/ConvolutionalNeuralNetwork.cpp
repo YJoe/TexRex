@@ -118,6 +118,12 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 			// create and store the neural network
 			fully_connected_networks.emplace_back(NeuralNetwork(&network_topology));
 		}
+		
+		// Create a ReLu layer
+		else if ((*l)["type"] == "R") {
+			layer_type_stack.emplace_back("R");
+		}
+
 		else {
 			cout << "\tI don't know what layer type [" << (*l)["type"] << "] is, quitting :(" << endl;
 			cin.get();
@@ -132,13 +138,12 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 	cout << "]" << endl;
 }
 
-bool super_serious_logging = true;
+bool super_serious_logging =true;
 
 void print_layer(vector<vector<vector<float>>>& layer) {	
 
-	cout << "Result layer size is [" << layer.size() << "]" << endl;
-
 	if (super_serious_logging) {
+		cout << "Result layer size is [" << layer.size() << "]" << endl;
 		for (int i = 0; i < layer.size(); i++) {
 			for (int j = 0; j < layer[i].size(); j++) {
 				for (int k = 0; k < layer[i][j].size(); k++) {
@@ -163,10 +168,10 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 	input_image_segment.m.release();
 
 	// keep track of which convolution pooling and fully connected section we are on
-	int current_conv = 0;
-	int current_pool = 0;
-	int current_full = 0;
-	int layer_result_index = 0;
+	current_conv = 0;
+	current_pool = 0;
+	current_full = 0;
+	layer_result_index = 0;
 
 	// cycle through the layers, the input layer can be ignored
 	for (int i = 1; i < layer_type_stack.size(); i++) {
@@ -182,7 +187,7 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 				for (int j = 0; j < convolution_layers[current_conv].filters.size(); j++) {
 					vector<vector<float>> conv_result;
 					cout << "\t\tConvolving the image with filter [" << i << "]" << endl;
-					ocl_functions.apply_filter_convolution(input_image_segment.float_m, convolution_layers[current_conv].filters[i], conv_result);
+					ocl_functions.apply_filter_convolution(input_image_segment.float_m, convolution_layers[current_conv].filters[j], conv_result);
 					conv_results.emplace_back(conv_result);
 				}
 				layer_results_stack.emplace_back(conv_results);
@@ -210,7 +215,6 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 
 			current_conv++;
 			layer_result_index++;
-
 			print_layer(layer_results_stack.back());
 		}
 		else if (layer_type_stack[i] == "P") {
@@ -244,6 +248,22 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 
 			print_layer(layer_results_stack.back());
 		}
+		else if (layer_type_stack[i] == "R") {
+			cout << "[R] Performing ReLu step" << endl;
+			cout << "\tUsing the results stack index [" << layer_result_index - 1 << "]" << endl;
+			vector<vector<vector<float>>> reluResults;
+
+			for (int j = 0; j < layer_results_stack[layer_result_index - 1].size(); j++) {
+				vector<vector<float>> result;
+				ocl_functions.reLu(layer_results_stack[layer_result_index - 1][j], result);
+				reluResults.emplace_back(result);
+			}	
+
+			layer_results_stack.emplace_back(reluResults);
+			print_layer(layer_results_stack.back());
+
+			layer_result_index++;
+		}
 		else if (layer_type_stack[i] == "F") {
 			cout << "[F] Performing fully connected [" << current_full << "]" << endl;
 
@@ -265,13 +285,10 @@ void ConvolutionalNeuralNetwork::feed_forward(ImageSegment & input_image_segment
 			layer_result_index++;
 		}
 	}
-
-	cout << "The network results" << endl;
-	fully_connected_networks.back().print_results();
 }
 
-void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_values){
-	
+void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_values) {
+
 	// print the targets we want to aim for
 	cout << "Targeting the values [";
 	for (int i = 0; i < target_values.size(); i++) {
@@ -298,7 +315,85 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 	error = sqrt(error);
 	cout << "network error [" << error << "]" << endl;
 
-	// 
+	vector<float> next_neuron_gradients;
+
+	// cycle through the layer types, using the result stack solve the gradients for the layer - 1 from the current iteration
+	for (int i = (int)layer_type_stack.size() - 1; i > -1; i--) {
+
+		if (layer_type_stack[i] == "F") {
+			cout << "Back propagating fully connected network at [" << current_full - 1<< "]" << endl;
+			fully_connected_networks[current_full - 1].backwards_propagation(&target_values);
+			
+			// get the gradients of the fully connected network's input layer
+			for (int j = 0; j < fully_connected_networks[current_full - 1].layers[0].size() - 1; j++) {
+				next_neuron_gradients.emplace_back(fully_connected_networks[current_full - 1].layers[0][j]->get_gradient());
+			}
+
+			current_full--;
+		}
+		if (layer_type_stack[i] == "P") {
+			cout << "Back propagating pooling layer at [" << current_pool - 1 << "]" << endl;
+			layer_result_index -= 1; 
+			current_pool -= 1;
+			int next_grad_count = 0;
+			print_layer(layer_results_stack[layer_result_index - 1]);
+
+			// there should be a 1-1 result relation for a pooling layer and the previous
+			// cycle through the previous layer size
+			vector<float> temp_next_neuron_gradients;
+			for (int j = 0; j < layer_results_stack[layer_result_index - 2].size(); j++) {
+				//cout << "\tWorking on prev layer element [" << j << "]" << endl;
+				for (int k = 0; k < layer_results_stack[layer_result_index - 2][j].size(); k += pooling_layers[current_pool].sample_size) {
+					for (int l = 0; l < layer_results_stack[layer_result_index - 2][j][k].size(); l += pooling_layers[current_pool].sample_size) {
+						//cout << "\t\tNew pooling position" << endl;
+						int x = 0;
+						int y = 0;
+						for (int m = 0; m < pooling_layers[current_pool].sample_size; m++) {
+							for (int n = 0; n < pooling_layers[current_pool].sample_size; n++) {
+								if (k + m < layer_results_stack[layer_result_index - 2][j].size() && l + n < layer_results_stack[layer_result_index - 2][j][0].size()) {
+									//cout << "\t\t" << layer_results_stack[layer_result_index - 2][j][k + m][l + n] << endl;
+									if (layer_results_stack[layer_result_index - 2][j][k + m][l + n] > layer_results_stack[layer_result_index - 2][j][k + y][l + x]) {
+										x = n;
+										y = m;
+									}
+								}
+							}
+						}
+						//cout << "\t\tThis segments highest is [" << layer_results_stack[layer_result_index - 2][j][k + y][l + x] << "]" << endl;
+						for (int m = 0; m < pooling_layers[current_pool].sample_size; m++) {
+							for (int n = 0; n < pooling_layers[current_pool].sample_size; n++) {
+								if (k + m < layer_results_stack[layer_result_index - 2][j].size() && l + n < layer_results_stack[layer_result_index - 2][j][0].size()) {
+									if (m == y && n == x) {
+										temp_next_neuron_gradients.emplace_back(next_neuron_gradients[next_grad_count]);
+										next_grad_count += 1;
+									}
+									else {
+										temp_next_neuron_gradients.emplace_back(0);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			next_neuron_gradients.clear();
+			next_neuron_gradients = temp_next_neuron_gradients;
+			current_pool--;
+		}
+		if (layer_type_stack[i] == "R") {
+			cout << "The next neuron gradients will just be past on to the next I think" << endl;
+			cout << "Gradients [";
+			for (int j = 0; j < next_neuron_gradients.size(); j++) {
+				cout << next_neuron_gradients[j] << ", ";
+			}
+			cout << "]" << endl;
+		}
+
+		if (layer_type_stack[i] == "C") {
+			cout << "Back propagating convolutional layer at [" << current_conv - 1 << "]" << endl;
+			current_conv--;
+		}
+	}
 }
 
 void ConvolutionalNeuralNetwork::get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max) {

@@ -35,7 +35,7 @@ OCLFunctions::OCLFunctions(int device_type) {
 		"		float temp = 0;																																				"
 		"		for (int i = 0; i < filter_w; i++) {																															"
 		"			for (int j = 0; j < filter_h; j++) {																														"
-		"				temp += image[offset + (i + (j * image_w))] * filter[i + (j * filter_w)];																				"
+		"				temp += image[offset + (i + (j * image_w))] * filter[(filter_h * filter_w) - (i + (j * filter_w)) - 1];																				"
 		"			}																																							"
 		"		}																																								"
 		"		map[map_space] = temp / (filter_w * filter_h);																													"
@@ -45,7 +45,7 @@ OCLFunctions::OCLFunctions(int device_type) {
 		"		int g_id = get_global_id(0);																					"
 		"		int fake_x = g_id % pooled_width;																			"
 		"		int fake_y = g_id / pooled_width;																			"
-		"		float max = 0;																										"
+		"		float max = -2;																										"
 		"		for(int i = 0; i < sample_size; i++){																				"
 		"			for(int j = 0; j < sample_size; j++){																			"
 		"				int fake_pooled_y = fake_y * sample_size + i;																			"
@@ -62,30 +62,6 @@ OCLFunctions::OCLFunctions(int device_type) {
 		"	}																														"
 		"																										"
 	;
-
-	/*int g_id = g;
-	cout << "gid [" << g_id << "]" << endl;
-	int fake_x = g_id / pooled_width;
-	int fake_y = g_id % pooled_width;
-	cout << "fake indexes [" << fake_x << ", " << fake_y << "]" << endl;
-	int max = 0;
-
-	for (int i = 0; i < sample_s; i++) {
-		for (int j = 0; j < sample_s; j++) {
-			int fake_pooled_y = fake_x * sample_s + i;
-			int fake_pooled_x = fake_y * sample_s + j;
-			int index = fake_pooled_x + fake_pooled_y * image_width;
-			if (fake_pooled_y < image_height && fake_pooled_x < image_width) {
-				cout << "\tfake pooled indexes [" << fake_pooled_x << ", " << fake_pooled_y << "] [" << index << "]" << endl;
-				if (image_arr[index] > max) {
-					max = image_arr[index];
-				}
-			}
-		}
-	}
-
-	cout << "\t\tMax is [" << max << "]" << endl;
-	cout << endl;*/
 
 	sources.push_back({ kernel_code.c_str(),kernel_code.length() });
 
@@ -113,6 +89,13 @@ void vector_to_arr(std::vector<std::vector<float>> &vec, float** arr_ptr) {
 			(*arr_ptr)[x] = vec[i][j];
 			x++;
 		}
+	}
+}
+
+void flip_vector_180(vector<vector<float>>& vec) {
+	reverse(vec.begin(), vec.end());
+	for (int i = 0; i < vec.size(); i++) {
+		reverse(vec[i].begin(), vec[i].end());
 	}
 }
 
@@ -187,6 +170,35 @@ void OCLFunctions::apply_filter_convolution(std::vector<std::vector<float>> &ima
 	free(map);
 }
 
+void OCLFunctions::inverse_convolution(vector<vector<float>>& im, vector<vector<float>> fi, vector<vector<float>>& res) {
+	// TODO: This same operation using OpenCL
+
+	// flip the copy of the filter 180 degrees (the original will not be rotated, just this copy)
+	flip_vector_180(fi);
+
+	// for each position that the filter can be placed over the input
+	for (int i = -(int)fi.size() + 1; i < (int)fi.size() + ((int)im.size() - (int)fi.size()); i++) {
+		vector<float> temp_vec;
+		for (int j = -(int)fi.size() + 1; j < (int)fi.size() + ((int)im.size() - (int)fi.size()); j++) {
+
+			// for all positions in the filter that needs to be solved
+			temp_vec.emplace_back(0);
+			for (int k = 0; k < (int)fi.size(); k++) {
+				for (int l = 0; l < (int)fi.size(); l++) {
+
+					// if the xy position we are in is a valid position on the image
+					if (i + k > -1 && i + k < (int)im.size() && j + l > -1 && j + l < (int)im.size()) {
+
+						// increment this result position by the product of the image location and the filter value
+						temp_vec.back() += im[i + k][j + l] * fi[k][l];
+					}
+				}
+			}
+		}
+		res.emplace_back(temp_vec);
+	}
+}
+
 void OCLFunctions::pooling(std::vector<std::vector<float>>& image, std::vector<std::vector<float>>& target, int sample_size) {
 	target.clear();
 
@@ -241,4 +253,14 @@ void OCLFunctions::pooling(std::vector<std::vector<float>>& image, std::vector<s
 	}
 
 	free(pooled_map);
+}
+
+void OCLFunctions::reLu(std::vector<std::vector<float>>& input, std::vector<std::vector<float>>& output) {
+	for (int i = 0; i < input.size(); i++) {
+		vector<float> temp;
+		for (int j = 0; j < input[i].size(); j++) {
+			temp.emplace_back(input[i][j] > 0 ? input[i][j] : 0);
+		}
+		output.emplace_back(temp);
+	}
 }

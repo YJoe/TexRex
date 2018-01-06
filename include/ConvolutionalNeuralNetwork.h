@@ -27,6 +27,10 @@ private:
 	void get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max);
 	float float_rand(float min, float max);
 	float error;
+	int current_conv;
+	int current_pool;
+	int current_full;
+	int layer_result_index;
 
 	OCLFunctions ocl_functions;
 	cv::Size input_size;

@@ -129,8 +129,8 @@ void NeuralNetwork::backwards_propagation(vector<float> *target_values) {
 	}
 
 	// calculate hidden layer gradients
-	for (size_t i = layers.size() - 2; i > 0; i--) {
-		for (size_t j = 0; j < layers[i].size(); j++) {
+	for (int i = (int)layers.size() - 2; i > -1; i--) {
+		for (int j = 0; j < layers[i].size(); j++) {
 			layers[i][j]->calculate_hidden_gradients();
 		}
 	}
@@ -151,9 +151,7 @@ void NeuralNetwork::backwards_propagation(vector<float> *target_values) {
 }
 
 void NeuralNetwork::get_results(vector<float>& output_values){
-	cout << "Getting results" << endl;
 	for (int i = 0; i < layers.back().size(); i++) {
-		cout << layers.back()[i]->get_output_value() << endl;
 		output_values.emplace_back(layers.back()[i]->get_output_value());
 	}
 }

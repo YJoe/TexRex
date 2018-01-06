@@ -16,13 +16,13 @@ public:
 	void print_results();
 	float get_recent_average_error();
 	void log(string message);
+	std::vector<std::vector<Neuron*>> layers;
 private:
 	float error;
 	float recent_average_error;
 	float recent_average_smoothing_factor;
 	std::vector<Connection> connections;
 	float rand_zero_point();
-	std::vector<std::vector<Neuron*>> layers;
 	std::vector<Neuron> neurons;
 };
 
