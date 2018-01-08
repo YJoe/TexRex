@@ -11,6 +11,7 @@ using namespace std;
 struct ImageSegment {
 	cv::Mat m;
 	vector<vector<float>> float_m;
+	vector<vector<float>> float_m_mini;
 	int x;
 	int y;
 	int gravity_x;
