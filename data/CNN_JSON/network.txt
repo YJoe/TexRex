@@ -1,21 +1,22 @@
 {"cnn": 
 	{"layers" :
 		[
-			{"type" : "I", "details" : {"input_width" : 4, "input_height" : 4}},
+			{"type" : "I", "details" : {"input_width" : 8, "input_height" : 8}},
 			{"type" : "C", "details" : {
 				"filters" :
 					[
-						{"filter_width" : 2, "filter_height" : 2, "filter_obj" : []},
-						{"filter_width" : 2, "filter_height" : 2, "filter_obj" : []}
+						{"filter_width" : 4, "filter_height" : 4, "filter_obj" : []},
+						{"filter_width" : 4, "filter_height" : 4, "filter_obj" : []},
+						{"filter_width" : 4, "filter_height" : 4, "filter_obj" : []}
 					]
 				}
 			},
-			{"type" : "R"},
-			{"type" : "P", "details" : {"sample_size" : 2}},
+			{"type": "P", "details" : {"sample_size": 3}},
 			{"type" : "F", "details" : {
 				"sub_layers" : 
 					[
-						{"neurons" : 3},
+						{"neurons" : 5},
+						{"neurons" : 5},
 						{"neurons" : 3}
 					]
 				}

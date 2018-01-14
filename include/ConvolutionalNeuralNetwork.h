@@ -23,6 +23,8 @@ public:
 	cv::Size input_size;
 	void feed_forward(vector<vector<float>>& input_image);
 	void backwards_propagate(vector<float>& target_values);
+	void print_network_results();
+
 
 private:
 	void get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max);

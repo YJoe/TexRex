@@ -195,8 +195,11 @@ void print_gradients(vector<float>& gradients) {
 
 void ConvolutionalNeuralNetwork::feed_forward(vector<vector<float>>& input_image_segment){
 
-	cout << "\n__________________________________________" << endl;
-	cout << "STARTING FORWARD PROPAGATION" << endl;
+	//cout << "\n__________________________________________" << endl;
+	//cout << "STARTING FORWARD PROPAGATION" << endl;
+	layer_results_stack.clear();
+
+	//print_vector2_neatly(input_image_segment);
 
 	// keep track of which convolution pooling and fully connected section we are on
 	current_conv = 0;
@@ -324,8 +327,8 @@ void ConvolutionalNeuralNetwork::feed_forward(vector<vector<float>>& input_image
 
 void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_values) {
 
-	cout << "\n__________________________________________" << endl;
-	cout << "STARTING BACK PROPAGATION" << endl;
+	//cout << "\n__________________________________________" << endl;
+	//cout << "STARTING BACK PROPAGATION" << endl;
 
 	// print the output of the network
 	vector<float> output_results;
@@ -352,6 +355,12 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 	error /= output_results.size();
 	error = sqrt(error);
 	cout << "Network error [" << error << "]" << endl;
+
+	if (error < 0.582714 && error > 0.582713) {
+		cout << "I think I died :(" << endl;
+		cin.get();
+		exit(-1);
+	}
 
 	vector<float> next_neuron_gradients;
 
@@ -506,10 +515,10 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 				}
 			}
 
-			/*cout << "Current filters" << endl;
-			print_layer(convolution_layers[current_conv - 1].filters);
-			*/
-			// work out the input deltas by doing inverse convolution I think
+			//cout << "Current filters" << endl;
+			//print_layer(convolution_layers[current_conv - 1].filters);
+			
+			// work out the input deltas here by doing inverse convolution I think
 
 			current_conv--;
 		}
@@ -530,4 +539,14 @@ void ConvolutionalNeuralNetwork::get_random_filter(vector<vector<float>>& filter
 float ConvolutionalNeuralNetwork::float_rand(float min, float max) {
 	float f = (float)rand() / RAND_MAX;
 	return min + f * (max - min);
+}
+
+void ConvolutionalNeuralNetwork::print_network_results() {
+	vector<float> output_results;
+	fully_connected_networks.back().get_results(output_results);
+	cout << "Network results [";
+	for (int i = 0; i < output_results.size(); i++) {
+		cout << output_results[i] << ", ";
+	}
+	cout << "]" << endl;
 }
