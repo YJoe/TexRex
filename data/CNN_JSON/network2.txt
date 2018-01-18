@@ -1,0 +1,24 @@
+{"cnn": 
+	{"layers" :
+		[
+			{"type" : "I", "details" : {"input_width" : 8, "input_height" : 8}},
+			{"type" : "C", "details" : {
+				"filters" :
+					[
+						{"filter_width" : 3, "filter_height" : 4, "filter_obj" : []},
+						{"filter_width" : 3, "filter_height" : 4, "filter_obj" : []}
+					]
+				}
+			},
+			{"type" : "P", "details" : {"sample_size": 5}},
+			{"type" : "F", "details" : {
+				"sub_layers" : 
+					[
+						{"neurons" : 2, "input_weights" : []},
+						{"neurons" : 2, "input_weights" : []}
+					]
+				}
+			}
+		]
+	}
+}

@@ -24,6 +24,10 @@ void print_vector2_neatly(vector<vector<float>> &vec) {
 	}
 }
 
+float map_value(float value, float minFrom, float maxFrom, float minTo, float maxTo) {
+	return minTo + (maxTo - minTo) * ((value - minFrom) / (maxFrom - minFrom));
+}
+
 ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl) {
 
 	ocl_functions = ocl;
@@ -77,9 +81,16 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 					
 					// if there is already a filter defined in the json
 					if ((*f)["filter_obj"].size() != 0) {
-						cout << "\t\tOops, under construction :( we can't load filters just yet" << endl;
-						cin.get();
-						exit(-1);
+						vector<vector<float>> temp_filter;
+						for (int i = 0; i < (*f)["filter_obj"].size(); i++) {
+							vector<float> temp_line;
+							for (int j = 0; j < (*f)["filter_obj"][i].size(); j++) {
+								temp_line.emplace_back((*f)["filter_obj"][i][j]["val"]);
+							}
+							temp_filter.emplace_back(temp_line);
+						}
+						conv_layer.filters.emplace_back(temp_filter);
+						print_vector2_neatly(temp_filter);
 					}
 
 					// there is no filter defined so we will just create a new one
@@ -137,6 +148,47 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 
 			// create and store the neural network
 			fully_connected_networks.emplace_back(NeuralNetwork(&network_topology));
+
+			// check if there are any weights to load
+			vector<vector<float>> layer_connection_weights;
+			for (json::iterator f = full_layer_array.begin(); f != full_layer_array.end(); ++f) {
+				vector<float> layer_input_weights;
+
+				// iterate through the input weights array and store the results if we find any
+				for (json::iterator w = (*f)["input_weights"].begin(); w != (*f)["input_weights"].end(); ++w) {
+					layer_input_weights.emplace_back((*w)["weight"]);
+				}
+				
+				// if there are any results to store
+				if (layer_input_weights.size() != 0) {
+					layer_connection_weights.emplace_back(layer_input_weights);
+				}
+			}
+			
+			// if there are connection weights for every neuron (not including the input layer)
+			if (layer_connection_weights.size() == network_topology.size() - 1) {
+				cout << "Soooo the correct amount of layers was defined, trying to load connection weights" << endl;
+
+				// for each layer
+				for (int i = 0; i < layer_connection_weights.size(); i++) {
+					cout << "\tThis data is for the input connections of the neurons on layer [" << i + 1 << "]" << endl;
+
+					int current_weight_index = 0;
+
+					// for each neuron in that layer
+					for (int j = 0; j < fully_connected_networks.back().layers[i + 1].size(); j++) {
+						cout << "\t\tLooking at a neuron on this layer" << endl;
+
+						// for each input connection on the given neuron
+						for (int k = 0; k < fully_connected_networks.back().layers[i + 1][j]->input_connections.size(); k++) {
+							cout << "\t\t\tSetting input connection weight [" << layer_connection_weights[i][current_weight_index] << "]" << endl;
+							
+							// set the input connection weight of a given neuron to the value defined in the json, iterate the current_weight_index
+							fully_connected_networks.back().layers[i + 1][j]->input_connections[k]->set_weight(layer_connection_weights[i][current_weight_index++]);
+						}
+					}
+				}
+			}
 		}
 		
 		// Create a ReLu layer
@@ -145,7 +197,7 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 		}
 
 		else {
-			cout << "\tI don't know what layer type [" << (*l)["type"] << "] is, quitting :(" << endl;
+			cout << "\tI don't know what layer type [" << (*l)["type"] << "] is, soooo I'm quitting :(" << endl;
 			cin.get();
 			exit(-1);
 		}
@@ -549,4 +601,132 @@ void ConvolutionalNeuralNetwork::print_network_results() {
 		cout << output_results[i] << ", ";
 	}
 	cout << "]" << endl;
+}
+
+void ConvolutionalNeuralNetwork::show_filters(string prefix) {
+	for (int i = 0; i < convolution_layers.size(); i++) {
+		print_layer(convolution_layers[i].filters);
+		
+		vector<cv::Mat> filter_images;
+		for (int j = 0; j < convolution_layers[i].filters.size(); j++) {
+			filter_images.emplace_back(cv::Mat(convolution_layers[i].filters[j].size(), convolution_layers[i].filters[j].size(), CV_32FC1, cv::Scalar(0.0f)));
+			
+			float min_filter_val = 10.0f;
+			float max_filter_val = -10.0f;
+			for (int k = 0; k < convolution_layers[i].filters[j].size(); k++) {
+				for (int l = 0; l < convolution_layers[i].filters[j][k].size(); l++) {
+					if (convolution_layers[i].filters[j][l][k] > max_filter_val) {
+						max_filter_val = convolution_layers[i].filters[j][l][k];
+					}
+					if (convolution_layers[i].filters[j][l][k] < min_filter_val) {
+						min_filter_val = convolution_layers[i].filters[j][l][k];
+					}
+				}
+			}
+
+			for (int k = 0; k < convolution_layers[i].filters[j].size(); k++) {
+				for (int l = 0; l < convolution_layers[i].filters[j][k].size(); l++) {
+					filter_images.back().at<float>(cv::Point(l, k)) = map_value(convolution_layers[i].filters[j][l][k], min_filter_val, max_filter_val, 0.0f, 1.0f);
+				}
+			}
+			
+			cv::Size size(200, 200);
+			cv::Mat dst;
+			resize(filter_images.back(), dst, size, 0, 0, cv::INTER_AREA);
+			cout << "Showing filter [" << j << "]" << endl;
+			cv::imshow(prefix + "-" + to_string(i) + "-" + to_string(j), dst);
+		}
+	}
+
+	cv::waitKey();
+}
+
+void ConvolutionalNeuralNetwork::json_dump_network(string file_name){
+	cout << "Saving the network" << endl;
+
+	// start the json object
+	json network = "{ \"cnn\":{\"layers\":[]} }"_json;
+	current_pool = 0;
+	current_conv = 0;
+	current_full = 0;
+
+	// cycle through each layer type and add it to the json
+	for (int i = 0; i < layer_type_stack.size(); i++) {
+
+		// switch on the current layer type symbol
+		switch (layer_type_stack[i][0]) {
+			case 'I': {
+
+				// store the size of the input layer in the json object
+				network["cnn"]["layers"].push_back(json::parse("{\"type\":\"I\",\"details\":{\"input_width\":" + to_string(input_size.width) + ",\"input_height\":" + to_string(input_size.height) + "}}"));
+				break;
+			}
+			case 'C': {
+
+				// create a convolution layer in the json object
+				json conv = json::parse("{\"type\":\"C\",\"details\":{\"filters\":[]}}");
+				
+				// for all filters in this convolution layer
+				for (int j = 0; j < convolution_layers[current_conv].filters.size(); j++) {
+					
+					// start a new json filter and then iterate through the size of the filter
+					conv["details"]["filters"].push_back(json::parse("{\"filter_obj\":[]}"));
+					for (int k = 0; k < convolution_layers[current_conv].filters[j].size(); k++) {
+						
+						// create a new line in the json filter and iterate through each line in the actual filter
+						conv["details"]["filters"][j]["filter_obj"].push_back(json::parse("[]"));
+						for (int l = 0; l < convolution_layers[current_conv].filters[j][k].size(); l++) {
+							
+							// store the value of the filter at this index into the json object
+							conv["details"]["filters"][j]["filter_obj"][k].push_back(json::parse("{\"val\":"+to_string(convolution_layers[current_conv].filters[j][k][l])+"}"));
+						}
+					}
+				}
+				network["cnn"]["layers"].push_back(conv);
+				current_conv++;
+				break;
+			}
+			case 'P': {
+				network["cnn"]["layers"].push_back(json::parse("{\"type\":\"P\",\"details\":{\"sample_size\":" + to_string(pooling_layers[current_pool].sample_size) + "}}"));
+				current_pool++;
+				break;
+			}
+			case 'R': {
+				network["cnn"]["layers"].push_back(json::parse("{ \"type\": \"R\"}"));
+				break;
+			}
+			case 'F': {
+				json full_temp = json::parse("{\"type\": \"F\", \"details\": {\"sub_layers\" : []}}");
+				cout << "There are [" << fully_connected_networks[current_full].layers.size() << "] layers" << endl;
+				
+				// for all layers in the current fully connected layer
+				for (int j = 1; j < fully_connected_networks[current_full].layers.size(); j++) {
+					
+					// work out how many neurons we want to store weights for, if we are looking at a hidden layer then there is a bias and we want to ignore it by subtracting one
+					int neuron_count = fully_connected_networks[current_full].layers[j].size() - (j == fully_connected_networks[current_full].layers.size() - 1 ? 0 : 1);
+					full_temp["details"]["sub_layers"].push_back(json::parse("{\"neurons\":" + to_string(neuron_count) + ",\"input_weights\": []}"));
+
+					// for all of the neurons on this layer
+					for (int k = 0; k < neuron_count; k++) {
+						
+						// for all input connections on this neuron
+						for (int l = 0; l < fully_connected_networks[current_full].layers[j][k]->input_connections.size(); l++) {
+							
+							// store the weight of the input connection in the json object
+							full_temp["details"]["sub_layers"][j - 1]["input_weights"].push_back(json::parse("{\"weight\":" + to_string((*fully_connected_networks[current_full].layers[j][k]).input_connections[l]->get_weight()) + "}"));
+						}
+					}
+				}
+
+				network["cnn"]["layers"].push_back(full_temp);
+				current_full++;
+				break;
+			}
+		}
+	}
+
+	// write the json object to the file we defined
+	cout << "Writing network json to [" << file_name << "]" << endl;
+	std::ofstream o(file_name);
+	o << std::setw(4) << network << std::endl;
 }

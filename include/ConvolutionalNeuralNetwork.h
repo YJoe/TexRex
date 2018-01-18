@@ -24,6 +24,8 @@ public:
 	void feed_forward(vector<vector<float>>& input_image);
 	void backwards_propagate(vector<float>& target_values);
 	void print_network_results();
+	void show_filters(string prefix);
+	void json_dump_network(string file_name);
 
 
 private:
