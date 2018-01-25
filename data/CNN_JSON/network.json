@@ -1,0 +1,27 @@
+{"cnn": 
+	{
+	"terminator" : {"type" : "iteration", "value" : 1000},
+	"layers" :
+		[
+			{"type" : "I", "details" : {"input_width" : 15, "input_height" : 15}},
+			{"type" : "C", "details" : {
+				"filters" :
+					[
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []},
+						{"filter_width" : 3, "filter_height" : 3, "filter_obj" : []}
+					]
+				}
+			},
+			{"type" : "P", "details" : {"sample_size": 4}},
+			{"type" : "F", "details" : {
+				"sub_layers" : 
+					[
+						{"neurons" : 5, "input_weights" : []},
+						{"neurons" : 5, "input_weights" : []}
+					]
+				}
+			}
+		]
+	}
+}

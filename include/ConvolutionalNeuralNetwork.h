@@ -3,6 +3,7 @@
 #include <vector>
 #include "../include/NeuralNetwork.h"
 #include "../include/ImageFun.h"
+#include "../include/DataSample.h"
 #include "../include/OCLFunctions.h"
 
 
@@ -23,9 +24,19 @@ public:
 	cv::Size input_size;
 	void feed_forward(vector<vector<float>>& input_image);
 	void backwards_propagate(vector<float>& target_values);
-	void print_network_results();
+	void print_network_results(vector<char>& res);
 	void show_filters(string prefix);
 	void json_dump_network(string file_name);
+	void setTrainingSamples(vector<DataSample>& dataSamples);
+	void setMapping(vector<char>& mapping);
+	void train();
+	char evaluate(vector<vector<float>>& image);
+	bool (ConvolutionalNeuralNetwork::*terminating_function)();
+	bool threshold_check();
+	bool iteration_check();
+	int iteration_target;
+	float threshold_target;
+	int current_iteration = 0;
 
 
 private:
@@ -36,7 +47,8 @@ private:
 	int current_pool;
 	int current_full;
 	int layer_result_index;
-
+	vector<DataSample> trainingSamples;
+	vector<char> mapping;
 	OCLFunctions ocl_functions;
 	vector<ConvolutionLayer> convolution_layers;
 	vector<PoolingLayer> pooling_layers;
