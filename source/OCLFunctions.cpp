@@ -104,6 +104,7 @@ void OCLFunctions::apply_filter_convolution(std::vector<std::vector<float>> &ima
 	// store the true dimensions of the vector
 	int a_height = (int)image.size();
 	int a_width = (int)image[0].size();
+
 	int b_height = (int)filter.size();
 	int b_width = (int)filter[0].size();
 	

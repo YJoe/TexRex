@@ -109,7 +109,6 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 							temp_filter.emplace_back(temp_line);
 						}
 						conv_layer.filters.emplace_back(temp_filter);
-						//print_vector2_neatly(temp_filter);
 					}
 
 					// there is no filter defined so we will just create a new one
@@ -273,6 +272,7 @@ void ConvolutionalNeuralNetwork::feed_forward(vector<vector<float>>& input_image
 	/*cout << "\n__________________________________________" << endl;
 	cout << "STARTING FORWARD PROPAGATION" << endl;
 	*/
+
 	layer_results_stack.clear();
 
 	// keep track of which convolution pooling and fully connected section we are on
@@ -282,8 +282,9 @@ void ConvolutionalNeuralNetwork::feed_forward(vector<vector<float>>& input_image
 	layer_result_index = 0;
 
 	// store the input image as the first element in the results stack
-	//cout << "INPUT" << endl;
-	//print_vector2_neatly(input_image_segment);
+	/*cout << "INPUT" << endl;
+	print_vector2_neatly(input_image_segment);
+	*/
 	vector<vector<vector<float>>> temp;
 	temp.emplace_back(input_image_segment);
 	layer_results_stack.emplace_back(temp);
@@ -773,7 +774,7 @@ void ConvolutionalNeuralNetwork::train(){
 }
 
 char ConvolutionalNeuralNetwork::evaluate(vector<vector<float>>& image) {
-	
+
 	// evaluate the input through the network
 	feed_forward(image);
 	
@@ -783,12 +784,14 @@ char ConvolutionalNeuralNetwork::evaluate(vector<vector<float>>& image) {
 	
 	// find the highest value of the output vector
 	int max_index = 0;
+	cout << "[";
 	for (int i = 0; i < output_results.size(); i++) {
 		cout << output_results[i] << ", ";
 		if (output_results[i] > output_results[max_index]) {
 			max_index = i;
 		}
 	}
+	cout << "] -> ";
 
 	// return the char mapping of the biggest one we found
 	return mapping[max_index];

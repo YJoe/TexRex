@@ -1,9 +1,9 @@
 {"cnn": 
 	{
-	"terminator" : {"type" : "iteration", "value" : 1000},
+	"terminator" : {"type" : "iteration", "value" : 2000},
 	"layers" :
 		[
-			{"type" : "I", "details" : {"input_width" : 15, "input_height" : 15}},
+			{"type" : "I", "details" : {"input_width" : 30, "input_height" : 30}},
 			{"type" : "C", "details" : {
 				"filters" :
 					[
@@ -17,7 +17,7 @@
 			{"type" : "F", "details" : {
 				"sub_layers" : 
 					[
-						{"neurons" : 5, "input_weights" : []},
+						{"neurons" : 6, "input_weights" : []},
 						{"neurons" : 5, "input_weights" : []}
 					]
 				}
