@@ -1,9 +1,9 @@
 {"cnn": 
 	{
-	"terminator" : {"type" : "iteration", "value" : 2000},
+	"terminator" : {"type" : "iteration", "value" : 1000},
 	"layers" :
 		[
-			{"type" : "I", "details" : {"input_width" : 30, "input_height" : 30}},
+			{"type" : "I", "details" : {"input_width" : 20, "input_height" : 20}},
 			{"type" : "C", "details" : {
 				"filters" :
 					[
@@ -13,12 +13,12 @@
 					]
 				}
 			},
-			{"type" : "P", "details" : {"sample_size": 4}},
+			{"type" : "P", "details" : {"sample_size": 5}},
 			{"type" : "F", "details" : {
 				"sub_layers" : 
 					[
-						{"neurons" : 6, "input_weights" : []},
-						{"neurons" : 5, "input_weights" : []}
+						{"neurons" : 5, "input_weights" : []},
+						{"neurons" : 26, "input_weights" : []}
 					]
 				}
 			}

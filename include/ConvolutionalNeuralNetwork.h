@@ -20,7 +20,7 @@ struct PoolingLayer {
 
 class ConvolutionalNeuralNetwork {
 public:
-	explicit ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl);
+	explicit ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl, int log_level);
 	cv::Size input_size;
 	void feed_forward(vector<vector<float>>& input_image);
 	void backwards_propagate(vector<float>& target_values);
@@ -29,7 +29,7 @@ public:
 	void json_dump_network(string file_name);
 	void setTrainingSamples(vector<DataSample>& dataSamples);
 	void setMapping(vector<char>& mapping);
-	void train();
+	void train(ofstream& data_file);
 	char evaluate(vector<vector<float>>& image);
 	bool (ConvolutionalNeuralNetwork::*terminating_function)();
 	bool threshold_check();
@@ -43,6 +43,7 @@ private:
 	void get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max);
 	float float_rand(float min, float max);
 	float error;
+	int log_level;
 	int current_conv;
 	int current_pool;
 	int current_full;

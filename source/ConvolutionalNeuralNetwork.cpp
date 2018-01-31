@@ -28,8 +28,9 @@ float map_value(float value, float minFrom, float maxFrom, float minTo, float ma
 	return minTo + (maxTo - minTo) * ((value - minFrom) / (maxFrom - minFrom));
 }
 
-ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl) {
+ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl, int log_level) {
 
+	this->log_level = log_level;
 	ocl_functions = ocl;
 
 	// read the config file 
@@ -405,21 +406,8 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 	//cout << "\n__________________________________________" << endl;
 	//cout << "STARTING BACK PROPAGATION" << endl;
 
-	// print the output of the network
 	vector<float> output_results;
 	fully_connected_networks.back().get_results(output_results);
-	cout << "Network results [";
-	for (int i = 0; i < output_results.size(); i++) {
-		cout << output_results[i] << ", ";
-	}
-	cout << "]" << endl;
-
-	// print the targets we want to aim for
-	cout << "Target values [";
-	for (int i = 0; i < target_values.size(); i++) {
-		cout << target_values[i] << ", ";
-	}
-	cout << "]" << endl;
 
 	// calculate error of network
 	error = 0.0;
@@ -429,8 +417,25 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 	}
 	error /= output_results.size();
 	error = sqrt(error);
-	cout << "Network error [" << error << "]" << endl;
-	
+
+	if (log_level > 0) {
+		// print the output of the network
+		cout << "Network results [";
+		for (int i = 0; i < output_results.size(); i++) {
+			cout << output_results[i] << ", ";
+		}
+		cout << "]" << endl;
+
+		// print the targets we want to aim for
+		cout << "Target values [";
+		for (int i = 0; i < target_values.size(); i++) {
+			cout << target_values[i] << ", ";
+		}
+		cout << "]" << endl;
+
+		cout << "Network error [" << error << "]" << endl;
+	}
+
 	// TODO: Smooth the network error here
 
 	vector<float> next_neuron_gradients;
@@ -762,13 +767,14 @@ void ConvolutionalNeuralNetwork::setMapping(vector<char>& mapping) {
 	this->mapping = mapping;
 }
 
-void ConvolutionalNeuralNetwork::train(){
+void ConvolutionalNeuralNetwork::train(ofstream& data_file){
 
 	// forward and back propagate until the terminating condition is met
 	for (;(this->*terminating_function)();) {	
 		int random_number = random_int(0, trainingSamples.size() - 1);
 		feed_forward(trainingSamples[random_number].image_segment.float_m_mini);
 		backwards_propagate(trainingSamples[random_number].answer);
+		data_file << current_iteration << "\t" << error << "\n";
 		current_iteration++;
 	}
 }
