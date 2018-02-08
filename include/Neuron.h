@@ -9,7 +9,7 @@ class Connection;
 class Neuron {
 
 public:
-	Neuron(char debug_tag, double weight);
+	Neuron(char debug_tag, double weight, float learning_rate);
 	void set_output_value(double weight);
 	void set_debug_tag(char debug_tag);
 	void add_input_connection(Connection* connection);
@@ -26,6 +26,7 @@ public:
 	double get_gradient();
 	void update_input_weights();
 	double get_delta_weight();
+	float get_learning_rate();
 	std::vector<Connection*> input_connections;
 	std::vector<Connection*> output_connections;
 

@@ -4,11 +4,11 @@
 
 using namespace std;
 
-Neuron::Neuron(char debug_tag, double weight) {
+Neuron::Neuron(char debug_tag, double weight, float learning_rate) {
 	set_debug_tag(debug_tag);
 	set_output_value(weight);
 	delta_weight = 1;
-	eta = 0.5;
+	eta = learning_rate;
 	alpha = 0.1;
 }
 
@@ -111,4 +111,8 @@ void Neuron::update_input_weights() {
 
 double Neuron::get_delta_weight() {
 	return delta_weight;
+}
+
+float Neuron::get_learning_rate() {
+	return eta;
 }

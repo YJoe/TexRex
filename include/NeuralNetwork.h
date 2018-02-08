@@ -9,7 +9,7 @@ using namespace std;
 
 class NeuralNetwork {
 public:
-	explicit NeuralNetwork(vector<int>* topology);
+	explicit NeuralNetwork(vector<int>* topology, float learning_rate);
 	void net_feed_forward(vector<float> *input_values);
 	void backwards_propagation(vector<float>* target_values);
 	void get_results(vector<float>& output_values);
@@ -17,6 +17,7 @@ public:
 	float get_recent_average_error();
 	void log(string message);
 	std::vector<std::vector<Neuron*>> layers;
+	float learning_rate;
 private:
 	float error;
 	float recent_average_error;

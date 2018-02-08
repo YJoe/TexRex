@@ -1,0 +1,4 @@
+train_example("data/MNIST/training/", "0123456789", 50, "data1.dat", 0);
+trained on mnist number set 0-9
+5000 iterations
+50 samples per number

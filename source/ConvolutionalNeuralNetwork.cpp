@@ -28,8 +28,13 @@ float map_value(float value, float minFrom, float maxFrom, float minTo, float ma
 	return minTo + (maxTo - minTo) * ((value - minFrom) / (maxFrom - minFrom));
 }
 
-ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl, int log_level) {
+ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(){
+	is_defined = false;
+}
 
+ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl, int log_level) {
+	this_net_dir = conf_file;
+	is_defined = true;
 	this->log_level = log_level;
 	ocl_functions = ocl;
 
@@ -43,7 +48,7 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 
 	// parse the file into a json object
 	json cnn_json = json::parse(buffer.str());
-	cout << "Loading config [" << cnn_json.dump() << "]" << endl;
+	//cout << "Loading config [" << cnn_json.dump() << "]" << endl;
 	
 	// read the terminating condition of the network
 	if (cnn_json["cnn"]["terminator"]["type"] == "iteration") {
@@ -57,7 +62,9 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 		threshold_target = cnn_json["cnn"]["terminator"]["value"];
 	}
 	else {
-		cout << "The termination type is not recognised" << endl;
+		cout << "The termination type is not recognised defaulting to iteration_check of 10" << endl;
+		terminating_function = &ConvolutionalNeuralNetwork::iteration_check;
+		iteration_target = 10;
 	}
 
 	// used to work out the size of each element at the last layer before the fully connected network
@@ -122,6 +129,9 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 					}
 				}
 
+				// store the learning rate for this layer
+				conv_layer.learning_rate = (*l)["details"]["learning_rate"];
+
 				// keep track of the 2d element width and height
 				current_element_width = current_element_width - (int)conv_layer.filters.back().back().size() + 1;
 				current_element_height = current_element_height - (int)conv_layer.filters.back().size() + 1;
@@ -166,7 +176,7 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 			}
 
 			// create and store the neural network
-			fully_connected_networks.emplace_back(NeuralNetwork(&network_topology));
+			fully_connected_networks.emplace_back(NeuralNetwork(&network_topology, (*l)["details"]["learning_rate"]));
 
 			// check if there are any weights to load
 			vector<vector<float>> layer_connection_weights;
@@ -401,11 +411,7 @@ void ConvolutionalNeuralNetwork::feed_forward(vector<vector<float>>& input_image
 	}
 }
 
-void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_values) {
-
-	//cout << "\n__________________________________________" << endl;
-	//cout << "STARTING BACK PROPAGATION" << endl;
-
+void ConvolutionalNeuralNetwork::calculate_error(vector<float>& target_values) {
 	vector<float> output_results;
 	fully_connected_networks.back().get_results(output_results);
 
@@ -437,6 +443,12 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 	}
 
 	// TODO: Smooth the network error here
+
+}
+
+void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_values) {
+
+	calculate_error(target_values);
 
 	vector<float> next_neuron_gradients;
 
@@ -586,7 +598,7 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 				// adjust the filter weights by adding the sum of the convolution of the deltas
 				for (int k = 0; k < convolution_layers[current_conv - 1].filters[j].size(); k++) {
 					for (int l = 0; l < convolution_layers[current_conv - 1].filters[j].size(); l++) {
-						convolution_layers[current_conv - 1].filters[j][k][l] += filter_deltas[k][l];
+						convolution_layers[current_conv - 1].filters[j][k][l] += filter_deltas[k][l] * convolution_layers[current_conv - 1].learning_rate;
 					}
 				}
 			}
@@ -692,7 +704,7 @@ void ConvolutionalNeuralNetwork::json_dump_network(string file_name){
 			case 'C': {
 
 				// create a convolution layer in the json object
-				json conv = json::parse("{\"type\":\"C\",\"details\":{\"filters\":[]}}");
+				json conv = json::parse("{\"type\":\"C\",\"details\":{\"filters\":[], \"learning_rate\":0.0}}");
 				
 				// for all filters in this convolution layer
 				for (int j = 0; j < convolution_layers[current_conv].filters.size(); j++) {
@@ -710,6 +722,10 @@ void ConvolutionalNeuralNetwork::json_dump_network(string file_name){
 						}
 					}
 				}
+
+				// store the learning rate
+				conv["details"]["learning_rate"] = convolution_layers[current_conv].learning_rate;
+
 				network["cnn"]["layers"].push_back(conv);
 				current_conv++;
 				break;
@@ -724,7 +740,7 @@ void ConvolutionalNeuralNetwork::json_dump_network(string file_name){
 				break;
 			}
 			case 'F': {
-				json full_temp = json::parse("{\"type\": \"F\", \"details\": {\"sub_layers\" : []}}");
+				json full_temp = json::parse("{\"type\": \"F\", \"details\": {\"sub_layers\" : []}, \"learning_rate\":0.0}");
 				cout << "There are [" << fully_connected_networks[current_full].layers.size() << "] layers" << endl;
 				
 				// for all layers in the current fully connected layer
@@ -746,6 +762,9 @@ void ConvolutionalNeuralNetwork::json_dump_network(string file_name){
 					}
 				}
 
+				// store the learning rate
+				full_temp["details"]["learning_rate"] = fully_connected_networks[current_full].layers[0][0]->get_learning_rate();
+
 				network["cnn"]["layers"].push_back(full_temp);
 				current_full++;
 				break;
@@ -764,7 +783,13 @@ void ConvolutionalNeuralNetwork::setTrainingSamples(vector<DataSample>& training
 }
 
 void ConvolutionalNeuralNetwork::setMapping(vector<char>& mapping) {
-	this->mapping = mapping;
+	int x = fully_connected_networks[fully_connected_networks.size() - 1].layers[fully_connected_networks[fully_connected_networks.size() - 1].layers.size() - 1].size();
+	if (mapping.size() == x) {
+		this->mapping = mapping;
+	}
+	else {
+		cout << "failed to set mapping because the network output size [" << x << "] does not match the mapping count [" << mapping.size() << "]" << endl;
+	}
 }
 
 void ConvolutionalNeuralNetwork::train(ofstream& data_file){
@@ -775,6 +800,7 @@ void ConvolutionalNeuralNetwork::train(ofstream& data_file){
 		feed_forward(trainingSamples[random_number].image_segment.float_m_mini);
 		backwards_propagate(trainingSamples[random_number].answer);
 		data_file << current_iteration << "\t" << error << "\n";
+		//cout << current_iteration << " " << error << endl;
 		current_iteration++;
 	}
 }
@@ -790,14 +816,14 @@ char ConvolutionalNeuralNetwork::evaluate(vector<vector<float>>& image) {
 	
 	// find the highest value of the output vector
 	int max_index = 0;
-	cout << "[";
+	//cout << "[";
 	for (int i = 0; i < output_results.size(); i++) {
-		cout << output_results[i] << ", ";
+		//cout << output_results[i] << ", ";
 		if (output_results[i] > output_results[max_index]) {
 			max_index = i;
 		}
 	}
-	cout << "] -> ";
+	//cout << "] -> ";
 
 	// return the char mapping of the biggest one we found
 	return mapping[max_index];
@@ -809,4 +835,31 @@ bool ConvolutionalNeuralNetwork::threshold_check(){
 
 bool ConvolutionalNeuralNetwork::iteration_check(){
 	return current_iteration < iteration_target;
+}
+
+vector<char>& ConvolutionalNeuralNetwork::get_mapping(){
+	return mapping;
+}
+
+void ConvolutionalNeuralNetwork::test() {
+	int correct_count = 0;
+	for (int i = 0; i < trainingSamples.size(); i++) {
+		correct_count += evaluate_single_word(trainingSamples[i]);
+	}
+	cout << "Network success rate [" << (float)correct_count / (float)trainingSamples.size() * 100.0f << "]" << endl;
+}
+
+int ConvolutionalNeuralNetwork::evaluate_single_word(DataSample input) {
+	char network_out = this->evaluate(input.image_segment.float_m_mini);
+
+	int max_index = 0;
+	for (int i = 0; i < input.answer.size(); i++) {
+		if (input.answer[i] > input.answer[max_index]) {
+			max_index = i;
+		}
+	}
+
+	cout << "Network evaluation [" << network_out << "] it should be [" << this->get_mapping()[max_index] << "]" << endl;
+
+	return this->get_mapping()[max_index] == network_out ? 1 : 0;
 }

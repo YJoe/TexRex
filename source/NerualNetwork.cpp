@@ -2,7 +2,7 @@
 #include <cmath>
 #include "..\include\NeuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork(vector<int> *topology) {
+NeuralNetwork::NeuralNetwork(vector<int> *topology, float learning_rate) {
 
 	recent_average_smoothing_factor = 100.0;
 	recent_average_error = 0;
@@ -18,7 +18,7 @@ NeuralNetwork::NeuralNetwork(vector<int> *topology) {
 
 	// create the neurons
 	for (int i = 0; i < total_neurons; i++) {
-		Neuron n = Neuron('?', 0);
+		Neuron n = Neuron('?', 0, learning_rate);
 		neurons.emplace_back(n);
 	}
 

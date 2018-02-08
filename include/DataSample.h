@@ -5,4 +5,5 @@
 struct DataSample {
 	ImageSegment image_segment;
 	vector<float> answer;
+	int correct_index;
 };
