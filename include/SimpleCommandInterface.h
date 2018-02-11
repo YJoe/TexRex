@@ -16,18 +16,27 @@ class SimpleCommandInterface {
 private:
 	ConvolutionalNeuralNetwork cnn;
 	vector<string> regex_split(const string& s, string regex);
+	vector<tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>> function_help;
 	char get_type_code(string e);
-	void handle_input(vector<string>& input, string pattern_code);
-	void handle_s(vector<string>& input);
-	void handle_sd(vector<string>& input);
-	void handle_ss(vector<string>& input);
-	void handle_sdii(vector<string>& input);
-	void handle_sdis(vector<string>& input);
-	void handle_sddii(vector<string>& input);
+	void handle_input(vector<string>& input);
 	boolean file_exists(const std::string & name);
+	boolean is_number(const std::string & s);
 	void create_template(string file_name);
 	void load_mnist(vector<DataSample>& data_samples, string folder, string num_string, int sample_count, cv::Size network_input_size);
+	void loadnet(vector<string>& input);
+	void createnet(vector<string>& input);
+	void formatset(vector<string>& input);
+	void loadset(vector<string>& input);
+	void trainnet(vector<string>& input);
+	void testnet(vector<string>& input);
+	void setiteration(vector<string>& input);
+	void viewgraph(vector<string>& input);
+	void setseed(vector<string>& input);
+	void savenet(vector<string>& intput);
+	void help(vector<string>& input);
+	void error_message(string function);
 public:
 	SimpleCommandInterface();
+	boolean evaluate_command(string input);
 	void begin();
 };

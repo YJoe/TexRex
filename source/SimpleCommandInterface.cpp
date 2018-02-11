@@ -1,36 +1,19 @@
 #include "..\include\SimpleCommandInterface.h"
 
 SimpleCommandInterface::SimpleCommandInterface(){
-}
-
-void SimpleCommandInterface::begin() {
-	cout << "========================" << endl;
-	cout << "Simple Network Interface" << endl;
-	cout << "========================" << endl;
-
-	// while the user has something to enter
-	string input = "";
-	boolean running = true;
-	while (running) {
-
-		// get the user input
-		cout << "input -> ";
-		getline(cin, input);
-
-		// split user data by regex and dsplay seperated command
-		vector<string> split_data = regex_split(input, "[ ]");
-		string pattern_code = "";
-		for (const auto & e : split_data) {
-			pattern_code += get_type_code(e);
-		}
-
-		// run the command or exit the interface
-		input == "exit" ? running = false : handle_input(split_data, pattern_code);
-		cout << endl;
-	}
-
-	// exit the interface
-	cout << "closing" << endl;
+	function_help = {
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("help", "<function name>", "will provide some help on a function", &SimpleCommandInterface::help),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadnet", "<file location>", "loads an already defined json network from the given directory", &SimpleCommandInterface::loadnet),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("createnet", "<file location>", "creates and loads a json network from a simple template", &SimpleCommandInterface::createnet),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("formatset", "<input folder> <output folder> <image width> <image height>", "resizes a training set found in a folder", &SimpleCommandInterface::formatset),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadset", "<input folder> <sample size> <representation>", "loads a training set from a given directory", &SimpleCommandInterface::loadset),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("trainnet", "<data output> <classification sample size>", "begins the training proccess and logs into the given data file", &SimpleCommandInterface::trainnet),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testnet", "", "begins the testing proccess for a loaded network and data set", &SimpleCommandInterface::testnet),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setiteration", "<number of iterations>", "sets the network terminating condition to iteration with the number given", &SimpleCommandInterface::setiteration),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("viewgraph", "<plt file>", "displays a plot of the latest data file", &SimpleCommandInterface::viewgraph),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setseed", "\"random\" or <number>", "sets the seed for which to make random choicess", &SimpleCommandInterface::setseed),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("savenet", "<save location>", "saves the network structure and weights", &SimpleCommandInterface::savenet)
+	};
 }
 
 vector<string> SimpleCommandInterface::regex_split(const string& s, string rgx_str = "\\s+") {
@@ -47,13 +30,47 @@ vector<string> SimpleCommandInterface::regex_split(const string& s, string rgx_s
 	return elems;
 }
 
+boolean SimpleCommandInterface::evaluate_command(string input) {
+	cout << "evaluating [" << input << "]" << endl;
+
+	if (input == "exit") {
+		return false;
+	}
+	else if(input != ""){
+		handle_input(regex_split(input));
+		cout << endl;
+		return true;
+	}
+
+	// only in the case that input != ""
+	cout << endl;
+}
+
+void SimpleCommandInterface::begin() {
+
+	// while the user has something to enter
+	string input = "";
+	boolean running = true;
+	while (running) {
+
+		// get the user input
+		cout << "input >> ";
+		getline(cin, input);
+
+		running = evaluate_command(input);
+	}
+
+	// exit the interface
+	cout << "bye :(" << endl;
+}
+
 char SimpleCommandInterface::get_type_code(string input) {
 	
 	// define regex rules to identify patterns in lines
 	vector<pair<regex, char>> regex_patterns = {
 		pair<regex, char>("(\\+|-)?[[:digit:]]+", 'I'),
-		pair<regex, char>("((\\/?[a-zA-Z_-])+\\.[a-zA-Z]+)|(\\/?([a-zA-Z].*\\.+|[a-zA-Z].*\.\\/))", 'D'),
-		pair<regex, char>("[A-Z|a-z]+", 'S')
+		pair<regex, char>("((\\/?[a-zA-Z0-9_-])+\\.[a-zA-Z0-9]+)|(\\/?([a-zA-Z0-9].*\\.+|[a-zA-Z0-9].*\.\\/))", 'D'),
+		pair<regex, char>("[A-Z|a-z|0-9]+", 'S')
 	};
 
 	// match and return codes
@@ -67,207 +84,215 @@ char SimpleCommandInterface::get_type_code(string input) {
 	return '?';
 }
 
-void SimpleCommandInterface::handle_input(vector<string>& input, string pattern_code) {
+void SimpleCommandInterface::handle_input(vector<string>& input) {
 
-	// all patterns and their respective function pointers
-	vector<pair<string, void (SimpleCommandInterface::*)(vector<string>& s)>> valid_patterns = {
-		pair<string, void (SimpleCommandInterface::*)(vector<string>& s)>("S", &SimpleCommandInterface::handle_s),
-		pair<string, void (SimpleCommandInterface::*)(vector<string>& s)>("SD", &SimpleCommandInterface::handle_sd),
-		pair<string, void (SimpleCommandInterface::*)(vector<string>& s)>("SS", &SimpleCommandInterface::handle_ss),
-		pair<string, void (SimpleCommandInterface::*)(vector<string>& s)>("SDIS", &SimpleCommandInterface::handle_sdis),
-		pair<string, void (SimpleCommandInterface::*)(vector<string>& s)>("SDII", &SimpleCommandInterface::handle_sdii),
-		pair<string, void (SimpleCommandInterface::*)(vector<string>& s)>("SDDII", &SimpleCommandInterface::handle_sddii)
-	};
-
-	// match the pattern to a function
-	boolean matched = false;
-	for (int i = 0; i < valid_patterns.size(); i++) {
-		if (valid_patterns[i].first == pattern_code) {
-			matched = true;
-			(this->*(valid_patterns[i].second))(input);
+	bool found = false;
+	for (int i = 0; i < function_help.size(); i++) {
+		if (input[0] == get<0>(function_help[i])) {
+			(this->*get<3>(function_help[i]))(input);
+			found = true;
 			break;
 		}
 	}
 
-	// we didn't find a match so do nothing
-	if (!matched) {
-		cout << "pattern template not found for [" << pattern_code << "] try \"help\"" << endl;
+	if (!found) {
+		error_message(input[0]);
 	}
 }
 
-void SimpleCommandInterface::handle_s(vector<string>& input) {
-	if (input[0] == "help") {
-		cout << "try \"help\" on any of the following function names" << endl;
-		cout << "\nfunctions:" << endl;
-		cout << "\tloadnet <file location>\n\t\tloads an already defined json network" << endl;
-		cout << "\n\tcreatenet <file location>\n\t\tcreates a json network from a simple template" << endl;
-		cout << "\n\tformatset <input folder> <output folder> <image width> <image height>\n\t\tresizes images found in a folder" << endl;
-		cout << "\n\tloadset <input folder> <sample size> <representation>\n\t\tresizes images found in a folder" << endl;
-		cout << "\n\ttrainnet <output data file>\n\t\tbegins the training proccess of a loaded network and set" << endl;
-		cout << "\n\ttestnet\n\t\tbegins the testing proccess of a loaded network and set" << endl;
-	}
-	else if (input[0] == "about"){
-		cout << "created by Joe Pauley, blah blah write more here" << endl;
-	}
-	else if (input[0] == "testnet"){
-		cout << "testing network" << endl;
-		cnn.test();
-	} 
-	else if (input[0] == "viewnet") {
-		if (cnn.is_defined) {
-			ShellExecute(0, 0, cnn.this_net_dir.c_str(), 0, 0, SW_SHOW);
-		}
-	}
-	else if (input[0] == "hi") {
-		cout << "howdy :)" << endl;
-	}
-	else {
-		cout << "pattern [S] must have a first argument of [\"help\" | \"about\"] try \"help\"" << endl;
-	}
-}
-
-void SimpleCommandInterface::handle_sd(vector<string>& input){ 
-	if (input[0] == "loadnet") {
+void SimpleCommandInterface::loadnet(vector<string>& input) {
+	if (input.size() == 2) {
 		if (file_exists(input[1])) {
 			OCLFunctions ocl = OCLFunctions(CL_DEVICE_TYPE_GPU);
-			cnn = ConvolutionalNeuralNetwork(input[1], ocl, 1);
+			cnn = ConvolutionalNeuralNetwork(input[1], ocl, 0);
 		}
 		else {
-			cout << "file [" << input[1] << "] doesn't exist" << endl;
-		}
-	}
-	else if(input[0] == "createnet"){
-		create_template(input[1]);
-		OCLFunctions ocl = OCLFunctions(CL_DEVICE_TYPE_GPU);
-		cnn = ConvolutionalNeuralNetwork(input[1], ocl, 1);
-	}
-	else if(input[0] == "viewnet") {
-		//TODO: make this work
-		ShellExecute(0, 0, input[1].c_str(), "C:\\Program Files\\Sublime Text 3\\sublime_text.exe", 0, SW_SHOW);
-	}
-	else if (input[0] == "trainnet") {
-		if (cnn.is_defined) {
-			ofstream data_file_clear(input[1]);
-			data_file_clear.close();
-			ofstream data_file(input[1], ios::app);
-			if (data_file.is_open()) {
-				data_file << "# NETWORK LEARNING DATA\n";
-			}
-			else {
-				cout << "failed to create data logging file, quitting" << endl;
-				cin.get();
-				exit(-1);
-			}
-
-			cout << "traing network and data will log to [" << input[1] << "]" << endl;
-			cnn.train(data_file);
+			cout << "error - file [" << input[1] << "] doesn't exist" << endl;
 		}
 	}
 	else {
-		cout << "pattern [SD] must have a firt argument of [\"loadnet\" | \"createnet\" | \"trainnet\"] try \"help <loadnet|createnet|trainnet>\" for info" << endl;
+		error_message(input[0]);
 	}
 }
 
-void SimpleCommandInterface::handle_ss(vector<string>& input) {
-	if (input[0] == "help") {
-		if (input[1] == "loadnet") {
-			cout << "loadnet <file location>\n\tloads an already defined json network" << endl;
-			cout << "examples\n\t\"loadnet some/file/directory/file.json\"\n\t\"loadnet file.json\"" << endl;
-		}
-		else if (input[1] == "createnet") {
-			cout << "createnet <file location>\n\tcreates a json network from a simple template" << endl;
-			cout << "examples\n\t\"createnet some/file/directory/file.json\"\n\t\"loadnet file.json\"" << endl;
-			cout << "help on createnet" << endl;
-		}
-		else if (input[1] == "formatset") {
-			cout << "help on formatset" << endl;
-		}
-		else if (input[1] == "loadset") {
-			cout << "help on loadset" << endl;
-		} 
-		else if (input[1] == "trainnet") {
-			cout << "help on trainnet" << endl;
-		}
-		else if (input[1] == "help") {
-			cout << "that's silly" << endl;
-		}
-		else if (input[1] == "about") {
-			cout << "that's silly" << endl;
-		}
-		else {
-			cout << "there is no function called [" << input[1] << "] try \"help\" for a list of functions" << endl;
-		}
+void SimpleCommandInterface::createnet(vector<string>& input) {
+	if (input.size() == 2) {
+		create_template(input[1]);
+		OCLFunctions ocl = OCLFunctions(CL_DEVICE_TYPE_GPU);
+		cnn = ConvolutionalNeuralNetwork(input[1], ocl, 0);
 	}
-	else if(input[0] == "setmap") {
-		if (cnn.is_defined) {
-			cout << "setting network mapping to [" << input[1] << "]" << endl;
+	else {
+		error_message(input[0]);
+	}
+}
+
+void SimpleCommandInterface::formatset(vector<string>& input) {
+	cout << "formatting set not yet complete" << endl;
+}
+
+void SimpleCommandInterface::loadset(vector<string>& input) {
+
+	if (input.size() == 4) {
+		if (is_number(input[2])) {
+			// generate the training set
+			vector<DataSample> data_samples;
+			load_mnist(data_samples, input[1], input[3], atoi(input[2].c_str()), cnn.input_size);
+
+			// creating mapping
 			vector<char> mapping;
-			for (int i = 0; i < input[1].size(); i++) {
-				mapping.emplace_back(input[1][i]);
+			for (int i = 0; i < input[3].size(); i++) {
+				mapping.emplace_back(input[3][i]);
 			}
+
+			cnn.setTrainingSamples(data_samples);
 			cnn.setMapping(mapping);
 		}
 		else {
-			cout << "define the network first! try \"help createnet\" or \"help loadnet\"" << endl;
+			cout << "error - [" << input[2] << "] is not a number" << endl;
 		}
 	}
 	else {
-		cout << "pattern [SS] must have first argument of [\"help\"] try \"help\" or \"help <a function>\"" << endl;
+		error_message(input[0]);
 	}
 }
 
-void SimpleCommandInterface::handle_sdii(vector<string>& input){
-	if (input[0] == "loadset") {
+void SimpleCommandInterface::trainnet(vector<string>& input) {
+	if (input.size() == 3) {
+		if (cnn.is_defined) {
+			if (is_number(input[2])) {
+				ofstream data_file_clear(input[1]);
+				data_file_clear.close();
+				ofstream data_file(input[1], ios::app);
+				if (!data_file.is_open()) {
+					cout << "error - failed to create data logging file, try another location" << endl;
+					return;
+				}
 
-		// generate the training set
-		vector<DataSample> data_samples;
-		load_mnist(data_samples, input[1], input[3], input[3].size(), cnn.input_size);
-
-		// creating mapping
-		vector<char> mapping;
-		for (int i = 0; i < input[3].size(); i++) {
-			mapping.emplace_back(input[3][i]);
+				cout << "traing network and data will log to [" << input[1] << "] and will sample the classification rate every [" << input[2] << "] inputs" << endl;
+				cnn.train(data_file, atoi(input[2].c_str()));
+			}
+			else {
+				cout << "error - [" << input[1] << "] is not a number" << endl;
+			}
 		}
-
-		cout << "Setting training samples" << endl;
-		cnn.setTrainingSamples(data_samples);
-
-		cout << "Setting training mapping" << endl;
-		cnn.setMapping(mapping);
-	}
-}
-
-void SimpleCommandInterface::handle_sdis(vector<string>& input) {
-
-	if (input[0] == "loadset") {
-
-		// generate the training set
-		vector<DataSample> data_samples;
-		load_mnist(data_samples, input[1], input[3], input[3].size(), cnn.input_size);
-
-		// creating mapping
-		vector<char> mapping;
-		for (int i = 0; i < input[2].size(); i++) {
-			mapping.emplace_back(input[2][i]);
+		else {
+			cout << "error - try loading or creating a network first" << endl;
 		}
-
-		cout << "Setting training samples" << endl;
-		cnn.setTrainingSamples(data_samples);
-
-		cout << "Setting training mapping" << endl;
-		cnn.setMapping(mapping);
+	}
+	else {
+		error_message(input[0]);
 	}
 }
 
-void SimpleCommandInterface::handle_sddii(vector<string>& input) {
-	if (input[0] == "formatset") {
-		cout << "formatting set" << endl;
+void SimpleCommandInterface::testnet(vector<string>& input) {
+	if (input.size() == 1) {
+		cnn.test();
 	}
+	else {
+		error_message(input[0]);
+	}
+}
+
+void SimpleCommandInterface::setiteration(vector<string>& input) {
+	if (input.size() == 2) {
+		if (cnn.is_defined) {
+			if (is_number(input[1])) {
+				cnn.terminating_function = &ConvolutionalNeuralNetwork::iteration_check;
+				cnn.iteration_target = atoi(input[1].c_str());
+				cout << "the network will terminate training after [" << input[1] << "] iterations" << endl;
+			}
+			else {
+				cout << "error - [" << input[1] << "] is not a number" << endl;
+			}
+		}
+		else {
+			cout << "error - try loading or creating a network first" << endl;
+		}
+	}
+	else {
+		error_message(input[0]);
+	}
+}
+
+void SimpleCommandInterface::viewgraph(vector<string>& input) {
+	if (input.size() == 2) {
+		if (file_exists(input[1])) {
+			ShellExecute(0, 0, input[1].c_str(), 0, 0, SW_SHOW);
+		}
+		else {
+			cout << "the file [" << input[1].c_str() << "] does not exist" << endl; 
+		}
+	}
+	else {
+		error_message(input[0]);
+	}
+}
+
+void SimpleCommandInterface::setseed(vector<string>& input) {
+	if (input.size() == 2) {
+		if (input[1] == "random") {
+			srand(time(NULL));
+			cout << "set network seed" << endl;
+		}
+		else if (is_number(input[1])) {
+			srand(atoi(input[1].c_str()));
+			cout << "set network seed" << endl;
+		}
+		else {
+			cout << "try \"setseed random\" or \"setseed <number>\" " << endl;
+		}
+	}
+	else {
+		error_message(input[0]);
+	}
+}
+
+void SimpleCommandInterface::savenet(vector<string>& input) {
+	if (input.size() == 2) {
+		cnn.json_dump_network(input[1]);
+	}
+	else {
+		error_message(input[0]);
+	}
+}
+
+void SimpleCommandInterface::help(vector<string>& input) {
+	if (input.size() == 1) {
+		cout << "possible functions:" << endl;
+		for (int i = 0; i < function_help.size(); i++) {
+			cout << "[" << get<0>(function_help[i]) << "] " << get<1>(function_help[i]) << endl;
+		}
+	}
+	else if (input.size() == 2) {
+		bool found = false;
+		for (int i = 0; i < function_help.size(); i++) {
+			if (input[1] == get<0>(function_help[i])) {
+				cout << "[" << get<0>(function_help[i]) << "] " << get<1>(function_help[i]) << " " << get<2>(function_help[i]) << endl;
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			cout << "help for the function \"" << input[1] << "\" was not found" << endl;
+			cout << "try the command \"help\" for a list of functions" << endl;
+		}
+	}
+}
+
+void SimpleCommandInterface::error_message(string function) {
+	cout << "command for function \"" << function << "\" was not understood" << endl;
+	cout << "try the command \"help\" or \"help " << function << "\"" << endl;
 }
 
 boolean SimpleCommandInterface::file_exists(const std::string& name) {
 	ifstream f(name.c_str());
 	return f.good();
+}
+
+boolean SimpleCommandInterface::is_number(const std::string& s){
+	string::const_iterator it = s.begin();
+	while (it != s.end() && isdigit(*it)) ++it;
+	return !s.empty() && it == s.end();
 }
 
 void SimpleCommandInterface::create_template(string file_name) {
@@ -285,21 +310,18 @@ void SimpleCommandInterface::load_mnist(vector<DataSample>& data_samples, string
 	// for how many numbers we should train on
 	for (int i = 0; i < num_string.size(); i++) {
 
-		cout << "loading [" << sample_count << "] letter [" << num_string[i] << "] files" << endl;
-
 		// form a folder to look at
 		string f = folder + num_string[i] + "/" + "*.png";
 		int count = 0;
 
 		// search for all files in this dir that are png
-		cout << "searching [" << f << "]" << endl;
+		cout << "loading [" << sample_count << "] images of the character [" << num_string[i] << "] searching [" << f << "]" << endl;
+
 		hFind = FindFirstFile(f.c_str(), &data);
 		if (hFind != INVALID_HANDLE_VALUE) {
 
 			// while there is another file
 			do {
-				cout << "\t" << data.cFileName << endl;
-
 				DataSample temp_data;
 
 				// store which index is correct

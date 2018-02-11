@@ -792,15 +792,31 @@ void ConvolutionalNeuralNetwork::setMapping(vector<char>& mapping) {
 	}
 }
 
-void ConvolutionalNeuralNetwork::train(ofstream& data_file){
+void ConvolutionalNeuralNetwork::train(ofstream& data_file, int sample_count){
+
+	vector<int> classifications;
 
 	// forward and back propagate until the terminating condition is met
 	for (;(this->*terminating_function)();) {	
 		int random_number = random_int(0, trainingSamples.size() - 1);
 		feed_forward(trainingSamples[random_number].image_segment.float_m_mini);
 		backwards_propagate(trainingSamples[random_number].answer);
-		data_file << current_iteration << "\t" << error << "\n";
-		//cout << current_iteration << " " << error << endl;
+		data_file << current_iteration << "\t" << error << "\t";
+
+		cout << current_iteration << " " << error << "\n";
+
+		classifications.emplace_back(evaluate_single_word(trainingSamples[random_number]));
+		if ((current_iteration + 1) % sample_count == 0) {
+			float total = 0.0f;
+			for (int i = 0; i < classifications.size(); i++) {
+				total += (float)classifications[i];
+			}
+			data_file << total / (float)sample_count << "\n";
+			classifications.clear();
+		}
+		else {
+			data_file << "?0\n";
+		}
 		current_iteration++;
 	}
 }
@@ -843,10 +859,16 @@ vector<char>& ConvolutionalNeuralNetwork::get_mapping(){
 
 void ConvolutionalNeuralNetwork::test() {
 	int correct_count = 0;
-	for (int i = 0; i < trainingSamples.size(); i++) {
+	cout << "testing on loaded set" << endl;
+
+	int sample_count = (int)trainingSamples.size();
+	for (int i = 0; i < sample_count; i++) {
+		if (i % (sample_count / 10) == 0) {
+			cout << (int)((float)i / (float)sample_count * 100) << "%" << endl;
+		}
 		correct_count += evaluate_single_word(trainingSamples[i]);
 	}
-	cout << "Network success rate [" << (float)correct_count / (float)trainingSamples.size() * 100.0f << "]" << endl;
+	cout << "network success rate [" << (float)correct_count / (float)sample_count * 100.0f << "]" << endl;
 }
 
 int ConvolutionalNeuralNetwork::evaluate_single_word(DataSample input) {
@@ -859,7 +881,7 @@ int ConvolutionalNeuralNetwork::evaluate_single_word(DataSample input) {
 		}
 	}
 
-	cout << "Network evaluation [" << network_out << "] it should be [" << this->get_mapping()[max_index] << "]" << endl;
+	//cout << "Network evaluation [" << network_out << "] it should be [" << this->get_mapping()[max_index] << "]" << endl;
 
 	return this->get_mapping()[max_index] == network_out ? 1 : 0;
 }

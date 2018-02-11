@@ -32,7 +32,7 @@ public:
 	void json_dump_network(string file_name);
 	void setTrainingSamples(vector<DataSample>& dataSamples);
 	void setMapping(vector<char>& mapping);
-	void train(ofstream& data_file);
+	void train(ofstream& data_file, int sample_count);
 	char evaluate(vector<vector<float>>& image);
 	bool (ConvolutionalNeuralNetwork::*terminating_function)();
 	bool threshold_check();
