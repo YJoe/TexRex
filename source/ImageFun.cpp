@@ -262,6 +262,19 @@ void crop_segment(ImageSegment& source_segment, int padding) {
 	copyMakeBorder(temp, source_segment.m, padding, padding, padding, padding, cv::BORDER_CONSTANT, 255);
 }
 
+void crop_segment(cv::Mat& source_segment, int padding) {
+
+	// find the minimum and maximums of the island
+	int min_x = find_feature(source_segment, X_MIN);
+	int max_x = find_feature(source_segment, X_MAX) + 1;
+	int min_y = find_feature(source_segment, Y_MIN);
+	int max_y = find_feature(source_segment, Y_MAX) + 1;
+
+	// crop the segment to remove white space
+	cv::Mat temp = source_segment(cv::Rect(min_x, min_y, max_x - min_x, max_y - min_y));
+	source_segment.release();
+	copyMakeBorder(temp, source_segment, padding, padding, padding, padding, cv::BORDER_CONSTANT, 255);
+}
 
 int truncate(int val, int min, int max) {
 	return val > 255 ? 255 : val < 0 ? 255 - val : val;

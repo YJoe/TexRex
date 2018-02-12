@@ -2,7 +2,7 @@
   "cnn": {
     "terminator": {
       "type": "iteration",
-      "value": 1000
+      "value": 10
     },
     "layers": [
       {
@@ -30,6 +30,11 @@
               "filter_width": 3,
               "filter_height": 3,
               "filter_obj": []
+            },
+            {
+              "filter_width": 3,
+              "filter_height": 3,
+              "filter_obj": []
             }
           ],
           "learning_rate": 0.3
@@ -37,14 +42,14 @@
       },
       {
         "type": "P",
-        "details": { "sample_size": 2 }
+        "details": { "sample_size": 4 }
       },
       {
         "type": "F",
         "details": {
           "sub_layers": [
             {
-              "neurons": 10,
+              "neurons": 26,
               "input_weights": []
             }
           ],

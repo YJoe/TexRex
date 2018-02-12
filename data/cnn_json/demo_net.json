@@ -2,7 +2,7 @@
   "cnn": {
     "terminator": {
       "type": "iteration",
-      "value": 1000
+      "value": 10
     },
     "layers": [
       {

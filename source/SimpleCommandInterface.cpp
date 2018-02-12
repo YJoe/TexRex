@@ -136,7 +136,7 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 		if (is_number(input[2])) {
 			// generate the training set
 			vector<DataSample> data_samples;
-			load_mnist(data_samples, input[1], input[3], atoi(input[2].c_str()), cnn.input_size);
+			load_nist(data_samples, input[1], input[3], atoi(input[2].c_str()), cnn.input_size);
 
 			// creating mapping
 			vector<char> mapping;
@@ -301,7 +301,7 @@ void SimpleCommandInterface::create_template(string file_name) {
 	dst << src.rdbuf();
 }
 
-void SimpleCommandInterface::load_mnist(vector<DataSample>& data_samples, string folder, string num_string, int sample_count, cv::Size network_input_size) {
+void SimpleCommandInterface::load_nist(vector<DataSample>& data_samples, string folder, string num_string, int sample_count, cv::Size network_input_size) {
 
 	// variables that we will use to read directories
 	HANDLE hFind;
@@ -349,6 +349,7 @@ void SimpleCommandInterface::load_mnist(vector<DataSample>& data_samples, string
 				data_samples.emplace_back(temp_data);
 
 				count++;
+
 			} while (FindNextFile(hFind, &data) && count < sample_count);
 
 			// close the handle on the file we found
