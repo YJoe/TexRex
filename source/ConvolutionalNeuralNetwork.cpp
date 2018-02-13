@@ -782,6 +782,10 @@ void ConvolutionalNeuralNetwork::setTrainingSamples(vector<DataSample>& training
 	this->trainingSamples = trainingSamples;
 }
 
+void ConvolutionalNeuralNetwork::setTestingSamples(vector<DataSample>& dataSamples){
+	this->testingSamples = dataSamples;
+}
+
 void ConvolutionalNeuralNetwork::setMapping(vector<char>& mapping) {
 	int x = fully_connected_networks[fully_connected_networks.size() - 1].layers[fully_connected_networks[fully_connected_networks.size() - 1].layers.size() - 1].size();
 	if (mapping.size() == x) {
@@ -792,12 +796,12 @@ void ConvolutionalNeuralNetwork::setMapping(vector<char>& mapping) {
 	}
 }
 
-void ConvolutionalNeuralNetwork::train(ofstream& data_file, int sample_count){
+void ConvolutionalNeuralNetwork::train(ofstream& data_file, int sample_count, int unseen_sample_count){
 
-	vector<int> classifications;
+	vector<int> training_classifications;
 
 	// forward and back propagate until the terminating condition is met
-	for (;(this->*terminating_function)();) {	
+	for (;(this->*terminating_function)();) {
 		int random_number = random_int(0, trainingSamples.size() - 1);
 		feed_forward(trainingSamples[random_number].image_segment.float_m_mini);
 		backwards_propagate(trainingSamples[random_number].answer);
@@ -805,17 +809,30 @@ void ConvolutionalNeuralNetwork::train(ofstream& data_file, int sample_count){
 
 		cout << current_iteration << " " << error << "\n";
 
-		classifications.emplace_back(evaluate_single_word(trainingSamples[random_number]));
+		training_classifications.emplace_back(evaluate_single_word(trainingSamples[random_number]));
 		if ((current_iteration + 1) % sample_count == 0) {
+			cout << "Evaluating classification rates ";
+			
+			// solve the average of the training data classification rate
 			float total = 0.0f;
-			for (int i = 0; i < classifications.size(); i++) {
-				total += (float)classifications[i];
+			for (int i = 0; i < training_classifications.size(); i++) {
+				total += (float)training_classifications[i];
 			}
-			data_file << total / (float)sample_count << "\n";
-			classifications.clear();
+			data_file << total / (float)sample_count << "\t";
+			training_classifications.clear();
+			cout << "seen [" << (total / (float)sample_count) * 100 << "] ";
+
+			// solve the average of the testing data classification rate
+			total = 0.0f;
+			for (int i = 0; i < unseen_sample_count; i++) {
+				total += (float)evaluate_single_word(testingSamples[random_int(0, testingSamples.size() - 1)]);
+			}
+			data_file << total / (float)unseen_sample_count << "\n";
+			cout << "unseen [" << (total / (float)unseen_sample_count) * 100<< "]" << endl;
+
 		}
 		else {
-			data_file << "?0\n";
+			data_file << "?0\t?0\n";
 		}
 		current_iteration++;
 	}
@@ -845,6 +862,17 @@ char ConvolutionalNeuralNetwork::evaluate(vector<vector<float>>& image) {
 	return mapping[max_index];
 }
 
+void ConvolutionalNeuralNetwork::evaluate_random_set(int sample_count) {
+	for (int i = 0; i < sample_count; i++) {
+		int random_index = random_int(0, testingSamples.size() - 1);
+		cout << "random sample number [" << i << "] image is a [" << testingSamples[random_index].correct_index << "] network guess is[" << evaluate(testingSamples[random_index].image_segment.float_m_mini) << "]" << endl;
+		cv::Mat temp;
+		cv::resize(testingSamples[random_index].image_segment.m, temp, cv::Size(200, 200));
+		cv::imshow("", temp);
+		cv::waitKey();
+	}
+}
+
 bool ConvolutionalNeuralNetwork::threshold_check(){
 	return error < threshold_target;
 }
@@ -857,18 +885,26 @@ vector<char>& ConvolutionalNeuralNetwork::get_mapping(){
 	return mapping;
 }
 
-void ConvolutionalNeuralNetwork::test() {
+void ConvolutionalNeuralNetwork::test(int sample_count) {
 	int correct_count = 0;
-	cout << "testing on loaded set" << endl;
+	bool be_random = false;
 
-	int sample_count = (int)trainingSamples.size();
+	if (sample_count > (int)testingSamples.size() || sample_count < 1) {
+		sample_count = (int)testingSamples.size();
+	}
+	else {
+		be_random = true;
+	}
+
+	cout << "testing on loaded test set with sample count of [" << sample_count << "] and random sampling is [" << be_random << "]" << endl;
+
 	for (int i = 0; i < sample_count; i++) {
 		if (i % (sample_count / 10) == 0) {
-			cout << (int)((float)i / (float)sample_count * 100) << "%" << endl;
+			cout << (int)((float)i / (float)sample_count * 100) << "% through testing" << endl;
 		}
-		correct_count += evaluate_single_word(trainingSamples[i]);
+		correct_count += evaluate_single_word(testingSamples[be_random ? random_int(0, testingSamples.size() - 1) : i]);
 	}
-	cout << "network success rate [" << (float)correct_count / (float)sample_count * 100.0f << "]" << endl;
+	cout << "network success rate [" << (float)correct_count / (float)sample_count * 100.0f << "%]" << endl;
 }
 
 int ConvolutionalNeuralNetwork::evaluate_single_word(DataSample input) {

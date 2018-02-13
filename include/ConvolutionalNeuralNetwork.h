@@ -31,9 +31,11 @@ public:
 	void show_filters(string prefix);
 	void json_dump_network(string file_name);
 	void setTrainingSamples(vector<DataSample>& dataSamples);
+	void setTestingSamples(vector<DataSample>& dataSamples);
 	void setMapping(vector<char>& mapping);
-	void train(ofstream& data_file, int sample_count);
+	void train(ofstream& data_file, int sample_count, int random_sample_count);
 	char evaluate(vector<vector<float>>& image);
+	void evaluate_random_set(int sample_count);
 	bool (ConvolutionalNeuralNetwork::*terminating_function)();
 	bool threshold_check();
 	bool iteration_check();
@@ -41,7 +43,7 @@ public:
 	float threshold_target;
 	int current_iteration = 0;
 	vector<char>& get_mapping();
-	void test();
+	void test(int sample_count);
 	int evaluate_single_word(DataSample input);
 	boolean is_defined;
 	string this_net_dir;
@@ -56,6 +58,7 @@ private:
 	int current_full;
 	int layer_result_index;
 	vector<DataSample> trainingSamples;
+	vector<DataSample> testingSamples;
 	vector<char> mapping;
 	OCLFunctions ocl_functions;
 	vector<ConvolutionLayer> convolution_layers;

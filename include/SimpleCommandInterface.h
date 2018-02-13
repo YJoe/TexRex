@@ -34,6 +34,7 @@ private:
 	void setseed(vector<string>& input);
 	void savenet(vector<string>& intput);
 	void help(vector<string>& input);
+	void view_evaluations(vector<string>& input);
 	void error_message(string function);
 public:
 	SimpleCommandInterface();

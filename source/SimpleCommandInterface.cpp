@@ -6,12 +6,13 @@ SimpleCommandInterface::SimpleCommandInterface(){
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadnet", "<file location>", "loads an already defined json network from the given directory", &SimpleCommandInterface::loadnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("createnet", "<file location>", "creates and loads a json network from a simple template", &SimpleCommandInterface::createnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("formatset", "<input folder> <output folder> <image width> <image height>", "resizes a training set found in a folder", &SimpleCommandInterface::formatset),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadset", "<input folder> <sample size> <representation>", "loads a training set from a given directory", &SimpleCommandInterface::loadset),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("trainnet", "<data output> <classification sample size>", "begins the training proccess and logs into the given data file", &SimpleCommandInterface::trainnet),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadset", "<input folder> <testing||training> <sample size> <representation>", "loads a data set from a given directory to the training or testing slot", &SimpleCommandInterface::loadset),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("trainnet", "<data output> <evaluation every n iterations> <number of unseen problems to test>", "begins the training proccess and logs into the given data file", &SimpleCommandInterface::trainnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testnet", "", "begins the testing proccess for a loaded network and data set", &SimpleCommandInterface::testnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setiteration", "<number of iterations>", "sets the network terminating condition to iteration with the number given", &SimpleCommandInterface::setiteration),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("viewgraph", "<plt file>", "displays a plot of the latest data file", &SimpleCommandInterface::viewgraph),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setseed", "\"random\" or <number>", "sets the seed for which to make random choicess", &SimpleCommandInterface::setseed),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("evaluate", "<number of samples>", "shows the guesses made by the network for a given image", &SimpleCommandInterface::view_evaluations),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("savenet", "<save location>", "saves the network structure and weights", &SimpleCommandInterface::savenet)
 	};
 }
@@ -132,23 +133,32 @@ void SimpleCommandInterface::formatset(vector<string>& input) {
 
 void SimpleCommandInterface::loadset(vector<string>& input) {
 
-	if (input.size() == 4) {
-		if (is_number(input[2])) {
+	if (input.size() == 5) {
+		if (is_number(input[3])) {
 			// generate the training set
 			vector<DataSample> data_samples;
-			load_nist(data_samples, input[1], input[3], atoi(input[2].c_str()), cnn.input_size);
+			load_nist(data_samples, input[2], input[4], atoi(input[3].c_str()), cnn.input_size);
 
 			// creating mapping
 			vector<char> mapping;
-			for (int i = 0; i < input[3].size(); i++) {
-				mapping.emplace_back(input[3][i]);
+			for (int i = 0; i < input[4].size(); i++) {
+				mapping.emplace_back(input[4][i]);
 			}
 
-			cnn.setTrainingSamples(data_samples);
+			if (input[1] == "training") {
+				cnn.setTrainingSamples(data_samples);
+			}
+			else if (input[1] == "testing") {
+				cnn.setTestingSamples(data_samples);
+			}
+			else {
+				cout << "the data slot [" << input[1] << "] was not recognised, this should be either \"testing\" or \"training\"" << endl;
+			}
+
 			cnn.setMapping(mapping);
 		}
 		else {
-			cout << "error - [" << input[2] << "] is not a number" << endl;
+			cout << "error - [" << input[3] << "] is not a number" << endl;
 		}
 	}
 	else {
@@ -157,7 +167,7 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 }
 
 void SimpleCommandInterface::trainnet(vector<string>& input) {
-	if (input.size() == 3) {
+	if (input.size() == 4) {
 		if (cnn.is_defined) {
 			if (is_number(input[2])) {
 				ofstream data_file_clear(input[1]);
@@ -168,8 +178,9 @@ void SimpleCommandInterface::trainnet(vector<string>& input) {
 					return;
 				}
 
-				cout << "traing network and data will log to [" << input[1] << "] and will sample the classification rate every [" << input[2] << "] inputs" << endl;
-				cnn.train(data_file, atoi(input[2].c_str()));
+				cout << "traing network - data will log to [" << input[1] << "] and will sample the classification rate every [" << input[2] << "] inputs" << endl;
+				cout << "classification rates of the training set and [" << input[3] << "] random unseen problems will be recorded" << endl;
+				cnn.train(data_file, atoi(input[2].c_str()), atoi(input[3].c_str()));
 			}
 			else {
 				cout << "error - [" << input[1] << "] is not a number" << endl;
@@ -185,11 +196,16 @@ void SimpleCommandInterface::trainnet(vector<string>& input) {
 }
 
 void SimpleCommandInterface::testnet(vector<string>& input) {
-	if (input.size() == 1) {
-		cnn.test();
+	if (input.size() == 2) {
+		if(is_number(input[1])){
+			cnn.test(atoi(input[1].c_str()));
+		}
+		else {
+			cout << "error - [" << input[1] << "] is not a number" << endl;
+		}
 	}
 	else {
-		error_message(input[0]);
+		cnn.test(-1);
 	}
 }
 
@@ -277,6 +293,10 @@ void SimpleCommandInterface::help(vector<string>& input) {
 			cout << "try the command \"help\" for a list of functions" << endl;
 		}
 	}
+}
+
+void SimpleCommandInterface::view_evaluations(vector<string>& input) {
+	cnn.evaluate_random_set(atoi(input[1].c_str()));
 }
 
 void SimpleCommandInterface::error_message(string function) {
