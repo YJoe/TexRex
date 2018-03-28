@@ -47,6 +47,8 @@ public:
 	int evaluate_single_word(DataSample input);
 	boolean is_defined;
 	string this_net_dir;
+	void set_softmax_evaluation(bool softmac_evaluation);
+	vector<float> get_network_result();
 
 private:
 	void get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max);
@@ -57,6 +59,7 @@ private:
 	int current_pool;
 	int current_full;
 	int layer_result_index;
+	bool softmax_evaluation;
 	vector<DataSample> trainingSamples;
 	vector<DataSample> testingSamples;
 	vector<char> mapping;

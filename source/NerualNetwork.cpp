@@ -70,7 +70,8 @@ NeuralNetwork::NeuralNetwork(vector<int> *topology, float learning_rate) {
 
 
 float NeuralNetwork::rand_zero_point() {
-	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	// get a random number between -1 and 1
+	return static_cast <float> (rand() * 2) / static_cast <float> (RAND_MAX) - 1;
 }
 
 void NeuralNetwork::net_feed_forward(vector<float> *input_values) {

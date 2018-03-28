@@ -1,19 +1,44 @@
 #include "..\include\SimpleCommandInterface.h"
 
-SimpleCommandInterface::SimpleCommandInterface(){
+void view_data_set(vector<DataSample> samples) {
+	for (int i = 0; i < samples.size(); i++) {
+		cout << "image answer is [";
+		for (int j = 0; j < samples[i].answer.size(); j++) {
+			cout << samples[i].answer[j] << ", ";
+		}
+		cout << "]" << endl;
+		cv::imshow("", samples[i].image_segment.m);
+		cv::waitKey();
+	}
+}
+
+void load_sized_data_sample(DataSample& destination, string directory, cv::Size size) {
+	// construct the file name and load the image
+	destination.image_segment.m = cv::imread(directory, cv::IMREAD_GRAYSCALE);
+
+	// scale the image to meet the network input sized and convert to float
+	cv::resize(destination.image_segment.m, destination.image_segment.m, size);
+	destination.image_segment.m.convertTo(destination.image_segment.m, CV_32FC1, 1.0 / 255.0);
+
+	// store the image as a vector of floats and release the image to save space
+	get_vector(destination.image_segment.m, destination.image_segment.float_m_mini);
+}
+
+SimpleCommandInterface::SimpleCommandInterface() {
 	function_help = {
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("help", "<function name>", "will provide some help on a function", &SimpleCommandInterface::help),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadnet", "<file location>", "loads an already defined json network from the given directory", &SimpleCommandInterface::loadnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("createnet", "<file location>", "creates and loads a json network from a simple template", &SimpleCommandInterface::createnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("formatset", "<input folder> <output folder> <image width> <image height>", "resizes a training set found in a folder", &SimpleCommandInterface::formatset),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadset", "<input folder> <testing||training> <sample size> <representation>", "loads a data set from a given directory to the training or testing slot", &SimpleCommandInterface::loadset),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadset", "<input folder> <testing||training> <sample size> (<target> <representation> || <representation>", "loads a data set from a given directory to the training or testing slot", &SimpleCommandInterface::loadset),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("trainnet", "<data output> <evaluation every n iterations> <number of unseen problems to test>", "begins the training proccess and logs into the given data file", &SimpleCommandInterface::trainnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testnet", "", "begins the testing proccess for a loaded network and data set", &SimpleCommandInterface::testnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setiteration", "<number of iterations>", "sets the network terminating condition to iteration with the number given", &SimpleCommandInterface::setiteration),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("viewgraph", "<plt file>", "displays a plot of the latest data file", &SimpleCommandInterface::viewgraph),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setseed", "\"random\" or <number>", "sets the seed for which to make random choicess", &SimpleCommandInterface::setseed),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("evaluate", "<number of samples>", "shows the guesses made by the network for a given image", &SimpleCommandInterface::view_evaluations),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("savenet", "<save location>", "saves the network structure and weights", &SimpleCommandInterface::savenet)
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("savenet", "<save location>", "saves the network structure and weights", &SimpleCommandInterface::savenet),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setevaluation", "<softmax||threshold>", "the type of evaluation used to score the network, softmax for multiple, threshold or single", &SimpleCommandInterface::set_evaluation)
 	};
 }
 
@@ -127,22 +152,94 @@ void SimpleCommandInterface::createnet(vector<string>& input) {
 	}
 }
 
+void SimpleCommandInterface::set_evaluation(vector<string>& input) {
+	if (input[1] == "softmax") {
+		cnn.set_softmax_evaluation(true);
+	}
+	else {
+		cnn.set_softmax_evaluation(false);
+	}
+}
+
 void SimpleCommandInterface::formatset(vector<string>& input) {
 	cout << "formatting set not yet complete" << endl;
 }
 
+bool replace(string& str, const string& find, const string& put) {
+	//https://stackoverflow.com/questions/3418231/replace-part-of-a-string-with-another-string
+	size_t start_pos = str.find(find);
+	if (start_pos == std::string::npos)
+		return false;
+	str.replace(start_pos, find.length(), put);
+	return true;
+}
+
+void SimpleCommandInterface::load_nist_binary(vector<DataSample>& data_samples, string folder, string target, string all_in_folder, int sample_count, cv::Size network_input_size) {
+
+	// make sure we aren't loading images from the target set into the random set
+	replace(all_in_folder, target, "");
+
+	if (sample_count < all_in_folder.size()) {
+		cout << "Not enough spread when selecting samples" << endl;
+		cin.get();
+		exit(0);
+	}
+
+	// load the correct answers that will just be images of the target labeled with the answer "1"
+	load_nist(data_samples, folder, target, sample_count, false, network_input_size);
+
+	// load a sample of all other images that arent the target all will be labeled with the answer "0"
+	int per_char = sample_count / all_in_folder.size();
+	load_nist(data_samples, folder, all_in_folder, per_char, true, network_input_size);
+
+	//view_data_set(data_samples);
+}
+
 void SimpleCommandInterface::loadset(vector<string>& input) {
 
-	if (input.size() == 5) {
+	if (input.size() == 5 || input.size() == 6) {
 		if (is_number(input[3])) {
 			// generate the training set
 			vector<DataSample> data_samples;
-			load_nist(data_samples, input[2], input[4], atoi(input[3].c_str()), cnn.input_size);
-
-			// creating mapping
 			vector<char> mapping;
-			for (int i = 0; i < input[4].size(); i++) {
-				mapping.emplace_back(input[4][i]);
+
+			// if we are using a multi problem network
+			if (input.size() == 5) {
+				load_nist(data_samples, input[2], input[4], atoi(input[3].c_str()), false, cnn.input_size);
+
+				// creating mapping
+				for (int i = 0; i < input[4].size(); i++) {
+					mapping.emplace_back(input[4][i]);
+				}
+			}
+
+			// we are using a single problem network
+			else {
+
+				/*
+					EXAMPLE
+					evaluating[loadset training data/NIST2/training/ 200 A BCD]
+					input[0] is[loadset]
+					input[1] is[training]
+					input[2] is[data/NIST2/training/]
+					input[3] is[200]
+					input[4] is[A]
+					input[5] is[BCD]
+				*/
+
+				// validate that we are only using one target
+				if (input[4].size() > 1) {
+					cout << "error - only one target can be selected -> [" << input[4] << "] is the issue" << endl;
+					cin.get();
+					exit(-1);
+				}
+
+				// input[4] in this case should be one char anyway so just take the first (and only index of the string)
+				mapping = { input[4][0] };
+
+				// load a set of correct inputs and several incorrect images
+				// vector<data_sample>, folder, target, all_in_folder, sample_count, network_input_size 
+				load_nist_binary(data_samples, input[2], input[4], input[5], atoi(input[3].c_str()), cnn.input_size);
 			}
 
 			if (input[1] == "training") {
@@ -152,7 +249,7 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 				cnn.setTestingSamples(data_samples);
 			}
 			else {
-				cout << "the data slot [" << input[1] << "] was not recognised, this should be either \"testing\" or \"training\"" << endl;
+				cout << "error - the data slot [" << input[1] << "] was not recognised, this should be either \"testing\" or \"training\"" << endl;
 			}
 
 			cnn.setMapping(mapping);
@@ -321,7 +418,7 @@ void SimpleCommandInterface::create_template(string file_name) {
 	dst << src.rdbuf();
 }
 
-void SimpleCommandInterface::load_nist(vector<DataSample>& data_samples, string folder, string num_string, int sample_count, cv::Size network_input_size) {
+void SimpleCommandInterface::load_nist(vector<DataSample>& data_samples, string folder, string num_string, int sample_count, bool random, cv::Size network_input_size) {
 
 	// variables that we will use to read directories
 	HANDLE hFind;
@@ -347,25 +444,26 @@ void SimpleCommandInterface::load_nist(vector<DataSample>& data_samples, string 
 				// store which index is correct
 				temp_data.correct_index = i;
 
-				// create the answer for this image
-				for (int k = 0; k < num_string.size(); k++) {
-					if (k == i) {
-						temp_data.answer.emplace_back(1);
-					}
-					else {
-						temp_data.answer.emplace_back(0);
+				// if the call is from a single problem set then this data is the random data and all should have a 0 answer
+				if (random) {
+					temp_data.answer.emplace_back(0);
+				}
+
+				// the data being loaded will be used for a multiple problem network
+				else {
+					// create the answer for this image
+					for (int k = 0; k < num_string.size(); k++) {
+						if (k == i) {
+							temp_data.answer.emplace_back(1);
+						}
+						else {
+							temp_data.answer.emplace_back(0);
+						}
 					}
 				}
 
-				// construct the file name and load the image
-				temp_data.image_segment.m = cv::imread(folder + num_string[i] + "/" + data.cFileName, cv::IMREAD_GRAYSCALE);
-
-				// scale the image to meet the network input sized and convert to float
-				resize(temp_data.image_segment.m, temp_data.image_segment.m, network_input_size);
-				temp_data.image_segment.m.convertTo(temp_data.image_segment.m, CV_32FC1, 1.0 / 255.0);
-
-				// store the image as a vector of floats and release the image to save space
-				get_vector(temp_data.image_segment.m, temp_data.image_segment.float_m_mini);
+				// create the data sample and load the image to the data sample add it to the pool of samples
+				load_sized_data_sample(temp_data, folder + num_string[i] + "/" + data.cFileName, network_input_size);
 				data_samples.emplace_back(temp_data);
 
 				count++;

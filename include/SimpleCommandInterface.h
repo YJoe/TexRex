@@ -22,7 +22,9 @@ private:
 	boolean file_exists(const std::string & name);
 	boolean is_number(const std::string & s);
 	void create_template(string file_name);
-	void load_nist(vector<DataSample>& data_samples, string folder, string num_string, int sample_count, cv::Size network_input_size);
+	void load_nist(vector<DataSample>& data_samples, string folder, string num_string, int sample_count, bool random, cv::Size network_input_size);
+	void load_nist_binary(vector<DataSample>& data_samples, string folder, string target, string all_in_folder, int sample_count, cv::Size network_input_size);
+	void set_evaluation(vector<string>& input);
 	void loadnet(vector<string>& input);
 	void createnet(vector<string>& input);
 	void formatset(vector<string>& input);
