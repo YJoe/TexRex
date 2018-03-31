@@ -38,7 +38,7 @@ NeuralNetwork::NeuralNetwork(vector<int> *topology, float learning_rate) {
 		}
 	}
 
-	// TODO: correct this count, it is creating a few too many connections
+	// TODO: correct this count, it is creating a few too many connections, not an issue as they are not assigned but it is just a waste
 	// create a list of connections
 	for (int i = 0; i < layers.size() - 1; i++) {
 		for (int j = 0; j < layers[i].size() * layers[i + 1].size() - (i + 1 != layers.size() - 1 ? 1 : 0); j++) {
