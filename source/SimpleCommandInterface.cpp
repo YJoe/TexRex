@@ -440,7 +440,7 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 	load_nist(data_samples, input_folder, input[3], 20, false, networks[0].input_size);
 
 	// for the number of samples we want to test with
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 30; i++) {
 
 		// pick and random sample and get the scores from each network
 		int random_index = random_i(0, data_samples.size());
@@ -461,8 +461,11 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 			}
 		}
 
-		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl << endl;
-		cv::imshow("", data_samples[random_index].image_segment.m);
+		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl;
+		cout << "Corrent index is [" << data_samples[random_index].correct_index << "] which is [" << input[3][data_samples[random_index].correct_index] << "] so the network was [" << (data_samples[random_index].correct_index == highest_index ? "correct" : "incorrect") << "]" << endl << endl;
+		cv::Mat temp;
+		cv::resize(data_samples[random_index].image_segment.m, temp, cv::Size(200, 200));
+		cv::imshow("", temp);
 		cv::waitKey();
 	}
 
