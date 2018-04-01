@@ -1,5 +1,9 @@
 #include "..\include\SimpleCommandInterface.h"
 
+int random_i(int min, int max) {
+	return rand() % (max - min + 1) + min;
+}
+
 void view_data_set(vector<DataSample> samples) {
 	for (int i = 0; i < samples.size(); i++) {
 		cout << "image answer is [";
@@ -24,6 +28,21 @@ void load_sized_data_sample(DataSample& destination, string directory, cv::Size 
 	get_vector(destination.image_segment.m, destination.image_segment.float_m_mini);
 }
 
+vector<string> files_in_dir(string dir) {
+	vector<string> files;
+
+	HANDLE hFind;
+	WIN32_FIND_DATA data;
+	hFind = FindFirstFile(dir.c_str(), &data);
+	if (hFind != INVALID_HANDLE_VALUE) {
+		do {
+			files.emplace_back(data.cFileName);
+		} while (FindNextFile(hFind, &data));
+	}
+
+	return files;
+}
+
 SimpleCommandInterface::SimpleCommandInterface() {
 	function_help = {
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("help", "<function name>", "will provide some help on a function", &SimpleCommandInterface::help),
@@ -38,7 +57,8 @@ SimpleCommandInterface::SimpleCommandInterface() {
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setseed", "\"random\" or <number>", "sets the seed for which to make random choicess", &SimpleCommandInterface::setseed),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("evaluate", "<number of samples>", "shows the guesses made by the network for a given image", &SimpleCommandInterface::view_evaluations),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("savenet", "<save location>", "saves the network structure and weights", &SimpleCommandInterface::savenet),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setevaluation", "<softmax||threshold>", "the type of evaluation used to score the network, softmax for multiple, threshold or single", &SimpleCommandInterface::set_evaluation)
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setevaluation", "<softmax||threshold>", "the type of evaluation used to score the network, softmax for multiple, threshold or single", &SimpleCommandInterface::set_evaluation),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testgroupnet", "<network directory> <network extension \"*.json\"> <network mapping>", "a test", &SimpleCommandInterface::group_net_test)
 	};
 }
 
@@ -88,6 +108,10 @@ void SimpleCommandInterface::begin() {
 
 	// exit the interface
 	cout << "bye :(" << endl;
+}
+
+void SimpleCommandInterface::test(){
+	view_data_set(cnn.testingSamples);
 }
 
 char SimpleCommandInterface::get_type_code(string input) {
@@ -394,6 +418,54 @@ void SimpleCommandInterface::help(vector<string>& input) {
 
 void SimpleCommandInterface::view_evaluations(vector<string>& input) {
 	cnn.evaluate_random_set(atoi(input[1].c_str()));
+}
+
+void SimpleCommandInterface::group_net_test(vector<string>& input){
+
+	// get all files within the network folder
+	vector<string> files = files_in_dir(input[1] + input[2]);
+	
+	// create an object to use the GPU or CPU used by all networks in the group
+	OCLFunctions ocl_functions = OCLFunctions(CL_DEVICE_TYPE_GPU);
+
+	// create and store all networks
+	ConvolutionalNeuralNetwork networks[26];
+	for (int i = 0; i < files.size(); i++) {
+		networks[i] = ConvolutionalNeuralNetwork(input[1] + files[i], ocl_functions, 0);
+	}
+
+	// load data samples to test the network group with
+	vector<DataSample> data_samples;
+	string input_folder = "data/NIST2/testing/";
+	load_nist(data_samples, input_folder, input[3], 20, false, networks[0].input_size);
+
+	// for the number of samples we want to test with
+	for (int i = 0; i < 10; i++) {
+
+		// pick and random sample and get the scores from each network
+		int random_index = random_i(0, data_samples.size());
+		int highest_index = 0;
+		float highest_probability = 0;
+
+		cv::destroyAllWindows();
+		for (int j = 0; j < files.size(); j++) {
+			
+			// get the probability that the image is the char of this network
+			float current_probability = networks[j].highest_probability(data_samples[random_index].image_segment.float_m_mini);
+			cout << input[3][j] << " -> " << current_probability << endl;
+
+			// check to see if this new network has a higher score
+			if (current_probability > highest_probability) {
+				highest_probability = current_probability;
+				highest_index = j;
+			}
+		}
+
+		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl << endl;
+		cv::imshow("", data_samples[random_index].image_segment.m);
+		cv::waitKey();
+	}
+
 }
 
 void SimpleCommandInterface::error_message(string function) {

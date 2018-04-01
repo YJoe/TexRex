@@ -23,6 +23,7 @@ class ConvolutionalNeuralNetwork {
 public:
 	ConvolutionalNeuralNetwork();
 	explicit ConvolutionalNeuralNetwork(string conf_file, OCLFunctions ocl, int log_level);
+	void testing_stuff();
 	cv::Size input_size;
 	void feed_forward(vector<vector<float>>& input_image);
 	void calculate_error(vector<float>& target_values);
@@ -34,6 +35,7 @@ public:
 	void setTestingSamples(vector<DataSample>& dataSamples);
 	void setMapping(vector<char>& mapping);
 	void train(ofstream& data_file, int sample_count, int random_sample_count);
+	float highest_probability(vector<vector<float>>& image);
 	char evaluate(vector<vector<float>>& image);
 	void evaluate_random_set(int sample_count);
 	bool (ConvolutionalNeuralNetwork::*terminating_function)();
@@ -49,6 +51,8 @@ public:
 	string this_net_dir;
 	void set_softmax_evaluation(bool softmac_evaluation);
 	vector<float> get_network_result();
+	vector<DataSample> trainingSamples;
+	vector<DataSample> testingSamples;
 
 private:
 	void get_random_filter(vector<vector<float>>& filter, int width, int height, float min, float max);
@@ -60,8 +64,6 @@ private:
 	int current_full;
 	int layer_result_index;
 	bool softmax_evaluation;
-	vector<DataSample> trainingSamples;
-	vector<DataSample> testingSamples;
 	vector<char> mapping;
 	OCLFunctions ocl_functions;
 	vector<ConvolutionLayer> convolution_layers;

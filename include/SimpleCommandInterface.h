@@ -14,7 +14,6 @@
 
 class SimpleCommandInterface {
 private:
-	ConvolutionalNeuralNetwork cnn;
 	vector<string> regex_split(const string& s, string regex);
 	vector<tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>> function_help;
 	char get_type_code(string e);
@@ -37,9 +36,12 @@ private:
 	void savenet(vector<string>& intput);
 	void help(vector<string>& input);
 	void view_evaluations(vector<string>& input);
+	void group_net_test(vector<string>& input);
 	void error_message(string function);
 public:
 	SimpleCommandInterface();
 	boolean evaluate_command(string input);
 	void begin();
+	ConvolutionalNeuralNetwork cnn;
+	void test();
 };

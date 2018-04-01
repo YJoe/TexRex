@@ -239,6 +239,10 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 	cout << "]" << endl;
 }
 
+void ConvolutionalNeuralNetwork::testing_stuff() {
+	cout << "fulliy connected network [" << fully_connected_networks[0].layers[2][0]->get_output_value() << "]" << endl;
+}
+
 bool super_serious_logging = true;
 
 int random_int(int min, int max) {
@@ -844,6 +848,26 @@ void ConvolutionalNeuralNetwork::train(ofstream& data_file, int sample_count, in
 	}
 }
 
+float ConvolutionalNeuralNetwork::highest_probability(vector<vector<float>>& image) {
+	// evaluate the input through the network
+	feed_forward(image);
+
+	// get the output vector of the network
+	vector<float> output_results;
+	fully_connected_networks.back().get_results(output_results);
+
+	// find the highest value of the output vector
+	float max_value = 0;
+	for (int i = 0; i < output_results.size(); i++) {
+		if (output_results[i] > max_value) {
+			max_value = output_results[i];
+		}
+	}
+
+	// return the char mapping of the biggest one we found
+	return max_value;
+}
+
 char ConvolutionalNeuralNetwork::evaluate(vector<vector<float>>& image) {
 
 	// evaluate the input through the network
@@ -855,15 +879,11 @@ char ConvolutionalNeuralNetwork::evaluate(vector<vector<float>>& image) {
 
 	// find the highest value of the output vector
 	int max_index = 0;
-
-	//cout << "[";
 	for (int i = 0; i < output_results.size(); i++) {
-		//cout << output_results[i] << ", ";
 		if (output_results[i] > output_results[max_index]) {
 			max_index = i;
 		}
 	}
-	//cout << "] -> ";
 
 	// return the char mapping of the biggest one we found
 	return mapping[max_index];
@@ -896,6 +916,7 @@ void ConvolutionalNeuralNetwork::test(int sample_count) {
 	int correct_count = 0;
 	bool be_random = false;
 
+	// ensure that we don't request more or less samples than are available
 	if (sample_count > (int)testingSamples.size() || sample_count < 1) {
 		sample_count = (int)testingSamples.size();
 	}
@@ -905,12 +926,19 @@ void ConvolutionalNeuralNetwork::test(int sample_count) {
 
 	cout << "testing on loaded test set with sample count of [" << sample_count << "] and random sampling is [" << be_random << "]" << endl;
 
+	// for a number of tests to complete
 	for (int i = 0; i < sample_count; i++) {
+
+		// if we are at a given 10 percent stage display some helpful logging
 		if (i % (sample_count / 10) == 0) {
 			cout << (int)((float)i / (float)sample_count * 100) << "% through testing" << endl;
 		}
+
+		// if the network's evaluation was correct, add 1 to the score, else add a 0
 		correct_count += evaluate_single_word(testingSamples[be_random ? random_int(0, testingSamples.size() - 1) : i]);
 	}
+
+	// helpful logging
 	cout << "network success rate [" << (float)correct_count / (float)sample_count * 100.0f << "%]" << endl;
 }
 
@@ -926,7 +954,7 @@ int ConvolutionalNeuralNetwork::evaluate_single_word(DataSample input) {
 			}
 		}
 
-		//cout << "network evaluation [" << network_out << "] it should be [" << this->get_mapping()[max_index] << "]" << endl;
+		cout << "network evaluation [" << network_out << "] it should be [" << this->get_mapping()[max_index] << "]" << endl;
 
 		return this->get_mapping()[max_index] == network_out ? 1 : 0;
 	}
