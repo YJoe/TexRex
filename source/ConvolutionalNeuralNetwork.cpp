@@ -818,7 +818,7 @@ void ConvolutionalNeuralNetwork::train(ofstream& data_file, int sample_count, in
 		backwards_propagate(trainingSamples[random_number].answer);
 		data_file << current_iteration << "\t" << error << "\t";
 
-		cout << current_iteration << " " << error << "\n";
+		cout << "[" << current_iteration << "/" << iteration_target << "] -> [" << error << "]\n";
 
 		if ((current_iteration + 1) % sample_count == 0) {
 			cout << "Evaluating classification rates" << endl;

@@ -422,6 +422,8 @@ void SimpleCommandInterface::view_evaluations(vector<string>& input) {
 
 void SimpleCommandInterface::group_net_test(vector<string>& input){
 
+	int test_count = 50;
+
 	// get all files within the network folder
 	vector<string> files = files_in_dir(input[1] + input[2]);
 	
@@ -437,10 +439,13 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 	// load data samples to test the network group with
 	vector<DataSample> data_samples;
 	string input_folder = "data/NIST2/testing/";
-	load_nist(data_samples, input_folder, input[3], 20, false, networks[0].input_size);
+	//string input_folder = "data/MIST/testing/";
+	load_nist(data_samples, input_folder, input[3], 30, false, networks[0].input_size);
+
+	int correct_count = 0;
 
 	// for the number of samples we want to test with
-	for (int i = 0; i < 30; i++) {
+	for (int i = 0; i < test_count; i++) {
 
 		// pick and random sample and get the scores from each network
 		int random_index = random_i(0, data_samples.size());
@@ -463,11 +468,16 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 
 		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl;
 		cout << "Corrent index is [" << data_samples[random_index].correct_index << "] which is [" << input[3][data_samples[random_index].correct_index] << "] so the network was [" << (data_samples[random_index].correct_index == highest_index ? "correct" : "incorrect") << "]" << endl << endl;
-		cv::Mat temp;
+		if (data_samples[random_index].correct_index == highest_index) {
+			correct_count++;
+		}
+		/*cv::Mat temp;
 		cv::resize(data_samples[random_index].image_segment.m, temp, cv::Size(200, 200));
 		cv::imshow("", temp);
-		cv::waitKey();
+		cv::waitKey();*/
 	}
+
+	cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;
 
 }
 
