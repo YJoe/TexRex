@@ -193,7 +193,7 @@ void find_gravity_center(ImageSegment& segment) {
 }
 
 void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destination){
-	// assumes that the image is in black(1.0) and white(0.0);
+	// assumes that the image is in black(0.0) and white(1.0);
 	cout << "[ImageFun] Island Segments" << endl;
 
 	for (int x = 0; x < source_image.cols; x++) {

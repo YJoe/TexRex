@@ -28,6 +28,18 @@ void load_sized_data_sample(DataSample& destination, string directory, cv::Size 
 	get_vector(destination.image_segment.m, destination.image_segment.float_m_mini);
 }
 
+void load_sized_data_sample(DataSample& destination, cv::Mat& image, cv::Size size) {
+	// construct the file name and load the image
+	destination.image_segment.m = image;
+
+	// scale the image to meet the network input sized and convert to float
+	cv::resize(destination.image_segment.m, destination.image_segment.m, size);
+	destination.image_segment.m.convertTo(destination.image_segment.m, CV_32FC1, 1.0 / 255.0);
+
+	// store the image as a vector of floats and release the image to save space
+	get_vector(destination.image_segment.m, destination.image_segment.float_m_mini);
+}
+
 vector<string> files_in_dir(string dir) {
 	vector<string> files;
 
@@ -424,7 +436,7 @@ void SimpleCommandInterface::view_evaluations(vector<string>& input) {
 
 void SimpleCommandInterface::group_net_test(vector<string>& input){
 
-	int test_count = 0;
+	int test_count = 13;
 
 	// get all files within the network folder
 	vector<string> files = files_in_dir(input[1] + input[2]);
@@ -482,9 +494,7 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 
 	cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;
 
-
 	//////////////////////////////////////////////////////////////////////
-
 
 	cout << "\nTesting network with noise problems" << endl;
 	
@@ -551,6 +561,64 @@ void SimpleCommandInterface::demo(vector<string>& input){
 		else if(input[1] == "2"){
 			evaluate_command("setseed 0");
 			evaluate_command("testgroupnet data/cnn_json/mnum_locmax2/ *.json 0123456789");
+		}
+
+		else if(input[1] == "3"){
+
+			// load an image, clean and segment it
+			cv::Mat image = cv::imread("data/WHITEBOARD/convolution.png", cv::IMREAD_GRAYSCALE);
+			vector<ImageSegment> segments;
+			cv::Mat source = image.clone();
+			GaussianBlur(source, image, cv::Size(3, 3), 5);
+			adaptiveThreshold(image, image, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 101, 5);
+			segment_image_islands(image, segments);
+			//bitwise_not ( image, image );
+			
+			// create DataSample objects from segments
+			vector<DataSample> samples;
+			for(int i = 0; i < segments.size(); i++){
+				samples.emplace_back(DataSample());
+				bitwise_not ( segments[i].m, segments[i].m );
+				load_sized_data_sample(samples.back(), segments[i].m, cv::Size(20, 20));
+			}
+
+			// get all files within the network folder
+			vector<string> files = files_in_dir("data/cnn_json/mchar_locmax2/*.json");
+	
+			// create an object to use the GPU or CPU used by all networks in the group
+			OCLFunctions ocl_functions = OCLFunctions(CL_DEVICE_TYPE_GPU);
+
+			// create and store all networks
+			ConvolutionalNeuralNetwork networks[26];
+			for (int i = 0; i < files.size(); i++) {
+				networks[i] = ConvolutionalNeuralNetwork("data/cnn_json/mchar_locmax2/" + files[i], ocl_functions, 0);
+			}
+
+			string mapping = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			string output = "";
+
+			for(int i = 0; i < samples.size(); i++){
+				float highest_probability = 0.0f;
+				int highest_index = 0;
+				for (int j = 0; j < files.size(); j++) {
+
+					// get the probability that the image is the char of this network
+					float current_probability = networks[j].highest_probability(samples[i].image_segment.float_m_mini);
+					//cout << mapping[j] << " -> " << current_probability << endl;
+
+					// check to see if this new network has a higher score
+					if (current_probability > highest_probability) {
+						highest_probability = current_probability;
+						highest_index = j;
+					}
+
+				}
+				//cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << mapping[highest_index] << "]" << endl << endl;
+				output += mapping[highest_index];
+				//cout << "so far... [" << output << "]\n" << endl;
+			}
+
+			cout << "network read [" << output << "]" << endl;
 		}
 	}
 }
