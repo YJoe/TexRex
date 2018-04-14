@@ -424,7 +424,7 @@ void SimpleCommandInterface::view_evaluations(vector<string>& input) {
 
 void SimpleCommandInterface::group_net_test(vector<string>& input){
 
-	int test_count = 50;
+	int test_count = 0;
 
 	// get all files within the network folder
 	vector<string> files = files_in_dir(input[1] + input[2]);
@@ -478,8 +478,57 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 		cv::imshow("", temp);
 		cv::waitKey();
 	}
+	cv::destroyAllWindows();
 
 	cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;
+
+
+	//////////////////////////////////////////////////////////////////////
+
+
+	cout << "\nTesting network with noise problems" << endl;
+	
+	// define paths to files
+	vector<string> noise_problem_dirs = {
+		"data/MNIST/noise/2_noise.png",
+		"data/MNIST/noise/3_noise.png",
+		"data/MNIST/noise/4_noise.png",
+		"data/MNIST/noise/5_noise.png",
+		"data/MNIST/noise/7_noise.png"
+	};
+
+	vector<DataSample> samples;
+	for (string dir : noise_problem_dirs) {
+		samples.emplace_back(DataSample());
+		load_sized_data_sample(samples.back(), dir, cv::Size(20, 20));
+	}
+
+	for (int i = 0; i < noise_problem_dirs.size(); i++) {
+
+		cv::destroyAllWindows();
+		float highest_probability = 0.0f;
+		int highest_index = 0;
+		for (int j = 0; j < files.size(); j++) {
+
+			// get the probability that the image is the char of this network
+			float current_probability = networks[j].highest_probability(samples[i].image_segment.float_m_mini);
+			cout << input[3][j] << " -> " << current_probability << endl;
+
+			// check to see if this new network has a higher score
+			if (current_probability > highest_probability) {
+				highest_probability = current_probability;
+				highest_index = j;
+			}
+
+		}
+		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl << endl;
+
+		cv::Mat temp;
+		cv::resize(samples[i].image_segment.m, temp, cv::Size(200, 200));
+		cv::imshow("", temp);
+		cv::waitKey();
+	}
+	cv::destroyAllWindows();
 
 }
 
@@ -488,18 +537,20 @@ void SimpleCommandInterface::demo(vector<string>& input){
 		
 		// trianing example A and !A
 		if(input[1] == "1"){
-			evaluate_command("setseed random");
+			evaluate_command("setseed 0");
 			evaluate_command("loadnet data/cnn_json/single_char_net.json");
-			evaluate_command(string("loadset training data/NIST2/training/ 1000 A ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
-			evaluate_command(string("loadset testing data/NIST2/testing/ 100 A ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
-			evaluate_command(string("setiteration 1000"));
+			evaluate_command("loadset training data/NIST2/training/ 1000 A ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			evaluate_command("loadset testing data/NIST2/testing/ 200 A ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			evaluate_command("setiteration 500");
 			evaluate_command("setevaluation threshold");
-			evaluate_command(string("trainnet test1/DEMO_A.dat 20 100"));
-			evaluate_command(string("savenet data/DEMO_A_SAVE.json"));
+			evaluate_command("trainnet test1/DEMO_A.dat 100 200");
+			evaluate_command("savenet data/DEMO_A_SAVE.json");
+			evaluate_command("viewgraph demo_a_plot.plt");
 		} 
 		
 		else if(input[1] == "2"){
-			cout << "Running demo 2" << endl;
+			evaluate_command("setseed 0");
+			evaluate_command("testgroupnet data/cnn_json/mnum_locmax2/ *.json 0123456789");
 		}
 	}
 }
