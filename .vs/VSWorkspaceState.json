@@ -3,8 +3,10 @@
     "",
     "\\data",
     "\\data\\CNN_JSON",
-    "\\data\\CNN_JSON\\MCHAR_LOCMAX"
+    "\\data\\CNN_JSON\\MCHAR_LOCMAX",
+    "\\include",
+    "\\source"
   ],
-  "SelectedNode": "\\data\\CNN_JSON\\MCHAR_LOCMAX\\mchar_locmaxALOCMAX.json",
+  "SelectedNode": "\\source\\OCLFunctions.cpp",
   "PreviewInSolutionExplorer": false
 }

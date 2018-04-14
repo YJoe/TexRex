@@ -440,8 +440,8 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 
 	// load data samples to test the network group with
 	vector<DataSample> data_samples;
-	string input_folder = "data/NIST2/testing/";
-	//string input_folder = "data/MIST/testing/";
+	//string input_folder = "data/NIST2/testing/";
+	string input_folder = "data/MNIST/testing/";
 	load_nist(data_samples, input_folder, input[3], 30, false, networks[0].input_size);
 
 	int correct_count = 0;
@@ -473,10 +473,10 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 		if (data_samples[random_index].correct_index == highest_index) {
 			correct_count++;
 		}
-		/*cv::Mat temp;
+		cv::Mat temp;
 		cv::resize(data_samples[random_index].image_segment.m, temp, cv::Size(200, 200));
 		cv::imshow("", temp);
-		cv::waitKey();*/
+		cv::waitKey();
 	}
 
 	cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;

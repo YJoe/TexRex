@@ -167,5 +167,5 @@ GNUTERM = "wxt"
 #    EOF
 set title "Network Error Over Training Iterations"
 set xlabel "Network Iteration"
-set ylabel "(RED)Network Difference ^2\n(BLUE)Classification Percentage"
-plot 'C:\Users\Joe\source\repos\TexRex\TexRex\test1\data1.dat' using 1:2 w lines lt rgb "#FF0000" title "Learning Error", 'C:\Users\Joe\source\repos\TexRex\TexRex\test1\data1.dat' using 1:3 w linespoints lt rgb "#0000FF" title "Seen Classification Rate", 'C:\Users\Joe\source\repos\TexRex\TexRex\test1\data1.dat' using 1:4 w linespoints lt rgb "#000000" title "Unseen Classification Rate"
+set ylabel "(Red)Error Rate\n(Blue And Black)Classification Percentage"
+plot 'C:\Users\Joe\source\repos\TexRex\test1\okay_net_learning.dat' using 1:2 w lines lt rgb "#FF0000" title "Learning Error", 'C:\Users\Joe\source\repos\TexRex\test1\okay_net_learning.dat' using 1:3 w linespoints lt rgb "#0000FF" title "Seen Classification Rate", 'C:\Users\Joe\source\repos\TexRex\test1\okay_net_learning.dat' using 1:4 w linespoints lt rgb "#000000" title "Unseen Classification Rate"
