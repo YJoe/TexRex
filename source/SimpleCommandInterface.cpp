@@ -58,7 +58,8 @@ SimpleCommandInterface::SimpleCommandInterface() {
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("evaluate", "<number of samples>", "shows the guesses made by the network for a given image", &SimpleCommandInterface::view_evaluations),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("savenet", "<save location>", "saves the network structure and weights", &SimpleCommandInterface::savenet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setevaluation", "<softmax||threshold>", "the type of evaluation used to score the network, softmax for multiple, threshold or single", &SimpleCommandInterface::set_evaluation),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testgroupnet", "<network directory> <network extension \"*.json\"> <network mapping>", "a test", &SimpleCommandInterface::group_net_test)
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testgroupnet", "<network directory> <network extension \"*.json\"> <network mapping>", "a test", &SimpleCommandInterface::group_net_test),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("demo", "<demo number>", "for presentation", &SimpleCommandInterface::demo)
 	};
 }
 
@@ -82,14 +83,14 @@ boolean SimpleCommandInterface::evaluate_command(string input) {
 	if (input == "exit") {
 		return false;
 	}
-	else if(input != ""){
-		handle_input(regex_split(input));
-		cout << endl;
+	else if (input == "") {
 		return true;
 	}
-
-	// only in the case that input != ""
-	cout << endl;
+	else {
+		bool ret = handle_input(regex_split(input));
+		cout << endl;
+		return ret;
+	}
 }
 
 void SimpleCommandInterface::begin() {
@@ -134,7 +135,7 @@ char SimpleCommandInterface::get_type_code(string input) {
 	return '?';
 }
 
-void SimpleCommandInterface::handle_input(vector<string>& input) {
+bool SimpleCommandInterface::handle_input(vector<string>& input) {
 
 	bool found = false;
 	for (int i = 0; i < function_help.size(); i++) {
@@ -148,6 +149,7 @@ void SimpleCommandInterface::handle_input(vector<string>& input) {
 	if (!found) {
 		error_message(input[0]);
 	}
+	return found;
 }
 
 void SimpleCommandInterface::loadnet(vector<string>& input) {
@@ -479,6 +481,27 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 
 	cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;
 
+}
+
+void SimpleCommandInterface::demo(vector<string>& input){
+	if(input.size() > 1){
+		
+		// trianing example A and !A
+		if(input[1] == "1"){
+			evaluate_command("setseed random");
+			evaluate_command("loadnet data/cnn_json/single_char_net.json");
+			evaluate_command(string("loadset training data/NIST2/training/ 1000 A ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+			evaluate_command(string("loadset testing data/NIST2/testing/ 100 A ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+			evaluate_command(string("setiteration 1000"));
+			evaluate_command("setevaluation threshold");
+			evaluate_command(string("trainnet test1/DEMO_A.dat 20 100"));
+			evaluate_command(string("savenet data/DEMO_A_SAVE.json"));
+		} 
+		
+		else if(input[1] == "2"){
+			cout << "Running demo 2" << endl;
+		}
+	}
 }
 
 void SimpleCommandInterface::error_message(string function) {

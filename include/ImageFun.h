@@ -28,6 +28,7 @@ float get_image_grey_avg(cv::Mat& source_image);
 void binary_threshold_auto(cv::Mat& source_image, cv::Mat& target_image);
 void gaussian_blur(cv::Mat& source_image, cv::Mat& target_image, int neighbour_hood);
 void draw_frequencies(cv::Mat& source); 
+void draw_lines(string image_name, int smoothing_factor);
 
 void get_vector(cv::Mat& source_image, vector<vector<float>>& target_vector);
 void get_image(vector<vector<float>>& source_vector, cv::Mat& target_image);

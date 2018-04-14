@@ -151,15 +151,25 @@ cv::Point adjacent_map[] = {cv::Point(-1, -1), cv::Point(0, -1), cv::Point(1, -1
 							cv::Point(-1, 0),                    cv::Point(1, 0),
 							cv::Point(-1, 1), cv::Point(0, 1), cv::Point(1, 1) };
 
-void recu(cv::Mat& s, cv::Mat& c, int x, int y) {
+void find_adjacent(cv::Mat& s, cv::Mat& c, int x, int y) {
 
+	// set the source image pixel to grey so it will not be identified as a neighbour to this pixel
 	s.at<uchar>(y, x) = 200;
+
+	// set the location of the image copy 
 	c.at<uchar>(y, x) = 0;
 
+	// for all coordinates that are adjacent to this pixel
 	for (cv::Point p : adjacent_map) {
+
+		// if the pixel is within the boundaries of the image
 		if (x + p.x > -1 && x + p.x < c.cols && y + p.y > -1 && y + p.y < c.rows) {
+
+			// if the pixel is black
 			if (s.at<uchar>(y + p.y, x + p.x) == 0) {
-				recu(s, c, x + p.x, y + p.y);
+
+				// find adjacent pixels to this newly discovered pixel
+				find_adjacent(s, c, x + p.x, y + p.y);
 			}
 		}
 	}
@@ -192,7 +202,7 @@ void segment_image_islands(cv::Mat& source_image, vector<ImageSegment>& destinat
 				vector<vector<float>> vec;
 				vector<vector<float>> vec2;
 				ImageSegment is = { cv::Mat(source_image.size[0], source_image.size[1], CV_8UC1, cv::Scalar(255)), vec, vec2, 0, 0, 0, 0};
-				recu(source_image, is.m, x, y);
+				find_adjacent(source_image, is.m, x, y);
 				crop_segment(is, 5);
 				find_gravity_center(is);
 				destination.emplace_back(is);
@@ -280,70 +290,213 @@ int truncate(int val, int min, int max) {
 	return val > 255 ? 255 : val < 0 ? 255 - val : val;
 }
 
-void draw_frequencies(cv::Mat& source) {
-	cv::Mat source_copy = source.clone();
-	cv::cvtColor(source, source_copy, cv::COLOR_GRAY2BGR);
+void draw_lines(string image_name, int smoothing_factor) {
 
-	imshow("F", source_copy);
+	// define a blur size
+	cv::Size s = cv::Size(3, 3);
 
-	int streak = 0;
-	int b = rand() % (255 + 1);
-	int g = rand() % (255 + 1);
-	int r = rand() % (255 + 1);
-	for (int i = 0; i < source_copy.cols; i++) {
-		int total = 0;
-		for (int j = 0; j < source_copy.rows; j++) {
-			if (source.at<uchar>(j, i) == 0) {
-				int temp_b = truncate(source_copy.at<cv::Vec3b>(total, i)[0] - b, 0, 255);
-				int temp_g = truncate(source_copy.at<cv::Vec3b>(total, i)[1] - g, 0, 255);
-				int temp_r = truncate(source_copy.at<cv::Vec3b>(total, i)[2] - r, 0, 255);
-				source_copy.at<cv::Vec3b>(total, i)[0] = temp_b;
-				source_copy.at<cv::Vec3b>(total, i)[1] = temp_g;
-				source_copy.at<cv::Vec3b>(total, i)[2] = temp_r;
-				total += 1;
+	// load and clean image
+	cout << "Trying to read [" << image_name << "]" << endl;
+	cv::Mat image = cv::imread(image_name, cv::IMREAD_GRAYSCALE);
+	cv::Mat source = image.clone();
+	GaussianBlur(source, image, s, 5);
+	adaptiveThreshold(image, image, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 101, 5);
+	//cv::imshow("ORIGINAL", image);
+
+	// read the occurances of black pixels per row
+	vector<int> row_instances;
+	for (int i = 0; i < image.rows; i++) {
+		int row_count = 0;
+		for (int j = 0; j < image.cols; j++) {
+			if (image.at<uchar>(i, j) == 0) {
+				row_count += 1;
 			}
 		}
-		if (total == 0) {
-			streak = 0;
-			b = rand() % (255 + 1);
-			g = rand() % (255 + 1);
-			r = rand() % (255 + 1);
-		}
-		else {
-			streak += 1;
+		row_instances.emplace_back(row_count);
+	}
+
+	// using the bounds, draw what it thinks the lines are
+	cv::Mat image_copy = image.clone();
+	cv::cvtColor(image, image_copy, cv::COLOR_GRAY2BGR);
+
+	for (int i = 0; i < image_copy.rows; i++) {
+		for (int j = 0; j < row_instances[i]; j++) {
+			image_copy.at<cv::Vec3b>(i, j)[0] = 0;
+			image_copy.at<cv::Vec3b>(i, j)[1] = 0;
 		}
 	}
 
-	streak = 0;
-	b = rand() % (255 + 1);
-	g = rand() % (255 + 1);
-	r = rand() % (255 + 1);
-	for (int i = 0; i < source_copy.rows; i++) {
+	//cv::imshow("1", image_copy);
+
+	vector<int> smoothed;
+
+	// smoothing data on edges that dont fit
+	int av_start = 0;
+	for (int i = 0; i < smoothing_factor / 2; i++) {
+		av_start += row_instances[i];
+	}
+	av_start /= (int)row_instances.size();
+
+	for (int i = 0; i < smoothing_factor / 2; i++) {
+		smoothed.emplace_back(av_start);
+	}
+
+	// smoothing values with a local neighbourhood
+	for (int i = smoothing_factor / 2; i < row_instances.size() - smoothing_factor / 2; i++) {
 		int total = 0;
-		for (int j = 0; j < source_copy.cols; j++) {
-			if (source.at<uchar>(i, j) == 0) {
-				int temp_b = truncate(source_copy.at<cv::Vec3b>(i, total)[0] - b, 0, 255);
-				int temp_g = truncate(source_copy.at<cv::Vec3b>(i, total)[1] - g, 0, 255);
-				int temp_r = truncate(source_copy.at<cv::Vec3b>(i, total)[2] - r, 0, 255);
-				source_copy.at<cv::Vec3b>(i, total)[0] = temp_b;
-				source_copy.at<cv::Vec3b>(i, total)[1] = temp_g;
-				source_copy.at<cv::Vec3b>(i, total)[2] = temp_r;
-				total += 1;
-			}
+		for (int j = -(smoothing_factor / 2); j < smoothing_factor / 2 + 1; j++) {
+			total += row_instances[i + j];
 		}
-		if (total == 0) {
-			streak = 0;
-			b = rand() % (255 + 1);
-			g = rand() % (255 + 1);
-			r = rand() % (255 + 1);
-		}
-		else {
-			streak += 1;
+		smoothed.emplace_back(total / smoothing_factor);
+	}
+
+	// smoothing data on edges that dont fit
+	int av_end = 0;
+	for (int i = (int)row_instances.size() - smoothing_factor / 2; i < (int)row_instances.size(); i++) {
+		av_end += row_instances[i];
+	}
+	av_end /= (int)row_instances.size();
+
+	for (int i = (int)row_instances.size() - smoothing_factor / 2; i < (int)row_instances.size(); i++) {
+		smoothed.emplace_back(av_end);
+	}
+
+	cv::Mat image_copy2 = image.clone();
+	cv::cvtColor(image, image_copy2, cv::COLOR_GRAY2BGR);
+
+	for (int i = 0; i < image_copy2.rows; i++) {
+		for (int j = 0; j < smoothed[i]; j++) {
+			image_copy2.at<cv::Vec3b>(i, j)[1] = 0;
+			image_copy2.at<cv::Vec3b>(i, j)[2] = 0;
 		}
 	}
 
-	imshow("F", source_copy);
+	// search for peaks in data
+	bool ascending = false;
+	int last = 0;
+	vector<vector<int>> peaks;
+
+	for (int i = 0; i < smoothed.size(); i++) {
+
+		// we found a low point
+		if (!ascending && smoothed[i] > last) {
+			ascending = true;
+		}
+
+		// we found a high point
+		if (ascending && smoothed[i] < last) {
+			ascending = false;
+			vector<int> vals;
+			vals.emplace_back(i - 1);
+			vals.emplace_back(smoothed[i]);
+			peaks.emplace_back(vals);
+		}
+		last = smoothed[i];
+	}
+
+
+	// draw lines
+	for (int i = 0; i < peaks.size(); i++) {
+		for (int j = 0; j < image_copy2.cols; j++) {
+			image_copy2.at<cv::Vec3b>(peaks[i][0], j)[0] = 0;
+			image_copy2.at<cv::Vec3b>(peaks[i][0], j)[1] = 0;
+			image_copy2.at<cv::Vec3b>(peaks[i][0], j)[2] = 200;
+		}
+
+		//// find the peak half value negative
+		//for (int j = peaks[i][0]; j > -1; j--) {
+		//	if (row_instances[j] < peaks[i][1] / 2) {
+		//		for (int k = 0; k < image.cols; k++) {
+		//			image_copy2.at<cv::Vec3b>(j, k)[0] = 200;
+		//			image_copy2.at<cv::Vec3b>(j, k)[1] = 0;
+		//			image_copy2.at<cv::Vec3b>(j, k)[2] = 0;
+		//		}
+		//		break;
+		//	}
+		//}
+
+		//// find the peak half value positive
+		//for (int j = peaks[i][0]; j < image.rows; j++) {
+		//	if (row_instances[j] < peaks[i][1] / 2) {
+		//		for (int k = 0; k < image.cols; k++) {
+		//			image_copy2.at<cv::Vec3b>(j, k)[0] = 0;
+		//			image_copy2.at<cv::Vec3b>(j, k)[1] = 200;
+		//			image_copy2.at<cv::Vec3b>(j, k)[2] = 0;
+		//		}
+		//		break;
+		//	}
+		//}
+	}
+
+	cv::imshow("2", image_copy2);
+
+	cv::waitKey();
 }
+
+//void draw_frequencies(cv::Mat& source) {
+//	cv::Mat source_copy = source.clone();
+//	cv::cvtColor(source, source_copy, cv::COLOR_GRAY2BGR);
+//
+//	imshow("F", source_copy);
+//
+//	int streak = 0;
+//	int b = rand() % (255 + 1);
+//	int g = rand() % (255 + 1);
+//	int r = rand() % (255 + 1);
+//	for (int i = 0; i < source_copy.cols; i++) {
+//		int total = 0;
+//		for (int j = 0; j < source_copy.rows; j++) {
+//			if (source.at<uchar>(j, i) == 0) {
+//				int temp_b = truncate(source_copy.at<cv::Vec3b>(total, i)[0] - b, 0, 255);
+//				int temp_g = truncate(source_copy.at<cv::Vec3b>(total, i)[1] - g, 0, 255);
+//				int temp_r = truncate(source_copy.at<cv::Vec3b>(total, i)[2] - r, 0, 255);
+//				source_copy.at<cv::Vec3b>(total, i)[0] = temp_b;
+//				source_copy.at<cv::Vec3b>(total, i)[1] = temp_g;
+//				source_copy.at<cv::Vec3b>(total, i)[2] = temp_r;
+//				total += 1;
+//			}
+//		}
+//		if (total == 0) {
+//			streak = 0;
+//			b = rand() % (255 + 1);
+//			g = rand() % (255 + 1);
+//			r = rand() % (255 + 1);
+//		}
+//		else {
+//			streak += 1;
+//		}
+//	}
+//
+//	int streak = 0;
+//	int b = rand() % (255 + 1);
+//	int g = rand() % (255 + 1);
+//	int r = rand() % (255 + 1);
+//	for (int i = 0; i < source_copy.rows; i++) {
+//		int total = 0;
+//		for (int j = 0; j < source_copy.cols; j++) {
+//			if (source.at<uchar>(i, j) == 0) {
+//				int temp_b = truncate(source_copy.at<cv::Vec3b>(i, total)[0] - b, 0, 255);
+//				int temp_g = truncate(source_copy.at<cv::Vec3b>(i, total)[1] - g, 0, 255);
+//				int temp_r = truncate(source_copy.at<cv::Vec3b>(i, total)[2] - r, 0, 255);
+//				source_copy.at<cv::Vec3b>(i, total)[0] = temp_b;
+//				source_copy.at<cv::Vec3b>(i, total)[1] = temp_g;
+//				source_copy.at<cv::Vec3b>(i, total)[2] = temp_r;
+//				total += 1;
+//			}
+//		}
+//		if (total == 0) {
+//			streak = 0;
+//			b = rand() % (255 + 1);
+//			g = rand() % (255 + 1);
+//			r = rand() % (255 + 1);
+//		}
+//		else {
+//			streak += 1;
+//		}
+//	}
+//
+//	imshow("F", source_copy);
+//}
 
 // frequency domain
 

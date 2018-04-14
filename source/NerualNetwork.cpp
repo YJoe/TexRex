@@ -76,8 +76,10 @@ float NeuralNetwork::rand_zero_point() {
 
 void NeuralNetwork::net_feed_forward(vector<float> *input_values) {
 	
+	// check that the number of inputs is as expected
 	if ((*input_values).size() != layers[0].size() - 1) {
 		cout << "the training inputs do not match the input layer size" << endl;
+		cin.get();
 		exit(-1);
 	}
 
@@ -86,7 +88,7 @@ void NeuralNetwork::net_feed_forward(vector<float> *input_values) {
 		layers[0][i]->set_output_value((*input_values)[i]);
 	}
 
-	// for everything other than the input layer
+	// for everything other than the first (the input) layer
 	for (int i = 1; i < layers.size(); i++) {
 
 		// for all neurons inside that layer
@@ -95,11 +97,13 @@ void NeuralNetwork::net_feed_forward(vector<float> *input_values) {
 			// if we aren't on the last layer
 			if (i < layers.size() - 1) {
 
-				// if we aren't on the last neuron of this layer
+				// if we aren't on the last neuron of this layer (to avoid the bias)
 				if (j < layers[i].size() - 1) {
 					layers[i][j]->neuron_feed_forward();
 				}
 			}
+
+			// we are on the last layer so there is no bias to avoid
 			else {
 				layers[i][j]->neuron_feed_forward();
 			}

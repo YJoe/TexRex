@@ -77,11 +77,15 @@ double Neuron::sum_dow() {
 void Neuron::neuron_feed_forward() {
 	double sum = 0.0;
 
+	// for each input connection to this neuron
 	for (int i = 0; i < input_connections.size(); i++) {
+
+		// increment the sum by the input neruon * weight that connects it
 		sum += input_connections[i]->get_start_neuron()->get_output_value()
 			* input_connections[i]->get_weight();
 	}
 
+	// set the output value of this neuron as the activation of the sum
 	output_value = activation_function(sum);
 }
 

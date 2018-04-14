@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <math.h>
 #include "..\library\json.hpp"
 #include "../include/ConvolutionalNeuralNetwork.h"
 
@@ -422,8 +423,7 @@ void ConvolutionalNeuralNetwork::calculate_error(vector<float>& target_values) {
 	// calculate error of network
 	error = 0.0;
 	for (int i = 0; i < output_results.size(); i++) {
-		float delta = target_values[i] - output_results[i];
-		error += delta * delta;
+		error += pow(target_values[i] - output_results[i], 2);
 	}
 	error /= output_results.size();
 	error = sqrt(error);
@@ -477,8 +477,7 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 			current_pool -= 1;
 			int next_grad_count = 0;
 
-			// there should be a 1-1 result relation for a pooling layer and the previous
-			// cycle through the previous layer size
+			// there should be a 1-1 result relation for a pooling layer and the previous, cycle through the previous layer size
 			vector<float> temp_next_neuron_gradients;
 			for (int j = 0; j < layer_results_stack[layer_result_index - 2].size(); j++) {
 				//cout << "\tWorking on prev layer element [" << j << "]" << endl;
@@ -535,14 +534,6 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 		if (layer_type_stack[i] == "C") {
 			//cout << "\n[C]Back propagating convolutional layer at [" << current_conv - 1 << "]" << endl;
 			layer_result_index -= 1;
-			//cout << "Layer results index [" << layer_result_index - 1 << "]" << endl;
-			//print_layer(layer_results_stack[layer_result_index - 1]);
-
-			//cout << "layer type stack is [" << i << "]" << endl;
-
-			// the previous layer layer_results_index - 2
-			//cout << "I think this is the input image" << endl;
-			//print_layer(layer_results_stack[layer_result_index - 2]);	
 
 			// work out the filter deltas
 			int delta_index = 0;
@@ -560,14 +551,13 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 				}
 
 				// what inputs does this weight effect
-				//cout << "This filter runs on the following inputs" << endl;
 				for (int k = 0; k < layer_results_stack[layer_result_index - 2].size(); k++) {
-					//cout << "Input [" << k << "]" << endl;
 
 					// for this input and filter, what is the delta array we want to use
 					int delta_width = layer_results_stack[layer_result_index - 1][k][0].size();
 					int delta_height = layer_results_stack[layer_result_index - 1][k].size();
 					//cout << "The deltas for this operation in the format [" << delta_width << " by " << delta_height << "]" << endl;
+
 					vector<vector<float>> structured_delta;
 					for (int l = 0; l < delta_height; l++) {
 						vector<float> temp_row;
@@ -577,27 +567,17 @@ void ConvolutionalNeuralNetwork::backwards_propagate(vector<float>& target_value
 						}
 						structured_delta.emplace_back(temp_row);
 					}
-					//cout << "Found a structured delta" << endl;
-					//print_vector2_neatly(structured_delta);
 
-					// TODO: WORK OUT IF THIS RESULT NEEDS TO BE FLIPPED OR NOT, RIGHT NOW THAT FUNCTION WILL FLIP IT I THINK
 					vector<vector<float>> result;
 					ocl_functions.apply_filter_convolution(layer_results_stack[layer_result_index - 2][k], structured_delta, result);
-					//cout << "\nResults" << endl;
-					//print_vector2_neatly(result);
 
-					//cout << "\nAddition" << endl;
 					// add these results to a running total for the modification to this filter
 					for (int l = 0; l < convolution_layers[current_conv - 1].filters[j].size(); l++) {
 						for (int m = 0; m < convolution_layers[current_conv - 1].filters[j].size(); m++) {
 							filter_deltas[l][m] += result[l][m];
 						}
 					}
-					//print_vector2_neatly(filter_deltas);
 				}
-
-				//cout << "This filter will be modified by this matrix" << endl;
-				//print_vector2_neatly(filter_deltas);
 
 				// adjust the filter weights by adding the sum of the convolution of the deltas
 				for (int k = 0; k < convolution_layers[current_conv - 1].filters[j].size(); k++) {

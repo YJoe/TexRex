@@ -17,7 +17,7 @@ private:
 	vector<string> regex_split(const string& s, string regex);
 	vector<tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>> function_help;
 	char get_type_code(string e);
-	void handle_input(vector<string>& input);
+	bool handle_input(vector<string>& input);
 	boolean file_exists(const std::string & name);
 	boolean is_number(const std::string & s);
 	void create_template(string file_name);
@@ -37,6 +37,7 @@ private:
 	void help(vector<string>& input);
 	void view_evaluations(vector<string>& input);
 	void group_net_test(vector<string>& input);
+	void demo(vector<string>& input);
 	void error_message(string function);
 public:
 	SimpleCommandInterface();
