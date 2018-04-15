@@ -934,7 +934,7 @@ int ConvolutionalNeuralNetwork::evaluate_single_word(DataSample input) {
 			}
 		}
 
-		cout << "network evaluation [" << network_out << "] it should be [" << this->get_mapping()[max_index] << "]" << endl;
+		//cout << "network evaluation [" << network_out << "] it should be [" << this->get_mapping()[max_index] << "]" << endl;
 
 		return this->get_mapping()[max_index] == network_out ? 1 : 0;
 	}

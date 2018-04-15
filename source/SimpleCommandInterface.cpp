@@ -436,7 +436,7 @@ void SimpleCommandInterface::view_evaluations(vector<string>& input) {
 
 void SimpleCommandInterface::group_net_test(vector<string>& input){
 
-	int test_count = 13;
+	int test_count = stoi(input[4]);
 
 	// get all files within the network folder
 	vector<string> files = files_in_dir(input[1] + input[2]);
@@ -480,15 +480,18 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 			}
 		}
 
-		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl;
+		cout << "[" << i << "/" << test_count << "]" << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl;
 		cout << "Corrent index is [" << data_samples[random_index].correct_index << "] which is [" << input[3][data_samples[random_index].correct_index] << "] so the network was [" << (data_samples[random_index].correct_index == highest_index ? "correct" : "incorrect") << "]" << endl << endl;
 		if (data_samples[random_index].correct_index == highest_index) {
 			correct_count++;
 		}
-		cv::Mat temp;
-		cv::resize(data_samples[random_index].image_segment.m, temp, cv::Size(200, 200));
-		cv::imshow("", temp);
-		cv::waitKey();
+
+		if(input[5] == "show"){
+			cv::Mat temp;
+			cv::resize(data_samples[random_index].image_segment.m, temp, cv::Size(200, 200));
+			cv::imshow("", temp);
+			cv::waitKey();
+		}
 	}
 	cv::destroyAllWindows();
 
