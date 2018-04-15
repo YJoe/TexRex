@@ -17,18 +17,28 @@
         "details": {
           "filters": [
             {
-              "filter_width": 3,
-              "filter_height": 3,
+              "filter_width": 11,
+              "filter_height": 11,
               "filter_obj": []
             },
             {
-              "filter_width": 3,
-              "filter_height": 3,
+              "filter_width": 11,
+              "filter_height": 11,
               "filter_obj": []
             },
             {
-              "filter_width": 3,
-              "filter_height": 3,
+              "filter_width": 11,
+              "filter_height": 11,
+              "filter_obj": []
+            },
+            {
+              "filter_width": 11,
+              "filter_height": 11,
+              "filter_obj": []
+            },
+            {
+              "filter_width": 11,
+              "filter_height": 11,
               "filter_obj": []
             }
           ],
@@ -37,7 +47,7 @@
       },
       {
         "type": "P",
-        "details": { "sample_size": 3 }
+        "details": { "sample_size": 2 }
       },
       {
         "type": "F",

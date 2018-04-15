@@ -569,13 +569,13 @@ void SimpleCommandInterface::demo(vector<string>& input){
 		else if(input[1] == "3"){
 
 			// load an image, clean and segment it
-			cv::Mat image = cv::imread("data/WHITEBOARD/convolution.png", cv::IMREAD_GRAYSCALE);
+			cv::Mat image = cv::imread("data/WHITEBOARD/textrex.png", cv::IMREAD_GRAYSCALE);
 			vector<ImageSegment> segments;
 			cv::Mat source = image.clone();
 			GaussianBlur(source, image, cv::Size(3, 3), 5);
 			adaptiveThreshold(image, image, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 101, 5);
+			cv::Mat save = image.clone();
 			segment_image_islands(image, segments);
-			//bitwise_not ( image, image );
 			
 			// create DataSample objects from segments
 			vector<DataSample> samples;
@@ -621,7 +621,9 @@ void SimpleCommandInterface::demo(vector<string>& input){
 				//cout << "so far... [" << output << "]\n" << endl;
 			}
 
-			cout << "network read [" << output << "]" << endl;
+			cv::imshow("", save);
+			cout << "network evaluated [" << output << "]" << endl;
+			cv::waitKey();
 		}
 	}
 }
