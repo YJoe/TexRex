@@ -32,7 +32,7 @@
               "filter_obj": []
             }
           ],
-          "learning_rate": 0.5
+          "learning_rate": 0.1
         }
       },
       { 
@@ -52,7 +52,7 @@
               "input_weights": []
             }
           ],
-          "learning_rate": 0.4
+          "learning_rate": 0.1
         }
       }
     ]
