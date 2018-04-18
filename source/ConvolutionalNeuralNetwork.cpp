@@ -635,6 +635,7 @@ void ConvolutionalNeuralNetwork::print_network_results(vector<char>& res) {
 
 void ConvolutionalNeuralNetwork::show_filters(string prefix) {
 	for (int i = 0; i < convolution_layers.size(); i++) {
+		cv::Size size(200, 200);
 		print_layer(convolution_layers[i].filters);
 
 		vector<cv::Mat> filter_images;
@@ -656,21 +657,24 @@ void ConvolutionalNeuralNetwork::show_filters(string prefix) {
 
 			for (int k = 0; k < convolution_layers[i].filters[j].size(); k++) {
 				for (int l = 0; l < convolution_layers[i].filters[j][k].size(); l++) {
-					filter_images.back().at<float>(cv::Point(l, k)) = map_value(convolution_layers[i].filters[j][l][k], min_filter_val, max_filter_val, 0.0f, 1.0f);
+					filter_images.back().at<float>(cv::Point(k, l)) = map_value(convolution_layers[i].filters[j][l][k], min_filter_val, max_filter_val, 0.0f, 1.0f);
 				}
 			}
 
-			cv::Size size(200, 200);
 			cv::Mat dst;
-			resize(filter_images.back(), dst, size, 0, 0, cv::INTER_AREA);
-			cout << "Showing filter [" << j << "]" << endl;
-			cv::imshow(prefix + "-" + to_string(i) + "-" + to_string(j), dst);
+			resize(filter_images.back(), filter_images.back(), size, 0, 0, cv::INTER_AREA);
 		}
+
+		cv::Mat temp = cv::Mat(size.height, size.width * filter_images.size() + (5 * (filter_images.size() - 1)), CV_32FC1, cv::Scalar(0.0f));
+		for (int i = 0; i < filter_images.size(); i++) {
+			filter_images[i].copyTo(temp(cv::Rect(i * size.width + (i * 5), 0, filter_images[i].rows, filter_images[i].cols)));
+		}
+
+		cv::imshow(prefix + "-" + to_string(i), temp);
 	}
 
 	cv::waitKey();
 }
-
 void ConvolutionalNeuralNetwork::json_dump_network(string file_name) {
 	cout << "Saving the network" << endl;
 

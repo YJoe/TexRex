@@ -563,10 +563,17 @@ void SimpleCommandInterface::demo(vector<string>& input){
 		
 		else if(input[1] == "2"){
 			evaluate_command("setseed 0");
-			evaluate_command("testgroupnet data/cnn_json/mnum_locmax2/ *.json 0123456789");
+
+			evaluate_command("testgroupnet data/cnn_json/mnum_locmax2/ *.json 0123456789 13 show");
 		}
 
-		else if(input[1] == "3"){
+		else if (input[1] == "3") {
+			OCLFunctions ocl = OCLFunctions(CL_DEVICE_TYPE_GPU);
+			ConvolutionalNeuralNetwork c = ConvolutionalNeuralNetwork("data/cnn_json/MNUM_LOCMAX5/mnum_locmax50LOCMAX.json", ocl, 0);
+			c.show_filters("f");
+		}
+
+		else if(input[1] == "4"){
 
 			// load an image, clean and segment it
 			cv::Mat image = cv::imread("data/WHITEBOARD/textrex.png", cv::IMREAD_GRAYSCALE);
