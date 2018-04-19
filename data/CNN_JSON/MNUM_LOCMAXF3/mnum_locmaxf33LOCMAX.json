@@ -15,2410 +15,2410 @@
                         {
                             "input_weights": [
                                 {
-                                    "weight": -0.886569
+                                    "weight": 0.886312
                                 },
                                 {
-                                    "weight": 0.407415
+                                    "weight": 0.61372
                                 },
                                 {
-                                    "weight": -0.348406
+                                    "weight": 0.205627
                                 },
                                 {
-                                    "weight": -0.378314
+                                    "weight": 0.819293
                                 },
                                 {
-                                    "weight": -0.251052
+                                    "weight": -0.131981
                                 },
                                 {
-                                    "weight": -0.531639
+                                    "weight": -0.450927
                                 },
                                 {
-                                    "weight": -0.819185
+                                    "weight": -0.581946
                                 },
                                 {
-                                    "weight": 0.364628
+                                    "weight": 0.014764
                                 },
                                 {
-                                    "weight": -0.342913
+                                    "weight": -0.41716
                                 },
                                 {
-                                    "weight": -0.705961
+                                    "weight": -0.765292
                                 },
                                 {
-                                    "weight": 0.391424
+                                    "weight": -0.234828
                                 },
                                 {
-                                    "weight": 0.432868
+                                    "weight": -0.045461
                                 },
                                 {
-                                    "weight": 0.237671
+                                    "weight": -0.155132
                                 },
                                 {
-                                    "weight": 0.873921
+                                    "weight": -0.567956
                                 },
                                 {
-                                    "weight": -0.295304
+                                    "weight": -0.358599
                                 },
                                 {
-                                    "weight": -0.739592
+                                    "weight": 0.844746
                                 },
                                 {
-                                    "weight": -0.837618
+                                    "weight": 0.24347
                                 },
                                 {
-                                    "weight": 0.143064
+                                    "weight": 0.213012
                                 },
                                 {
-                                    "weight": 0.552256
+                                    "weight": 0.68788
                                 },
                                 {
-                                    "weight": -0.128612
+                                    "weight": 0.580821
                                 },
                                 {
-                                    "weight": 0.913717
+                                    "weight": 0.135495
                                 },
                                 {
-                                    "weight": 0.833759
+                                    "weight": 0.302676
                                 },
                                 {
-                                    "weight": 1.039692
+                                    "weight": 0.952659
                                 },
                                 {
-                                    "weight": -0.143529
+                                    "weight": -0.759002
                                 },
                                 {
-                                    "weight": -0.426373
+                                    "weight": 0.979547
                                 },
                                 {
-                                    "weight": -0.42326
+                                    "weight": -0.316382
                                 },
                                 {
-                                    "weight": -0.139897
+                                    "weight": 0.306415
                                 },
                                 {
-                                    "weight": 0.59767
+                                    "weight": -0.159103
                                 },
                                 {
-                                    "weight": -0.138375
+                                    "weight": 0.920529
                                 },
                                 {
-                                    "weight": -0.799859
+                                    "weight": 0.44742
                                 },
                                 {
-                                    "weight": 0.427258
+                                    "weight": 0.070358
                                 },
                                 {
-                                    "weight": 0.696411
+                                    "weight": -0.943165
                                 },
                                 {
-                                    "weight": 0.341404
+                                    "weight": -0.851206
                                 },
                                 {
-                                    "weight": 0.486634
+                                    "weight": -0.114915
                                 },
                                 {
-                                    "weight": -0.620888
+                                    "weight": -0.892208
                                 },
                                 {
-                                    "weight": -0.116878
+                                    "weight": -0.820136
                                 },
                                 {
-                                    "weight": -0.642853
+                                    "weight": 0.113644
                                 },
                                 {
-                                    "weight": -0.071198
+                                    "weight": -0.069467
                                 },
                                 {
-                                    "weight": -0.721641
+                                    "weight": -0.35335
                                 },
                                 {
-                                    "weight": 0.873311
+                                    "weight": 0.503793
                                 },
                                 {
-                                    "weight": 0.128781
+                                    "weight": -0.880405
                                 },
                                 {
-                                    "weight": -0.206798
+                                    "weight": 0.538401
                                 },
                                 {
-                                    "weight": -1.02764
+                                    "weight": 0.009515
                                 },
                                 {
-                                    "weight": -0.905161
+                                    "weight": -0.044745
                                 },
                                 {
-                                    "weight": -0.831153
+                                    "weight": -0.774078
                                 },
                                 {
-                                    "weight": 0.267997
+                                    "weight": -0.209583
                                 },
                                 {
-                                    "weight": -4e-05
+                                    "weight": -0.965565
                                 },
                                 {
-                                    "weight": 0.594579
+                                    "weight": 0.567107
                                 },
                                 {
-                                    "weight": -1.003363
+                                    "weight": 0.730735
                                 },
                                 {
-                                    "weight": 0.597677
+                                    "weight": 0.120404
                                 },
                                 {
-                                    "weight": 0.454755
+                                    "weight": 0.502933
                                 },
                                 {
-                                    "weight": 0.890517
+                                    "weight": 1.072671
                                 },
                                 {
-                                    "weight": -0.071232
+                                    "weight": 0.289926
                                 },
                                 {
-                                    "weight": -0.251928
+                                    "weight": -0.734149
                                 },
                                 {
-                                    "weight": -0.130846
+                                    "weight": 0.454285
                                 },
                                 {
-                                    "weight": -0.546282
+                                    "weight": -0.54201
                                 },
                                 {
-                                    "weight": -0.813114
+                                    "weight": 0.293727
                                 },
                                 {
-                                    "weight": -1.03847
+                                    "weight": -0.079765
                                 },
                                 {
-                                    "weight": 0.610272
+                                    "weight": -0.768707
                                 },
                                 {
-                                    "weight": 0.10809
+                                    "weight": 0.624829
                                 },
                                 {
-                                    "weight": 0.180724
+                                    "weight": -0.028877
                                 },
                                 {
-                                    "weight": 0.028129
+                                    "weight": -0.659512
                                 },
                                 {
-                                    "weight": -0.068983
+                                    "weight": 0.991936
                                 },
                                 {
-                                    "weight": 0.561987
+                                    "weight": 0.788577
                                 },
                                 {
-                                    "weight": 0.946458
+                                    "weight": 0.531803
                                 },
                                 {
-                                    "weight": -0.341928
+                                    "weight": 0.587757
                                 },
                                 {
-                                    "weight": 0.613263
+                                    "weight": 0.919723
                                 },
                                 {
-                                    "weight": -0.991039
+                                    "weight": 0.902967
                                 },
                                 {
-                                    "weight": -0.852582
+                                    "weight": 0.153321
                                 },
                                 {
-                                    "weight": -0.94651
+                                    "weight": -0.838781
                                 },
                                 {
-                                    "weight": -0.170147
+                                    "weight": 0.196357
                                 },
                                 {
-                                    "weight": 0.907633
+                                    "weight": 0.482703
                                 },
                                 {
-                                    "weight": 0.618641
+                                    "weight": 0.250511
                                 },
                                 {
-                                    "weight": 0.588367
+                                    "weight": -0.041613
                                 },
                                 {
-                                    "weight": -0.312471
+                                    "weight": 0.371086
                                 },
                                 {
-                                    "weight": -0.216711
+                                    "weight": 0.520785
                                 },
                                 {
-                                    "weight": -0.377161
+                                    "weight": -0.655708
                                 },
                                 {
-                                    "weight": 0.084669
+                                    "weight": 0.974148
                                 },
                                 {
-                                    "weight": 0.072033
+                                    "weight": 0.491797
                                 },
                                 {
-                                    "weight": -0.439595
+                                    "weight": -0.466452
                                 },
                                 {
-                                    "weight": -0.36568
+                                    "weight": -0.300431
                                 },
                                 {
-                                    "weight": 0.828754
+                                    "weight": -0.876211
                                 },
                                 {
-                                    "weight": -0.727287
+                                    "weight": -0.433265
                                 },
                                 {
-                                    "weight": -0.437123
+                                    "weight": 0.58162
                                 },
                                 {
-                                    "weight": -1.007686
+                                    "weight": 0.888279
                                 },
                                 {
-                                    "weight": 0.692409
+                                    "weight": -0.214222
                                 },
                                 {
-                                    "weight": 0.091734
+                                    "weight": -0.085372
                                 },
                                 {
-                                    "weight": -0.766698
+                                    "weight": 1.393347
                                 },
                                 {
-                                    "weight": -0.668948
+                                    "weight": 0.024385
                                 },
                                 {
-                                    "weight": -0.869518
+                                    "weight": -0.122902
                                 },
                                 {
-                                    "weight": -0.481005
+                                    "weight": 0.433712
                                 },
                                 {
-                                    "weight": 0.002696
+                                    "weight": 0.215952
                                 },
                                 {
-                                    "weight": 0.767698
+                                    "weight": 0.343676
                                 },
                                 {
-                                    "weight": 0.694592
+                                    "weight": 0.377353
                                 },
                                 {
-                                    "weight": 1.162942
+                                    "weight": -0.12694
                                 },
                                 {
-                                    "weight": 0.973586
+                                    "weight": -0.959863
                                 },
                                 {
-                                    "weight": -0.399848
+                                    "weight": -0.384603
                                 },
                                 {
-                                    "weight": 1.120341
+                                    "weight": 0.649237
                                 },
                                 {
-                                    "weight": 0.0654
+                                    "weight": 0.162421
                                 },
                                 {
-                                    "weight": 0.738663
+                                    "weight": -0.297267
                                 },
                                 {
-                                    "weight": -0.732634
+                                    "weight": 0.762155
                                 },
                                 {
-                                    "weight": 0.080074
+                                    "weight": -0.163663
                                 },
                                 {
-                                    "weight": 0.803297
+                                    "weight": -0.243826
                                 },
                                 {
-                                    "weight": 0.204103
+                                    "weight": 0.336698
                                 },
                                 {
-                                    "weight": 0.146019
+                                    "weight": -0.596178
                                 },
                                 {
-                                    "weight": 0.516125
+                                    "weight": -0.008529
                                 },
                                 {
-                                    "weight": 0.630659
+                                    "weight": 0.54173
                                 },
                                 {
-                                    "weight": -0.570062
+                                    "weight": 0.437309
                                 },
                                 {
-                                    "weight": -0.760124
+                                    "weight": 0.3304
                                 },
                                 {
-                                    "weight": -0.679176
+                                    "weight": 0.001477
                                 },
                                 {
-                                    "weight": -0.203537
+                                    "weight": 1.015825
                                 },
                                 {
-                                    "weight": -0.271883
+                                    "weight": 0.955687
                                 },
                                 {
-                                    "weight": -0.344451
+                                    "weight": -0.263462
                                 },
                                 {
-                                    "weight": -0.367813
+                                    "weight": -0.28922
                                 },
                                 {
-                                    "weight": -0.313223
+                                    "weight": 0.150854
                                 },
                                 {
-                                    "weight": -0.308086
+                                    "weight": 0.086952
                                 },
                                 {
-                                    "weight": 0.610267
+                                    "weight": -1.421168
                                 },
                                 {
-                                    "weight": -0.291587
+                                    "weight": -0.378139
                                 },
                                 {
-                                    "weight": 0.140121
+                                    "weight": -0.015756
                                 },
                                 {
-                                    "weight": -0.067575
+                                    "weight": 0.245653
                                 },
                                 {
-                                    "weight": -0.608668
+                                    "weight": -0.117889
                                 },
                                 {
-                                    "weight": -0.194521
+                                    "weight": 0.268309
                                 },
                                 {
-                                    "weight": -0.104412
+                                    "weight": 0.2743
                                 },
                                 {
-                                    "weight": 0.515444
+                                    "weight": 0.494618
                                 },
                                 {
-                                    "weight": -0.157625
+                                    "weight": 0.929882
                                 },
                                 {
-                                    "weight": 0.875904
+                                    "weight": 0.18124
                                 },
                                 {
-                                    "weight": 0.296572
+                                    "weight": -1.22416
                                 },
                                 {
-                                    "weight": -0.2665
+                                    "weight": -1.118509
                                 },
                                 {
-                                    "weight": -0.573952
+                                    "weight": -1.261247
                                 },
                                 {
-                                    "weight": -0.018407
+                                    "weight": -1.595622
                                 },
                                 {
-                                    "weight": -0.840304
+                                    "weight": -0.068264
                                 },
                                 {
-                                    "weight": -0.883172
+                                    "weight": -0.268904
                                 },
                                 {
-                                    "weight": -0.322407
+                                    "weight": 0.716749
                                 },
                                 {
-                                    "weight": 0.556751
+                                    "weight": -0.659094
                                 },
                                 {
-                                    "weight": 0.800019
+                                    "weight": -0.220146
                                 },
                                 {
-                                    "weight": -0.395408
+                                    "weight": 0.71216
                                 },
                                 {
-                                    "weight": 0.572424
+                                    "weight": 0.005111
                                 },
                                 {
-                                    "weight": 0.398922
+                                    "weight": 0.389434
                                 },
                                 {
-                                    "weight": 0.60133
+                                    "weight": -0.027024
                                 },
                                 {
-                                    "weight": -0.279007
+                                    "weight": -0.075748
                                 },
                                 {
-                                    "weight": -0.57876
+                                    "weight": -0.875304
                                 },
                                 {
-                                    "weight": 0.816192
+                                    "weight": -0.192531
                                 },
                                 {
-                                    "weight": 0.20843
+                                    "weight": 0.650728
                                 },
                                 {
-                                    "weight": 0.146478
+                                    "weight": -0.091037
                                 },
                                 {
-                                    "weight": -0.679715
+                                    "weight": -0.936035
                                 },
                                 {
-                                    "weight": -0.035963
+                                    "weight": -0.241607
                                 },
                                 {
-                                    "weight": 0.316116
+                                    "weight": -1.800872
                                 },
                                 {
-                                    "weight": 0.42369
+                                    "weight": -1.294638
                                 },
                                 {
-                                    "weight": -0.82521
+                                    "weight": -1.389618
                                 },
                                 {
-                                    "weight": 0.369886
+                                    "weight": -1.238693
                                 },
                                 {
-                                    "weight": 0.770354
+                                    "weight": 0.654848
                                 },
                                 {
-                                    "weight": -0.171588
+                                    "weight": 0.400102
                                 },
                                 {
-                                    "weight": -0.74449
+                                    "weight": -0.820496
                                 },
                                 {
-                                    "weight": -0.544814
+                                    "weight": -0.099529
                                 },
                                 {
-                                    "weight": 0.284156
+                                    "weight": -0.359724
                                 },
                                 {
-                                    "weight": 1.178656
+                                    "weight": -0.27414
                                 },
                                 {
-                                    "weight": -0.818876
+                                    "weight": -0.2456
                                 },
                                 {
-                                    "weight": -0.432652
+                                    "weight": 0.361031
                                 },
                                 {
-                                    "weight": 0.780397
+                                    "weight": 0.164718
                                 },
                                 {
-                                    "weight": 0.730545
+                                    "weight": 0.408887
                                 },
                                 {
-                                    "weight": -0.303666
+                                    "weight": -0.790546
                                 },
                                 {
-                                    "weight": 0.298464
+                                    "weight": 0.569514
                                 },
                                 {
-                                    "weight": 0.720531
+                                    "weight": -0.246207
                                 },
                                 {
-                                    "weight": 0.053972
+                                    "weight": -0.106168
                                 },
                                 {
-                                    "weight": 0.771037
+                                    "weight": -0.079992
                                 },
                                 {
-                                    "weight": 0.313384
+                                    "weight": -1.755081
                                 },
                                 {
-                                    "weight": -0.055986
+                                    "weight": -2.636383
                                 },
                                 {
-                                    "weight": 0.411427
+                                    "weight": -1.923956
                                 },
                                 {
-                                    "weight": 0.289645
+                                    "weight": 0.816892
                                 },
                                 {
-                                    "weight": 0.793395
+                                    "weight": 1.628865
                                 },
                                 {
-                                    "weight": -0.285472
+                                    "weight": 2.00849
                                 },
                                 {
-                                    "weight": -0.31036
+                                    "weight": 1.665562
                                 },
                                 {
-                                    "weight": -0.4619
+                                    "weight": 1.259796
                                 },
                                 {
-                                    "weight": -0.527239
+                                    "weight": 0.563182
                                 },
                                 {
-                                    "weight": -0.725767
+                                    "weight": -0.402192
                                 },
                                 {
-                                    "weight": 0.74028
+                                    "weight": -1.286691
                                 },
                                 {
-                                    "weight": -0.274321
+                                    "weight": -0.794012
                                 },
                                 {
-                                    "weight": 0.878164
+                                    "weight": -0.088881
                                 },
                                 {
-                                    "weight": -0.392262
+                                    "weight": 0.619903
                                 },
                                 {
-                                    "weight": -0.357806
+                                    "weight": -0.219252
                                 },
                                 {
-                                    "weight": -0.449911
+                                    "weight": 1.094814
                                 },
                                 {
-                                    "weight": 1.101467
+                                    "weight": 0.624768
                                 },
                                 {
-                                    "weight": 0.54975
+                                    "weight": -0.806229
                                 },
                                 {
-                                    "weight": -0.268849
+                                    "weight": -0.710571
                                 },
                                 {
-                                    "weight": 0.627218
+                                    "weight": -1.804947
                                 },
                                 {
-                                    "weight": 0.098464
+                                    "weight": -1.822842
                                 },
                                 {
-                                    "weight": -0.207105
+                                    "weight": -1.329059
                                 },
                                 {
-                                    "weight": -0.27436
+                                    "weight": -0.910401
                                 },
                                 {
-                                    "weight": 0.660348
+                                    "weight": 0.329628
                                 },
                                 {
-                                    "weight": 0.689876
+                                    "weight": 1.792311
                                 },
                                 {
-                                    "weight": -0.577477
+                                    "weight": 1.607264
                                 },
                                 {
-                                    "weight": 0.075373
+                                    "weight": 0.630377
                                 },
                                 {
-                                    "weight": -0.720838
+                                    "weight": 1.431751
                                 },
                                 {
-                                    "weight": -0.674586
+                                    "weight": -0.109925
                                 },
                                 {
-                                    "weight": 0.234236
+                                    "weight": -1.087266
                                 },
                                 {
-                                    "weight": 0.007533
+                                    "weight": -0.112813
                                 },
                                 {
-                                    "weight": 0.75309
+                                    "weight": -1.411611
                                 },
                                 {
-                                    "weight": 0.646146
+                                    "weight": -0.176406
                                 },
                                 {
-                                    "weight": 0.248107
+                                    "weight": -0.406475
                                 },
                                 {
-                                    "weight": -0.550072
+                                    "weight": 0.295535
                                 },
                                 {
-                                    "weight": -0.369098
+                                    "weight": -0.231276
                                 },
                                 {
-                                    "weight": 0.41065
+                                    "weight": -0.661761
                                 },
                                 {
-                                    "weight": 0.114324
+                                    "weight": 0.121824
                                 },
                                 {
-                                    "weight": 0.511956
+                                    "weight": 0.633342
                                 },
                                 {
-                                    "weight": 0.859024
+                                    "weight": -1.147947
                                 },
                                 {
-                                    "weight": -0.248015
+                                    "weight": -1.292068
                                 },
                                 {
-                                    "weight": -0.23209
+                                    "weight": -1.312202
                                 },
                                 {
-                                    "weight": 0.09998
+                                    "weight": -0.741185
                                 },
                                 {
-                                    "weight": 0.505866
+                                    "weight": 0.508228
                                 },
                                 {
-                                    "weight": 0.944568
+                                    "weight": 0.419949
                                 },
                                 {
-                                    "weight": 0.146495
+                                    "weight": -0.404167
                                 },
                                 {
-                                    "weight": 0.27552
+                                    "weight": -0.033702
                                 },
                                 {
-                                    "weight": 0.44584
+                                    "weight": -0.337307
                                 },
                                 {
-                                    "weight": 0.047048
+                                    "weight": -0.108734
                                 },
                                 {
-                                    "weight": 0.63223
+                                    "weight": 0.965279
                                 },
                                 {
-                                    "weight": 0.532599
+                                    "weight": 0.464512
                                 },
                                 {
-                                    "weight": -0.528258
+                                    "weight": 0.528243
                                 },
                                 {
-                                    "weight": -0.109265
+                                    "weight": 0.130777
                                 },
                                 {
-                                    "weight": 0.817706
+                                    "weight": -0.092286
                                 },
                                 {
-                                    "weight": -0.031807
+                                    "weight": 0.388343
                                 },
                                 {
-                                    "weight": 0.471931
+                                    "weight": 0.354496
                                 },
                                 {
-                                    "weight": 0.853596
+                                    "weight": -0.341134
                                 },
                                 {
-                                    "weight": -0.523932
+                                    "weight": -0.219131
                                 },
                                 {
-                                    "weight": -0.672143
+                                    "weight": 0.246613
                                 },
                                 {
-                                    "weight": 0.987396
+                                    "weight": -1.41495
                                 },
                                 {
-                                    "weight": 0.041648
+                                    "weight": -1.555195
                                 },
                                 {
-                                    "weight": 0.038046
+                                    "weight": -0.890095
                                 },
                                 {
-                                    "weight": -0.030188
+                                    "weight": -0.007407
                                 },
                                 {
-                                    "weight": -0.848558
+                                    "weight": -0.210049
                                 },
                                 {
-                                    "weight": 0.944894
+                                    "weight": -0.248377
                                 },
                                 {
-                                    "weight": -0.268136
+                                    "weight": -2.118753
                                 },
                                 {
-                                    "weight": 0.222573
+                                    "weight": -0.401028
                                 },
                                 {
-                                    "weight": 0.951046
+                                    "weight": -0.193648
                                 },
                                 {
-                                    "weight": 0.188123
+                                    "weight": 0.169048
                                 },
                                 {
-                                    "weight": 0.724867
+                                    "weight": 0.973013
                                 },
                                 {
-                                    "weight": -0.179621
+                                    "weight": 0.352766
                                 },
                                 {
-                                    "weight": 0.919365
+                                    "weight": -0.163731
                                 },
                                 {
-                                    "weight": 0.791894
+                                    "weight": -0.104125
                                 },
                                 {
-                                    "weight": 0.032221
+                                    "weight": -0.204743
                                 },
                                 {
-                                    "weight": 0.589794
+                                    "weight": 0.932053
                                 },
                                 {
-                                    "weight": -0.68826
+                                    "weight": 0.410467
                                 },
                                 {
-                                    "weight": -0.09469
+                                    "weight": 0.94401
                                 },
                                 {
-                                    "weight": 0.998733
+                                    "weight": 0.365292
                                 },
                                 {
-                                    "weight": 0.889768
+                                    "weight": 1.043441
                                 },
                                 {
-                                    "weight": 0.48591
+                                    "weight": -0.787767
                                 },
                                 {
-                                    "weight": 0.906802
+                                    "weight": -0.283343
                                 },
                                 {
-                                    "weight": 0.850456
+                                    "weight": -2.135918
                                 },
                                 {
-                                    "weight": -0.00508
+                                    "weight": -1.844673
                                 },
                                 {
-                                    "weight": -0.96868
+                                    "weight": -2.41714
                                 },
                                 {
-                                    "weight": 0.821313
+                                    "weight": -2.659867
                                 },
                                 {
-                                    "weight": 0.724887
+                                    "weight": -1.739601
                                 },
                                 {
-                                    "weight": -0.163249
+                                    "weight": -0.584728
                                 },
                                 {
-                                    "weight": 0.436404
+                                    "weight": 0.82408
                                 },
                                 {
-                                    "weight": 0.119311
+                                    "weight": 1.206169
                                 },
                                 {
-                                    "weight": -0.306505
+                                    "weight": 0.261305
                                 },
                                 {
-                                    "weight": 0.753811
+                                    "weight": 1.478765
                                 },
                                 {
-                                    "weight": 0.255211
+                                    "weight": 0.101738
                                 },
                                 {
-                                    "weight": 0.564197
+                                    "weight": 0.96685
+                                },
+                                {
+                                    "weight": -0.293955
+                                },
+                                {
+                                    "weight": -0.255152
+                                },
+                                {
+                                    "weight": 0.505197
+                                },
+                                {
+                                    "weight": 0.14452
+                                },
+                                {
+                                    "weight": 0.896621
+                                },
+                                {
+                                    "weight": 1.570105
+                                },
+                                {
+                                    "weight": 0.900476
+                                },
+                                {
+                                    "weight": 0.348455
+                                },
+                                {
+                                    "weight": -1.726243
+                                },
+                                {
+                                    "weight": -3.263877
+                                },
+                                {
+                                    "weight": -1.945521
+                                },
+                                {
+                                    "weight": -2.368712
+                                },
+                                {
+                                    "weight": -1.114862
+                                },
+                                {
+                                    "weight": 0.117091
+                                },
+                                {
+                                    "weight": 0.872643
+                                },
+                                {
+                                    "weight": 0.261026
+                                },
+                                {
+                                    "weight": 0.593728
+                                },
+                                {
+                                    "weight": 1.597357
+                                },
+                                {
+                                    "weight": 0.563386
+                                },
+                                {
+                                    "weight": -0.257122
+                                },
+                                {
+                                    "weight": -0.360282
+                                },
+                                {
+                                    "weight": 0.347344
+                                },
+                                {
+                                    "weight": 1.037378
+                                },
+                                {
+                                    "weight": 1.043459
+                                },
+                                {
+                                    "weight": 1.426389
+                                },
+                                {
+                                    "weight": 0.137639
+                                },
+                                {
+                                    "weight": 0.460709
+                                },
+                                {
+                                    "weight": 1.060701
+                                },
+                                {
+                                    "weight": -0.665709
+                                },
+                                {
+                                    "weight": -0.3083
+                                },
+                                {
+                                    "weight": -0.728904
+                                },
+                                {
+                                    "weight": -0.687542
+                                },
+                                {
+                                    "weight": -0.90942
+                                },
+                                {
+                                    "weight": 0.796085
+                                },
+                                {
+                                    "weight": 0.75584
+                                },
+                                {
+                                    "weight": 1.279511
+                                },
+                                {
+                                    "weight": 1.563983
+                                },
+                                {
+                                    "weight": 0.749032
+                                },
+                                {
+                                    "weight": -1.189763
+                                },
+                                {
+                                    "weight": -1.250439
+                                },
+                                {
+                                    "weight": 0.384591
+                                },
+                                {
+                                    "weight": 0.973232
+                                },
+                                {
+                                    "weight": -0.693692
+                                },
+                                {
+                                    "weight": 0.310268
+                                },
+                                {
+                                    "weight": -0.00038
+                                },
+                                {
+                                    "weight": 1.431152
+                                },
+                                {
+                                    "weight": 1.005316
+                                },
+                                {
+                                    "weight": 0.925745
+                                },
+                                {
+                                    "weight": 1.150058
+                                },
+                                {
+                                    "weight": 0.220433
+                                },
+                                {
+                                    "weight": 1.114738
+                                },
+                                {
+                                    "weight": -0.363103
+                                },
+                                {
+                                    "weight": 0.15557
+                                },
+                                {
+                                    "weight": 0.056921
+                                },
+                                {
+                                    "weight": 0.404392
+                                },
+                                {
+                                    "weight": 1.307915
+                                },
+                                {
+                                    "weight": -0.232554
+                                },
+                                {
+                                    "weight": 0.491113
+                                },
+                                {
+                                    "weight": -0.819677
+                                },
+                                {
+                                    "weight": 0.673197
+                                },
+                                {
+                                    "weight": -0.487526
+                                },
+                                {
+                                    "weight": -0.170111
+                                },
+                                {
+                                    "weight": 0.832477
+                                },
+                                {
+                                    "weight": 0.881139
+                                },
+                                {
+                                    "weight": 0.013549
+                                },
+                                {
+                                    "weight": 0.412504
+                                },
+                                {
+                                    "weight": -0.05318
+                                },
+                                {
+                                    "weight": 1.026707
+                                },
+                                {
+                                    "weight": 0.815794
+                                },
+                                {
+                                    "weight": -0.179176
+                                },
+                                {
+                                    "weight": -0.042309
+                                },
+                                {
+                                    "weight": -0.536027
+                                },
+                                {
+                                    "weight": -0.138138
+                                },
+                                {
+                                    "weight": -1.048692
+                                },
+                                {
+                                    "weight": -0.391151
+                                },
+                                {
+                                    "weight": 0.291812
+                                },
+                                {
+                                    "weight": 0.486188
+                                },
+                                {
+                                    "weight": 0.854185
+                                },
+                                {
+                                    "weight": 0.457444
+                                },
+                                {
+                                    "weight": 0.30752
+                                },
+                                {
+                                    "weight": 0.862003
+                                },
+                                {
+                                    "weight": 0.588146
+                                },
+                                {
+                                    "weight": 0.927329
+                                },
+                                {
+                                    "weight": 0.461679
+                                },
+                                {
+                                    "weight": 0.245322
+                                },
+                                {
+                                    "weight": 1.244565
+                                },
+                                {
+                                    "weight": 0.554928
+                                },
+                                {
+                                    "weight": 0.71
+                                },
+                                {
+                                    "weight": 0.533815
+                                },
+                                {
+                                    "weight": 0.133639
+                                },
+                                {
+                                    "weight": 0.994984
+                                },
+                                {
+                                    "weight": 0.597712
+                                },
+                                {
+                                    "weight": 0.116635
+                                },
+                                {
+                                    "weight": -0.418597
+                                },
+                                {
+                                    "weight": -0.817156
+                                },
+                                {
+                                    "weight": -0.016058
+                                },
+                                {
+                                    "weight": 0.281728
+                                },
+                                {
+                                    "weight": -0.108046
+                                },
+                                {
+                                    "weight": -0.796779
+                                },
+                                {
+                                    "weight": 0.60755
+                                },
+                                {
+                                    "weight": -0.686856
+                                },
+                                {
+                                    "weight": 0.164
+                                },
+                                {
+                                    "weight": 0.514108
+                                },
+                                {
+                                    "weight": -0.339861
+                                },
+                                {
+                                    "weight": -0.250869
+                                },
+                                {
+                                    "weight": 0.902112
+                                },
+                                {
+                                    "weight": -0.05873
+                                },
+                                {
+                                    "weight": 0.102644
+                                },
+                                {
+                                    "weight": -0.002846
+                                },
+                                {
+                                    "weight": 0.496678
+                                },
+                                {
+                                    "weight": -0.315603
+                                },
+                                {
+                                    "weight": -0.149298
+                                },
+                                {
+                                    "weight": -0.955622
+                                },
+                                {
+                                    "weight": 0.073812
+                                },
+                                {
+                                    "weight": -0.629221
+                                },
+                                {
+                                    "weight": -0.755814
+                                },
+                                {
+                                    "weight": 0.143002
+                                },
+                                {
+                                    "weight": 0.471254
+                                },
+                                {
+                                    "weight": -0.634402
+                                },
+                                {
+                                    "weight": 0.067804
+                                },
+                                {
+                                    "weight": 0.760575
+                                },
+                                {
+                                    "weight": 0.713455
+                                },
+                                {
+                                    "weight": 0.197875
+                                },
+                                {
+                                    "weight": 0.741593
+                                },
+                                {
+                                    "weight": 0.36121
+                                },
+                                {
+                                    "weight": 0.108517
+                                },
+                                {
+                                    "weight": 0.063196
+                                },
+                                {
+                                    "weight": 0.973054
+                                },
+                                {
+                                    "weight": 0.327648
+                                },
+                                {
+                                    "weight": 1.061926
+                                },
+                                {
+                                    "weight": -0.468868
+                                },
+                                {
+                                    "weight": 0.7728
+                                },
+                                {
+                                    "weight": -1.071081
+                                },
+                                {
+                                    "weight": -0.42086
+                                },
+                                {
+                                    "weight": -0.447961
+                                },
+                                {
+                                    "weight": 0.631062
+                                },
+                                {
+                                    "weight": 0.747261
+                                },
+                                {
+                                    "weight": -0.884431
+                                },
+                                {
+                                    "weight": 0.560582
+                                },
+                                {
+                                    "weight": 0.439765
+                                },
+                                {
+                                    "weight": 1.067592
+                                },
+                                {
+                                    "weight": -0.107432
+                                },
+                                {
+                                    "weight": -2.691001
+                                },
+                                {
+                                    "weight": 1.094448
+                                },
+                                {
+                                    "weight": 0.70961
+                                },
+                                {
+                                    "weight": 0.131284
+                                },
+                                {
+                                    "weight": -0.758026
+                                },
+                                {
+                                    "weight": -0.75711
+                                },
+                                {
+                                    "weight": -0.233168
+                                },
+                                {
+                                    "weight": -0.588526
+                                },
+                                {
+                                    "weight": -0.8201
+                                },
+                                {
+                                    "weight": -0.790556
+                                },
+                                {
+                                    "weight": -0.76993
+                                },
+                                {
+                                    "weight": -0.414171
+                                },
+                                {
+                                    "weight": -0.05076
+                                },
+                                {
+                                    "weight": -0.36299
+                                },
+                                {
+                                    "weight": 0.689406
+                                },
+                                {
+                                    "weight": -0.340471
+                                },
+                                {
+                                    "weight": 0.983788
+                                },
+                                {
+                                    "weight": 0.151487
+                                },
+                                {
+                                    "weight": -0.868747
+                                },
+                                {
+                                    "weight": -0.776398
+                                },
+                                {
+                                    "weight": 0.872945
+                                },
+                                {
+                                    "weight": -0.757537
+                                },
+                                {
+                                    "weight": -0.217909
+                                },
+                                {
+                                    "weight": 0.847981
+                                },
+                                {
+                                    "weight": -0.074716
+                                },
+                                {
+                                    "weight": -0.602869
+                                },
+                                {
+                                    "weight": 0.35413
+                                },
+                                {
+                                    "weight": -0.103831
+                                },
+                                {
+                                    "weight": -0.007454
+                                },
+                                {
+                                    "weight": -0.516713
+                                },
+                                {
+                                    "weight": 0.485739
+                                },
+                                {
+                                    "weight": -0.464212
+                                },
+                                {
+                                    "weight": -0.454658
+                                },
+                                {
+                                    "weight": 0.379597
+                                },
+                                {
+                                    "weight": 0.41181
+                                },
+                                {
+                                    "weight": 0.928428
+                                },
+                                {
+                                    "weight": -0.039193
+                                },
+                                {
+                                    "weight": -0.13673
+                                },
+                                {
+                                    "weight": 0.959129
+                                },
+                                {
+                                    "weight": 0.872578
+                                },
+                                {
+                                    "weight": -0.840975
+                                },
+                                {
+                                    "weight": 0.738724
+                                },
+                                {
+                                    "weight": 0.691238
+                                },
+                                {
+                                    "weight": 0.426398
+                                },
+                                {
+                                    "weight": 0.356995
+                                },
+                                {
+                                    "weight": 0.221549
+                                },
+                                {
+                                    "weight": 0.379334
+                                },
+                                {
+                                    "weight": 0.98328
+                                },
+                                {
+                                    "weight": 0.172886
+                                },
+                                {
+                                    "weight": 0.575042
+                                },
+                                {
+                                    "weight": 0.700696
+                                },
+                                {
+                                    "weight": -0.478156
+                                },
+                                {
+                                    "weight": -0.054021
+                                },
+                                {
+                                    "weight": 0.967242
+                                },
+                                {
+                                    "weight": -0.863818
+                                },
+                                {
+                                    "weight": 1.082957
+                                },
+                                {
+                                    "weight": 0.264525
+                                },
+                                {
+                                    "weight": 0.683547
+                                },
+                                {
+                                    "weight": 0.278505
+                                },
+                                {
+                                    "weight": 0.591259
+                                },
+                                {
+                                    "weight": 0.87856
+                                },
+                                {
+                                    "weight": -0.618922
+                                },
+                                {
+                                    "weight": -0.864372
+                                },
+                                {
+                                    "weight": -0.203351
+                                },
+                                {
+                                    "weight": -0.326772
+                                },
+                                {
+                                    "weight": 0.832716
+                                },
+                                {
+                                    "weight": -0.076547
+                                },
+                                {
+                                    "weight": -0.433901
+                                },
+                                {
+                                    "weight": 1.03567
+                                },
+                                {
+                                    "weight": -0.265025
+                                },
+                                {
+                                    "weight": -0.059452
+                                },
+                                {
+                                    "weight": -0.648997
+                                },
+                                {
+                                    "weight": -0.56294
+                                },
+                                {
+                                    "weight": -0.012211
+                                },
+                                {
+                                    "weight": 0.965168
+                                },
+                                {
+                                    "weight": 0.125955
+                                },
+                                {
+                                    "weight": 0.211642
+                                },
+                                {
+                                    "weight": -0.194329
+                                },
+                                {
+                                    "weight": -0.686632
+                                },
+                                {
+                                    "weight": 0.029998
+                                },
+                                {
+                                    "weight": -0.354689
+                                },
+                                {
+                                    "weight": 0.586315
+                                },
+                                {
+                                    "weight": -0.119894
+                                },
+                                {
+                                    "weight": -0.020186
+                                },
+                                {
+                                    "weight": 0.330177
+                                },
+                                {
+                                    "weight": 0.730843
+                                },
+                                {
+                                    "weight": 0.964578
+                                },
+                                {
+                                    "weight": 0.006261
+                                },
+                                {
+                                    "weight": -0.382943
+                                },
+                                {
+                                    "weight": 0.677132
+                                },
+                                {
+                                    "weight": 0.392611
+                                },
+                                {
+                                    "weight": 1.043284
+                                },
+                                {
+                                    "weight": -0.206556
+                                },
+                                {
+                                    "weight": -0.3754
+                                },
+                                {
+                                    "weight": -0.72161
+                                },
+                                {
+                                    "weight": 0.058563
+                                },
+                                {
+                                    "weight": 0.506903
+                                },
+                                {
+                                    "weight": 0.562183
+                                },
+                                {
+                                    "weight": 0.133364
+                                },
+                                {
+                                    "weight": -0.039478
+                                },
+                                {
+                                    "weight": -0.325863
+                                },
+                                {
+                                    "weight": -0.321672
+                                },
+                                {
+                                    "weight": -0.643832
+                                },
+                                {
+                                    "weight": -0.497881
+                                },
+                                {
+                                    "weight": 0.831328
+                                },
+                                {
+                                    "weight": 0.328285
+                                },
+                                {
+                                    "weight": 0.211478
+                                },
+                                {
+                                    "weight": -0.174072
+                                },
+                                {
+                                    "weight": -0.122545
+                                },
+                                {
+                                    "weight": 0.295785
+                                },
+                                {
+                                    "weight": -0.791405
+                                },
+                                {
+                                    "weight": 0.558478
+                                },
+                                {
+                                    "weight": -0.526082
+                                },
+                                {
+                                    "weight": 0.762046
+                                },
+                                {
+                                    "weight": 0.063881
+                                },
+                                {
+                                    "weight": 1.029815
+                                },
+                                {
+                                    "weight": -0.244467
+                                },
+                                {
+                                    "weight": -0.264249
+                                },
+                                {
+                                    "weight": 0.257241
+                                },
+                                {
+                                    "weight": 0.689701
+                                },
+                                {
+                                    "weight": -0.492757
+                                },
+                                {
+                                    "weight": -0.572333
+                                },
+                                {
+                                    "weight": -0.48544
+                                },
+                                {
+                                    "weight": 1.059813
+                                },
+                                {
+                                    "weight": -0.299874
+                                },
+                                {
+                                    "weight": 0.725078
+                                },
+                                {
+                                    "weight": -0.780935
+                                },
+                                {
+                                    "weight": 0.631117
+                                },
+                                {
+                                    "weight": 0.585629
+                                },
+                                {
+                                    "weight": 0.62955
+                                },
+                                {
+                                    "weight": 0.885138
+                                },
+                                {
+                                    "weight": 0.986691
+                                },
+                                {
+                                    "weight": 0.024308
+                                },
+                                {
+                                    "weight": -0.718101
+                                },
+                                {
+                                    "weight": 0.557619
+                                },
+                                {
+                                    "weight": 0.758138
+                                },
+                                {
+                                    "weight": -0.820975
+                                },
+                                {
+                                    "weight": 0.09014
+                                },
+                                {
+                                    "weight": -0.486364
+                                },
+                                {
+                                    "weight": -0.270143
+                                },
+                                {
+                                    "weight": 0.990942
+                                },
+                                {
+                                    "weight": 0.840559
+                                },
+                                {
+                                    "weight": 0.926263
+                                },
+                                {
+                                    "weight": -0.568982
+                                },
+                                {
+                                    "weight": 0.71161
+                                },
+                                {
+                                    "weight": 0.788722
+                                },
+                                {
+                                    "weight": -0.324597
+                                },
+                                {
+                                    "weight": 0.11484
+                                },
+                                {
+                                    "weight": 0.894202
+                                },
+                                {
+                                    "weight": 0.202478
+                                },
+                                {
+                                    "weight": 1.015903
+                                },
+                                {
+                                    "weight": -0.894353
+                                },
+                                {
+                                    "weight": 0.023553
+                                },
+                                {
+                                    "weight": -0.439556
+                                },
+                                {
+                                    "weight": 1.086793
+                                },
+                                {
+                                    "weight": -0.825095
+                                },
+                                {
+                                    "weight": 0.534274
+                                },
+                                {
+                                    "weight": 0.115292
+                                },
+                                {
+                                    "weight": 0.089608
+                                },
+                                {
+                                    "weight": 0.70159
+                                },
+                                {
+                                    "weight": -0.49825
+                                },
+                                {
+                                    "weight": -0.802398
+                                },
+                                {
+                                    "weight": -0.866845
+                                },
+                                {
+                                    "weight": 0.64122
+                                },
+                                {
+                                    "weight": -0.63522
+                                },
+                                {
+                                    "weight": -0.588008
+                                },
+                                {
+                                    "weight": 0.159544
+                                },
+                                {
+                                    "weight": -0.316098
+                                },
+                                {
+                                    "weight": -0.754856
+                                },
+                                {
+                                    "weight": 0.577339
+                                },
+                                {
+                                    "weight": 0.960585
+                                },
+                                {
+                                    "weight": 0.898406
+                                },
+                                {
+                                    "weight": -0.211258
+                                },
+                                {
+                                    "weight": -0.763256
+                                },
+                                {
+                                    "weight": 0.123388
+                                },
+                                {
+                                    "weight": 0.355883
+                                },
+                                {
+                                    "weight": -0.561147
+                                },
+                                {
+                                    "weight": -0.827408
+                                },
+                                {
+                                    "weight": -0.006337
+                                },
+                                {
+                                    "weight": -0.491386
+                                },
+                                {
+                                    "weight": -0.576502
+                                },
+                                {
+                                    "weight": -0.65646
+                                },
+                                {
+                                    "weight": 0.252565
+                                },
+                                {
+                                    "weight": 0.378256
+                                },
+                                {
+                                    "weight": 0.611768
+                                },
+                                {
+                                    "weight": 1.052367
+                                },
+                                {
+                                    "weight": -0.181051
+                                },
+                                {
+                                    "weight": 1.051537
+                                },
+                                {
+                                    "weight": -0.797597
+                                },
+                                {
+                                    "weight": 0.275221
+                                },
+                                {
+                                    "weight": 0.228805
+                                },
+                                {
+                                    "weight": 0.633207
+                                },
+                                {
+                                    "weight": -0.216451
+                                },
+                                {
+                                    "weight": -0.69387
+                                },
+                                {
+                                    "weight": 0.687881
+                                },
+                                {
+                                    "weight": -0.258407
+                                },
+                                {
+                                    "weight": -0.191968
+                                },
+                                {
+                                    "weight": -0.319065
+                                },
+                                {
+                                    "weight": -0.456102
+                                },
+                                {
+                                    "weight": -0.255028
+                                },
+                                {
+                                    "weight": 0.873677
+                                },
+                                {
+                                    "weight": 0.225647
+                                },
+                                {
+                                    "weight": -0.174329
+                                },
+                                {
+                                    "weight": -0.344753
+                                },
+                                {
+                                    "weight": -0.165394
+                                },
+                                {
+                                    "weight": 0.535731
+                                },
+                                {
+                                    "weight": -0.414636
+                                },
+                                {
+                                    "weight": 0.165201
+                                },
+                                {
+                                    "weight": 0.725175
+                                },
+                                {
+                                    "weight": -0.434407
+                                },
+                                {
+                                    "weight": -0.482217
+                                },
+                                {
+                                    "weight": 0.771031
+                                },
+                                {
+                                    "weight": 0.056858
+                                },
+                                {
+                                    "weight": -0.572552
+                                },
+                                {
+                                    "weight": -0.04981
+                                },
+                                {
+                                    "weight": 0.444854
+                                },
+                                {
+                                    "weight": -0.475031
+                                },
+                                {
+                                    "weight": 0.694689
+                                },
+                                {
+                                    "weight": -0.727065
+                                },
+                                {
+                                    "weight": -0.63876
+                                },
+                                {
+                                    "weight": -0.320268
+                                },
+                                {
+                                    "weight": 0.682936
+                                },
+                                {
+                                    "weight": 0.920308
+                                },
+                                {
+                                    "weight": -0.275666
+                                },
+                                {
+                                    "weight": 1.06853
+                                },
+                                {
+                                    "weight": 1.086321
+                                },
+                                {
+                                    "weight": 0.471073
+                                },
+                                {
+                                    "weight": 0.292511
+                                },
+                                {
+                                    "weight": 0.610701
+                                },
+                                {
+                                    "weight": 0.880522
+                                },
+                                {
+                                    "weight": -0.651389
+                                },
+                                {
+                                    "weight": -0.428752
+                                },
+                                {
+                                    "weight": 0.911623
+                                },
+                                {
+                                    "weight": 0.357849
+                                },
+                                {
+                                    "weight": 0.089382
+                                },
+                                {
+                                    "weight": 0.993115
+                                },
+                                {
+                                    "weight": -0.504235
+                                },
+                                {
+                                    "weight": 0.688628
+                                },
+                                {
+                                    "weight": 1.020136
+                                },
+                                {
+                                    "weight": 0.580873
+                                },
+                                {
+                                    "weight": 0.606152
+                                },
+                                {
+                                    "weight": 0.485543
+                                },
+                                {
+                                    "weight": -0.517359
+                                },
+                                {
+                                    "weight": 0.240152
+                                },
+                                {
+                                    "weight": 0.489739
+                                },
+                                {
+                                    "weight": -0.393306
+                                },
+                                {
+                                    "weight": -0.837908
+                                },
+                                {
+                                    "weight": 0.447278
+                                },
+                                {
+                                    "weight": 0.144539
+                                },
+                                {
+                                    "weight": 0.37091
+                                },
+                                {
+                                    "weight": 0.164607
+                                },
+                                {
+                                    "weight": -0.221667
+                                },
+                                {
+                                    "weight": 0.917267
+                                },
+                                {
+                                    "weight": -0.160524
+                                },
+                                {
+                                    "weight": 0.334535
+                                },
+                                {
+                                    "weight": 0.207316
+                                },
+                                {
+                                    "weight": -0.13657
+                                },
+                                {
+                                    "weight": -0.384721
+                                },
+                                {
+                                    "weight": 0.291726
+                                },
+                                {
+                                    "weight": 1.060131
+                                },
+                                {
+                                    "weight": -0.169385
+                                },
+                                {
+                                    "weight": 0.623486
+                                },
+                                {
+                                    "weight": 0.938655
+                                },
+                                {
+                                    "weight": 0.680237
+                                },
+                                {
+                                    "weight": -0.881856
+                                },
+                                {
+                                    "weight": -0.752304
+                                },
+                                {
+                                    "weight": 0.996682
+                                },
+                                {
+                                    "weight": -0.783887
+                                },
+                                {
+                                    "weight": 0.313071
+                                },
+                                {
+                                    "weight": 0.703561
+                                },
+                                {
+                                    "weight": -0.74614
+                                },
+                                {
+                                    "weight": 0.434853
+                                },
+                                {
+                                    "weight": 0.174501
+                                },
+                                {
+                                    "weight": -0.369543
+                                },
+                                {
+                                    "weight": 0.366687
+                                },
+                                {
+                                    "weight": -0.65874
+                                },
+                                {
+                                    "weight": -0.589932
+                                },
+                                {
+                                    "weight": 0.166591
+                                },
+                                {
+                                    "weight": -0.149683
+                                },
+                                {
+                                    "weight": 0.304692
+                                },
+                                {
+                                    "weight": 0.67079
+                                },
+                                {
+                                    "weight": 0.845842
+                                },
+                                {
+                                    "weight": 0.045317
+                                },
+                                {
+                                    "weight": 0.996604
+                                },
+                                {
+                                    "weight": 0.817105
+                                },
+                                {
+                                    "weight": -0.861182
+                                },
+                                {
+                                    "weight": -0.177781
+                                },
+                                {
+                                    "weight": -0.567308
+                                },
+                                {
+                                    "weight": -0.234276
+                                },
+                                {
+                                    "weight": 0.999526
+                                },
+                                {
+                                    "weight": 1.079212
+                                },
+                                {
+                                    "weight": 0.033582
+                                },
+                                {
+                                    "weight": 0.762392
+                                },
+                                {
+                                    "weight": -0.249574
+                                },
+                                {
+                                    "weight": 0.915295
+                                },
+                                {
+                                    "weight": -0.411187
+                                },
+                                {
+                                    "weight": 0.359192
+                                },
+                                {
+                                    "weight": 0.306973
+                                },
+                                {
+                                    "weight": 0.568668
+                                },
+                                {
+                                    "weight": -0.666779
+                                },
+                                {
+                                    "weight": 0.56068
+                                },
+                                {
+                                    "weight": 0.449773
+                                },
+                                {
+                                    "weight": -0.008123
+                                },
+                                {
+                                    "weight": -0.45396
+                                },
+                                {
+                                    "weight": -0.484973
+                                },
+                                {
+                                    "weight": -0.490823
+                                },
+                                {
+                                    "weight": -0.454619
+                                },
+                                {
+                                    "weight": 0.488071
+                                },
+                                {
+                                    "weight": 0.47054
+                                },
+                                {
+                                    "weight": 0.266013
+                                },
+                                {
+                                    "weight": 0.993087
+                                },
+                                {
+                                    "weight": -0.95841
+                                },
+                                {
+                                    "weight": 0.448987
+                                },
+                                {
+                                    "weight": 0.068951
+                                },
+                                {
+                                    "weight": -0.391706
+                                },
+                                {
+                                    "weight": 0.628304
+                                },
+                                {
+                                    "weight": 0.348982
+                                },
+                                {
+                                    "weight": -0.875608
+                                },
+                                {
+                                    "weight": -0.463465
+                                },
+                                {
+                                    "weight": -0.408517
+                                },
+                                {
+                                    "weight": -0.722685
+                                },
+                                {
+                                    "weight": 0.319522
+                                },
+                                {
+                                    "weight": 0.755359
+                                },
+                                {
+                                    "weight": 0.224783
+                                },
+                                {
+                                    "weight": -0.335169
+                                },
+                                {
+                                    "weight": -0.066118
+                                },
+                                {
+                                    "weight": 0.766031
+                                },
+                                {
+                                    "weight": -0.206457
+                                },
+                                {
+                                    "weight": 0.366592
+                                },
+                                {
+                                    "weight": -0.162735
+                                },
+                                {
+                                    "weight": -0.056529
+                                },
+                                {
+                                    "weight": -0.483462
+                                },
+                                {
+                                    "weight": -0.22256
+                                },
+                                {
+                                    "weight": 1.056861
+                                },
+                                {
+                                    "weight": 0.036216
+                                },
+                                {
+                                    "weight": 0.633312
+                                },
+                                {
+                                    "weight": -0.350895
+                                },
+                                {
+                                    "weight": -0.1991
+                                },
+                                {
+                                    "weight": -0.584962
+                                },
+                                {
+                                    "weight": -0.883459
+                                },
+                                {
+                                    "weight": 0.417425
+                                },
+                                {
+                                    "weight": 0.215759
+                                },
+                                {
+                                    "weight": 0.693984
+                                },
+                                {
+                                    "weight": 0.927816
+                                },
+                                {
+                                    "weight": 0.003189
+                                },
+                                {
+                                    "weight": 0.836454
+                                },
+                                {
+                                    "weight": 0.439582
+                                },
+                                {
+                                    "weight": -0.674655
+                                },
+                                {
+                                    "weight": -0.584287
+                                },
+                                {
+                                    "weight": -0.785207
+                                },
+                                {
+                                    "weight": 0.733652
+                                },
+                                {
+                                    "weight": -0.002556
+                                },
+                                {
+                                    "weight": 0.040894
+                                },
+                                {
+                                    "weight": -0.256034
+                                },
+                                {
+                                    "weight": 0.156222
+                                },
+                                {
+                                    "weight": -0.600166
+                                },
+                                {
+                                    "weight": -0.392211
+                                },
+                                {
+                                    "weight": -0.081424
+                                },
+                                {
+                                    "weight": 1.019983
+                                },
+                                {
+                                    "weight": -0.049813
+                                },
+                                {
+                                    "weight": 0.123776
+                                },
+                                {
+                                    "weight": -0.685819
+                                },
+                                {
+                                    "weight": -0.593897
+                                },
+                                {
+                                    "weight": -0.820649
+                                },
+                                {
+                                    "weight": 0.500985
+                                },
+                                {
+                                    "weight": 0.324224
+                                },
+                                {
+                                    "weight": 1.065319
+                                },
+                                {
+                                    "weight": -0.486442
+                                },
+                                {
+                                    "weight": 0.671926
+                                },
+                                {
+                                    "weight": 1.050968
+                                },
+                                {
+                                    "weight": -0.720873
+                                },
+                                {
+                                    "weight": -0.412875
+                                },
+                                {
+                                    "weight": 0.918857
+                                },
+                                {
+                                    "weight": -0.819458
+                                },
+                                {
+                                    "weight": -0.134872
+                                },
+                                {
+                                    "weight": 0.747247
+                                },
+                                {
+                                    "weight": 0.406943
+                                },
+                                {
+                                    "weight": 1.013941
+                                },
+                                {
+                                    "weight": -0.806245
+                                },
+                                {
+                                    "weight": 0.803485
+                                },
+                                {
+                                    "weight": 1.061976
+                                },
+                                {
+                                    "weight": -0.004951
+                                },
+                                {
+                                    "weight": -0.170849
+                                },
+                                {
+                                    "weight": 1.051478
+                                },
+                                {
+                                    "weight": 0.592113
                                 },
                                 {
                                     "weight": 0.227905
                                 },
                                 {
-                                    "weight": -0.706388
+                                    "weight": 1.109585
                                 },
                                 {
-                                    "weight": -0.835359
+                                    "weight": 0.519174
                                 },
                                 {
-                                    "weight": -0.476946
+                                    "weight": 0.829913
                                 },
                                 {
-                                    "weight": -0.37205
+                                    "weight": -0.59175
                                 },
                                 {
-                                    "weight": -0.294052
+                                    "weight": -0.873684
                                 },
                                 {
-                                    "weight": 0.331725
+                                    "weight": -0.522105
                                 },
                                 {
-                                    "weight": 0.153024
+                                    "weight": -0.701335
                                 },
                                 {
-                                    "weight": 0.938804
+                                    "weight": 0.949141
                                 },
                                 {
-                                    "weight": -0.007291
+                                    "weight": -0.08624
                                 },
                                 {
-                                    "weight": 0.874899
+                                    "weight": 0.2013
                                 },
                                 {
-                                    "weight": -0.860402
+                                    "weight": 0.032282
                                 },
                                 {
-                                    "weight": 0.827736
+                                    "weight": -0.641384
                                 },
                                 {
-                                    "weight": 0.748709
+                                    "weight": -0.101511
                                 },
                                 {
-                                    "weight": -0.16572
+                                    "weight": 0.970665
                                 },
                                 {
-                                    "weight": -0.0194
+                                    "weight": -0.353411
                                 },
                                 {
-                                    "weight": 0.237359
-                                },
-                                {
-                                    "weight": -0.231366
-                                },
-                                {
-                                    "weight": 0.314159
-                                },
-                                {
-                                    "weight": 0.364678
-                                },
-                                {
-                                    "weight": -0.734832
-                                },
-                                {
-                                    "weight": -0.097117
-                                },
-                                {
-                                    "weight": 0.140867
-                                },
-                                {
-                                    "weight": 0.029104
-                                },
-                                {
-                                    "weight": 0.141745
-                                },
-                                {
-                                    "weight": 0.917571
-                                },
-                                {
-                                    "weight": 0.124105
-                                },
-                                {
-                                    "weight": 0.878293
-                                },
-                                {
-                                    "weight": -1.031533
-                                },
-                                {
-                                    "weight": -0.54479
-                                },
-                                {
-                                    "weight": -0.345196
-                                },
-                                {
-                                    "weight": -0.183864
-                                },
-                                {
-                                    "weight": -0.873222
-                                },
-                                {
-                                    "weight": 0.918836
-                                },
-                                {
-                                    "weight": 0.10908
-                                },
-                                {
-                                    "weight": -0.696228
-                                },
-                                {
-                                    "weight": 0.967645
-                                },
-                                {
-                                    "weight": 1.050151
-                                },
-                                {
-                                    "weight": 0.274698
-                                },
-                                {
-                                    "weight": 0.118888
-                                },
-                                {
-                                    "weight": 0.432662
-                                },
-                                {
-                                    "weight": -0.407673
-                                },
-                                {
-                                    "weight": 1.016748
-                                },
-                                {
-                                    "weight": 0.230545
-                                },
-                                {
-                                    "weight": 0.339874
-                                },
-                                {
-                                    "weight": 0.719092
-                                },
-                                {
-                                    "weight": -0.878189
-                                },
-                                {
-                                    "weight": 0.280768
-                                },
-                                {
-                                    "weight": 0.541879
-                                },
-                                {
-                                    "weight": -0.839473
-                                },
-                                {
-                                    "weight": 0.367543
-                                },
-                                {
-                                    "weight": -0.186652
-                                },
-                                {
-                                    "weight": -0.54341
-                                },
-                                {
-                                    "weight": -0.000555
-                                },
-                                {
-                                    "weight": -0.402367
-                                },
-                                {
-                                    "weight": 0.730797
-                                },
-                                {
-                                    "weight": -0.040125
-                                },
-                                {
-                                    "weight": 1.034286
-                                },
-                                {
-                                    "weight": 0.130839
-                                },
-                                {
-                                    "weight": -0.344225
-                                },
-                                {
-                                    "weight": 0.6421
-                                },
-                                {
-                                    "weight": 0.646375
-                                },
-                                {
-                                    "weight": 1.055262
-                                },
-                                {
-                                    "weight": -0.169233
-                                },
-                                {
-                                    "weight": 0.495581
-                                },
-                                {
-                                    "weight": -0.343739
-                                },
-                                {
-                                    "weight": 0.593167
-                                },
-                                {
-                                    "weight": -0.050696
-                                },
-                                {
-                                    "weight": 0.708833
-                                },
-                                {
-                                    "weight": -0.859043
-                                },
-                                {
-                                    "weight": 0.730204
-                                },
-                                {
-                                    "weight": -0.283823
-                                },
-                                {
-                                    "weight": 0.440502
-                                },
-                                {
-                                    "weight": 0.789844
-                                },
-                                {
-                                    "weight": -0.283327
-                                },
-                                {
-                                    "weight": 0.281002
-                                },
-                                {
-                                    "weight": -0.689541
-                                },
-                                {
-                                    "weight": -0.814064
-                                },
-                                {
-                                    "weight": -0.458648
-                                },
-                                {
-                                    "weight": 0.089789
-                                },
-                                {
-                                    "weight": 0.87398
-                                },
-                                {
-                                    "weight": 0.466804
-                                },
-                                {
-                                    "weight": 0.076351
-                                },
-                                {
-                                    "weight": 0.059889
-                                },
-                                {
-                                    "weight": 1.00258
-                                },
-                                {
-                                    "weight": -0.464838
-                                },
-                                {
-                                    "weight": -0.241029
-                                },
-                                {
-                                    "weight": -0.547527
-                                },
-                                {
-                                    "weight": 0.820365
-                                },
-                                {
-                                    "weight": -0.300827
-                                },
-                                {
-                                    "weight": -0.410792
-                                },
-                                {
-                                    "weight": 0.750906
-                                },
-                                {
-                                    "weight": -0.412453
-                                },
-                                {
-                                    "weight": 1.050075
-                                },
-                                {
-                                    "weight": 0.593265
-                                },
-                                {
-                                    "weight": -0.496546
-                                },
-                                {
-                                    "weight": 0.855387
-                                },
-                                {
-                                    "weight": 0.899568
-                                },
-                                {
-                                    "weight": 0.857303
-                                },
-                                {
-                                    "weight": -0.547267
-                                },
-                                {
-                                    "weight": 0.872515
-                                },
-                                {
-                                    "weight": -0.16914
-                                },
-                                {
-                                    "weight": 0.777178
-                                },
-                                {
-                                    "weight": 0.487728
-                                },
-                                {
-                                    "weight": 0.097827
-                                },
-                                {
-                                    "weight": -0.403533
-                                },
-                                {
-                                    "weight": -0.877864
-                                },
-                                {
-                                    "weight": 0.395207
-                                },
-                                {
-                                    "weight": -0.209857
-                                },
-                                {
-                                    "weight": 0.132189
-                                },
-                                {
-                                    "weight": -0.204343
-                                },
-                                {
-                                    "weight": 0.216713
-                                },
-                                {
-                                    "weight": -0.241849
-                                },
-                                {
-                                    "weight": -0.667838
-                                },
-                                {
-                                    "weight": -0.746168
-                                },
-                                {
-                                    "weight": 0.462019
-                                },
-                                {
-                                    "weight": -0.113847
-                                },
-                                {
-                                    "weight": 0.95095
-                                },
-                                {
-                                    "weight": 0.456917
-                                },
-                                {
-                                    "weight": 0.578075
-                                },
-                                {
-                                    "weight": 0.091305
-                                },
-                                {
-                                    "weight": -0.601405
-                                },
-                                {
-                                    "weight": -0.697782
-                                },
-                                {
-                                    "weight": 0.186705
-                                },
-                                {
-                                    "weight": 0.482125
-                                },
-                                {
-                                    "weight": -0.71121
-                                },
-                                {
-                                    "weight": 0.077937
-                                },
-                                {
-                                    "weight": 0.698684
-                                },
-                                {
-                                    "weight": -0.229689
-                                },
-                                {
-                                    "weight": -0.831941
-                                },
-                                {
-                                    "weight": 0.968651
-                                },
-                                {
-                                    "weight": -0.834688
-                                },
-                                {
-                                    "weight": -0.064523
-                                },
-                                {
-                                    "weight": -0.506675
-                                },
-                                {
-                                    "weight": -0.147655
-                                },
-                                {
-                                    "weight": 0.380864
-                                },
-                                {
-                                    "weight": -0.860995
-                                },
-                                {
-                                    "weight": 0.858601
-                                },
-                                {
-                                    "weight": 0.339969
-                                },
-                                {
-                                    "weight": -0.766876
-                                },
-                                {
-                                    "weight": 0.88857
-                                },
-                                {
-                                    "weight": 0.471138
-                                },
-                                {
-                                    "weight": -0.167356
-                                },
-                                {
-                                    "weight": -0.417744
-                                },
-                                {
-                                    "weight": -0.740142
-                                },
-                                {
-                                    "weight": -0.168835
-                                },
-                                {
-                                    "weight": 1.081691
-                                },
-                                {
-                                    "weight": 0.979576
-                                },
-                                {
-                                    "weight": 0.826251
-                                },
-                                {
-                                    "weight": -0.871737
-                                },
-                                {
-                                    "weight": 0.082882
-                                },
-                                {
-                                    "weight": 0.715469
-                                },
-                                {
-                                    "weight": 0.007135
-                                },
-                                {
-                                    "weight": 1.057643
-                                },
-                                {
-                                    "weight": 0.692336
-                                },
-                                {
-                                    "weight": -0.808137
-                                },
-                                {
-                                    "weight": -0.752166
-                                },
-                                {
-                                    "weight": 1.081264
-                                },
-                                {
-                                    "weight": -0.852877
-                                },
-                                {
-                                    "weight": 0.245606
-                                },
-                                {
-                                    "weight": 0.407354
-                                },
-                                {
-                                    "weight": -0.118785
-                                },
-                                {
-                                    "weight": -0.83597
-                                },
-                                {
-                                    "weight": -0.469076
-                                },
-                                {
-                                    "weight": 0.20288
-                                },
-                                {
-                                    "weight": 0.367497
-                                },
-                                {
-                                    "weight": 1.010034
-                                },
-                                {
-                                    "weight": 0.152769
-                                },
-                                {
-                                    "weight": 0.905844
-                                },
-                                {
-                                    "weight": -0.064584
-                                },
-                                {
-                                    "weight": -0.177869
-                                },
-                                {
-                                    "weight": -0.450889
-                                },
-                                {
-                                    "weight": 0.286927
-                                },
-                                {
-                                    "weight": -0.02607
-                                },
-                                {
-                                    "weight": -0.821626
-                                },
-                                {
-                                    "weight": -0.375934
-                                },
-                                {
-                                    "weight": 0.811358
-                                },
-                                {
-                                    "weight": 0.62312
-                                },
-                                {
-                                    "weight": -0.082407
-                                },
-                                {
-                                    "weight": 0.130612
-                                },
-                                {
-                                    "weight": 0.084162
-                                },
-                                {
-                                    "weight": 0.782
-                                },
-                                {
-                                    "weight": 0.210022
-                                },
-                                {
-                                    "weight": -0.6965
-                                },
-                                {
-                                    "weight": 0.545725
-                                },
-                                {
-                                    "weight": -0.633388
-                                },
-                                {
-                                    "weight": 0.877339
-                                },
-                                {
-                                    "weight": -0.258072
-                                },
-                                {
-                                    "weight": 0.41687
-                                },
-                                {
-                                    "weight": -0.182452
-                                },
-                                {
-                                    "weight": -0.036757
-                                },
-                                {
-                                    "weight": -0.457668
-                                },
-                                {
-                                    "weight": -0.10579
-                                },
-                                {
-                                    "weight": -0.142046
-                                },
-                                {
-                                    "weight": 0.553776
-                                },
-                                {
-                                    "weight": 0.681405
-                                },
-                                {
-                                    "weight": 0.595712
-                                },
-                                {
-                                    "weight": 0.501168
-                                },
-                                {
-                                    "weight": -0.152661
-                                },
-                                {
-                                    "weight": 0.648695
-                                },
-                                {
-                                    "weight": 0.255371
-                                },
-                                {
-                                    "weight": 0.308657
-                                },
-                                {
-                                    "weight": -0.52462
-                                },
-                                {
-                                    "weight": -0.670559
-                                },
-                                {
-                                    "weight": 0.669447
-                                },
-                                {
-                                    "weight": 0.897786
-                                },
-                                {
-                                    "weight": 1.07247
-                                },
-                                {
-                                    "weight": -0.862344
-                                },
-                                {
-                                    "weight": 0.890944
-                                },
-                                {
-                                    "weight": -0.300376
-                                },
-                                {
-                                    "weight": 1.096461
-                                },
-                                {
-                                    "weight": 0.398626
-                                },
-                                {
-                                    "weight": -0.324664
-                                },
-                                {
-                                    "weight": -0.033091
-                                },
-                                {
-                                    "weight": 0.89925
-                                },
-                                {
-                                    "weight": -0.018324
-                                },
-                                {
-                                    "weight": -0.824073
-                                },
-                                {
-                                    "weight": 0.031544
-                                },
-                                {
-                                    "weight": 0.046685
-                                },
-                                {
-                                    "weight": -0.816683
-                                },
-                                {
-                                    "weight": -0.111095
-                                },
-                                {
-                                    "weight": -0.187329
-                                },
-                                {
-                                    "weight": 0.889303
-                                },
-                                {
-                                    "weight": 0.859883
-                                },
-                                {
-                                    "weight": 0.848835
-                                },
-                                {
-                                    "weight": 0.574407
-                                },
-                                {
-                                    "weight": 0.382018
-                                },
-                                {
-                                    "weight": -0.189899
-                                },
-                                {
-                                    "weight": 1.073816
-                                },
-                                {
-                                    "weight": -0.066416
-                                },
-                                {
-                                    "weight": -0.845004
-                                },
-                                {
-                                    "weight": 0.408452
-                                },
-                                {
-                                    "weight": 0.261047
-                                },
-                                {
-                                    "weight": 0.117794
-                                },
-                                {
-                                    "weight": -0.16615
-                                },
-                                {
-                                    "weight": -0.512474
-                                },
-                                {
-                                    "weight": 0.732009
-                                },
-                                {
-                                    "weight": -0.527129
-                                },
-                                {
-                                    "weight": 0.609625
-                                },
-                                {
-                                    "weight": 0.47095
-                                },
-                                {
-                                    "weight": 0.627637
-                                },
-                                {
-                                    "weight": -0.779083
-                                },
-                                {
-                                    "weight": 0.059443
-                                },
-                                {
-                                    "weight": 0.756181
-                                },
-                                {
-                                    "weight": 0.353825
-                                },
-                                {
-                                    "weight": -0.531828
-                                },
-                                {
-                                    "weight": -0.783117
-                                },
-                                {
-                                    "weight": 0.347538
-                                },
-                                {
-                                    "weight": 0.276735
-                                },
-                                {
-                                    "weight": 0.462532
-                                },
-                                {
-                                    "weight": 0.891988
-                                },
-                                {
-                                    "weight": -0.261368
-                                },
-                                {
-                                    "weight": -0.33211
-                                },
-                                {
-                                    "weight": 1.10165
-                                },
-                                {
-                                    "weight": 0.241699
-                                },
-                                {
-                                    "weight": 1.045679
-                                },
-                                {
-                                    "weight": 0.899862
-                                },
-                                {
-                                    "weight": 0.690688
-                                },
-                                {
-                                    "weight": 0.590216
-                                },
-                                {
-                                    "weight": 0.389648
-                                },
-                                {
-                                    "weight": 0.891073
-                                },
-                                {
-                                    "weight": -0.049996
-                                },
-                                {
-                                    "weight": 0.499398
-                                },
-                                {
-                                    "weight": -0.470236
-                                },
-                                {
-                                    "weight": -0.198377
-                                },
-                                {
-                                    "weight": -0.726902
-                                },
-                                {
-                                    "weight": 0.088797
-                                },
-                                {
-                                    "weight": 0.745866
-                                },
-                                {
-                                    "weight": 0.978478
-                                },
-                                {
-                                    "weight": 0.234498
-                                },
-                                {
-                                    "weight": 0.606335
-                                },
-                                {
-                                    "weight": 0.971336
-                                },
-                                {
-                                    "weight": 0.150266
-                                },
-                                {
-                                    "weight": 0.347232
-                                },
-                                {
-                                    "weight": -0.751861
-                                },
-                                {
-                                    "weight": -0.824129
-                                },
-                                {
-                                    "weight": -0.126598
-                                },
-                                {
-                                    "weight": 1.07101
-                                },
-                                {
-                                    "weight": -0.770477
-                                },
-                                {
-                                    "weight": 0.998737
-                                },
-                                {
-                                    "weight": -0.773102
-                                },
-                                {
-                                    "weight": 1.069728
-                                },
-                                {
-                                    "weight": 1.10458
-                                },
-                                {
-                                    "weight": 0.630689
-                                },
-                                {
-                                    "weight": 0.757828
-                                },
-                                {
-                                    "weight": 0.719675
-                                },
-                                {
-                                    "weight": -0.663179
-                                },
-                                {
-                                    "weight": -0.052503
-                                },
-                                {
-                                    "weight": 0.676284
-                                },
-                                {
-                                    "weight": -0.133067
-                                },
-                                {
-                                    "weight": 0.119809
-                                },
-                                {
-                                    "weight": 0.892781
-                                },
-                                {
-                                    "weight": 0.301455
-                                },
-                                {
-                                    "weight": 0.835467
-                                },
-                                {
-                                    "weight": 0.446844
-                                },
-                                {
-                                    "weight": 1.110318
-                                },
-                                {
-                                    "weight": 0.756181
-                                },
-                                {
-                                    "weight": 0.684768
-                                },
-                                {
-                                    "weight": 0.431769
-                                },
-                                {
-                                    "weight": 0.827161
-                                },
-                                {
-                                    "weight": 0.91274
-                                },
-                                {
-                                    "weight": 0.717789
-                                },
-                                {
-                                    "weight": 0.879048
-                                },
-                                {
-                                    "weight": 0.986535
-                                },
-                                {
-                                    "weight": 0.587779
-                                },
-                                {
-                                    "weight": -0.761449
-                                },
-                                {
-                                    "weight": 0.103995
-                                },
-                                {
-                                    "weight": 0.630561
-                                },
-                                {
-                                    "weight": 0.988122
-                                },
-                                {
-                                    "weight": -0.439595
-                                },
-                                {
-                                    "weight": 0.003411
-                                },
-                                {
-                                    "weight": -0.467123
-                                },
-                                {
-                                    "weight": 0.405523
-                                },
-                                {
-                                    "weight": -0.736724
-                                },
-                                {
-                                    "weight": -0.624294
-                                },
-                                {
-                                    "weight": 0.081905
-                                },
-                                {
-                                    "weight": -0.837618
-                                },
-                                {
-                                    "weight": 0.701919
-                                },
-                                {
-                                    "weight": 0.491158
-                                },
-                                {
-                                    "weight": 0.413029
-                                },
-                                {
-                                    "weight": -0.192945
-                                },
-                                {
-                                    "weight": 0.763444
-                                },
-                                {
-                                    "weight": 0.912191
-                                },
-                                {
-                                    "weight": 0.792071
-                                },
-                                {
-                                    "weight": 0.558848
-                                },
-                                {
-                                    "weight": -0.124833
-                                },
-                                {
-                                    "weight": 0.563848
-                                },
-                                {
-                                    "weight": -0.752415
-                                },
-                                {
-                                    "weight": 0.003533
-                                },
-                                {
-                                    "weight": 0.26288
-                                },
-                                {
-                                    "weight": 0.054072
-                                },
-                                {
-                                    "weight": 0.454047
-                                },
-                                {
-                                    "weight": 1.038721
-                                },
-                                {
-                                    "weight": -0.54226
-                                },
-                                {
-                                    "weight": 0.244018
-                                },
-                                {
-                                    "weight": -0.135754
-                                },
-                                {
-                                    "weight": 0.069087
-                                },
-                                {
-                                    "weight": 1.055201
-                                },
-                                {
-                                    "weight": 1.068263
-                                },
-                                {
-                                    "weight": 1.092739
-                                },
-                                {
-                                    "weight": -0.548363
-                                },
-                                {
-                                    "weight": 0.721695
-                                },
-                                {
-                                    "weight": -0.394977
-                                },
-                                {
-                                    "weight": 0.5478
-                                },
-                                {
-                                    "weight": -0.808687
-                                },
-                                {
-                                    "weight": -0.546599
-                                },
-                                {
-                                    "weight": -0.602997
-                                },
-                                {
-                                    "weight": -0.68497
-                                },
-                                {
-                                    "weight": -0.114273
-                                },
-                                {
-                                    "weight": 0.083547
-                                },
-                                {
-                                    "weight": 1.021015
-                                },
-                                {
-                                    "weight": 0.289914
-                                },
-                                {
-                                    "weight": 0.921097
-                                },
-                                {
-                                    "weight": 1.040181
-                                },
-                                {
-                                    "weight": -0.091324
-                                },
-                                {
-                                    "weight": 0.560246
-                                },
-                                {
-                                    "weight": -0.0829
-                                },
-                                {
-                                    "weight": -0.645723
-                                },
-                                {
-                                    "weight": -0.583343
-                                },
-                                {
-                                    "weight": 1.039448
-                                },
-                                {
-                                    "weight": -0.577483
-                                },
-                                {
-                                    "weight": 0.917563
-                                },
-                                {
-                                    "weight": -0.852816
-                                },
-                                {
-                                    "weight": -0.650845
-                                },
-                                {
-                                    "weight": 0.860371
-                                },
-                                {
-                                    "weight": -0.010266
-                                },
-                                {
-                                    "weight": 0.517826
-                                },
-                                {
-                                    "weight": -0.047865
-                                },
-                                {
-                                    "weight": -0.276998
-                                },
-                                {
-                                    "weight": -0.04286
-                                },
-                                {
-                                    "weight": -0.417626
-                                },
-                                {
-                                    "weight": -0.46499
-                                },
-                                {
-                                    "weight": 0.018117
-                                },
-                                {
-                                    "weight": -0.660063
-                                },
-                                {
-                                    "weight": 1.100856
-                                },
-                                {
-                                    "weight": -0.359027
-                                },
-                                {
-                                    "weight": -0.03669
-                                },
-                                {
-                                    "weight": 1.050257
-                                },
-                                {
-                                    "weight": -0.140209
-                                },
-                                {
-                                    "weight": 0.552867
-                                },
-                                {
-                                    "weight": 0.931662
-                                },
-                                {
-                                    "weight": 0.899679
-                                },
-                                {
-                                    "weight": -0.757171
-                                },
-                                {
-                                    "weight": 0.425788
-                                },
-                                {
-                                    "weight": -0.35274
-                                },
-                                {
-                                    "weight": -0.64261
-                                },
-                                {
-                                    "weight": 1.050801
-                                },
-                                {
-                                    "weight": -0.330159
-                                },
-                                {
-                                    "weight": -0.369774
-                                },
-                                {
-                                    "weight": 0.558051
-                                },
-                                {
-                                    "weight": 0.57191
-                                },
-                                {
-                                    "weight": 0.583446
-                                },
-                                {
-                                    "weight": -0.107798
-                                },
-                                {
-                                    "weight": 0.559031
-                                },
-                                {
-                                    "weight": 0.902486
-                                },
-                                {
-                                    "weight": 0.235229
-                                },
-                                {
-                                    "weight": 0.88149
-                                },
-                                {
-                                    "weight": 0.848896
-                                },
-                                {
-                                    "weight": 0.516855
-                                },
-                                {
-                                    "weight": 0.597912
-                                },
-                                {
-                                    "weight": -0.321428
-                                },
-                                {
-                                    "weight": 1.104763
-                                },
-                                {
-                                    "weight": 0.087825
-                                },
-                                {
-                                    "weight": -0.069833
-                                },
-                                {
-                                    "weight": 0.441351
-                                },
-                                {
-                                    "weight": -0.799654
-                                },
-                                {
-                                    "weight": 0.557073
-                                },
-                                {
-                                    "weight": -0.589871
-                                },
-                                {
-                                    "weight": 0.100332
-                                },
-                                {
-                                    "weight": 0.46393
-                                },
-                                {
-                                    "weight": 0.455451
-                                },
-                                {
-                                    "weight": 1.017908
-                                },
-                                {
-                                    "weight": -0.695951
-                                },
-                                {
-                                    "weight": 0.185485
-                                },
-                                {
-                                    "weight": 0.473091
-                                },
-                                {
-                                    "weight": 0.668287
-                                },
-                                {
-                                    "weight": 0.614453
-                                },
-                                {
-                                    "weight": -0.62466
-                                },
-                                {
-                                    "weight": -0.720183
-                                },
-                                {
-                                    "weight": 0.5937
-                                },
-                                {
-                                    "weight": -0.047982
-                                },
-                                {
-                                    "weight": -0.228529
-                                },
-                                {
-                                    "weight": 0.595898
-                                },
-                                {
-                                    "weight": 0.977196
-                                },
-                                {
-                                    "weight": -0.708708
-                                },
-                                {
-                                    "weight": 0.097408
-                                },
-                                {
-                                    "weight": -0.488675
-                                },
-                                {
-                                    "weight": 0.834913
-                                },
-                                {
-                                    "weight": 0.606085
-                                },
-                                {
-                                    "weight": -0.429835
-                                },
-                                {
-                                    "weight": 0.057368
-                                },
-                                {
-                                    "weight": 0.149046
-                                },
-                                {
-                                    "weight": 1.064723
-                                },
-                                {
-                                    "weight": 0.658033
-                                },
-                                {
-                                    "weight": 0.025934
-                                },
-                                {
-                                    "weight": -0.749237
-                                },
-                                {
-                                    "weight": -0.524743
-                                },
-                                {
-                                    "weight": 1.088161
-                                },
-                                {
-                                    "weight": 1.040308
-                                },
-                                {
-                                    "weight": -0.547082
-                                },
-                                {
-                                    "weight": -0.018684
-                                },
-                                {
-                                    "weight": 1.10458
-                                },
-                                {
-                                    "weight": -0.124644
-                                },
-                                {
-                                    "weight": 0.932883
-                                },
-                                {
-                                    "weight": 1.00686
-                                },
-                                {
-                                    "weight": -0.023873
-                                },
-                                {
-                                    "weight": 1.028095
-                                },
-                                {
-                                    "weight": -0.134965
-                                },
-                                {
-                                    "weight": -0.54843
-                                },
-                                {
-                                    "weight": -0.245991
-                                },
-                                {
-                                    "weight": 0.537363
-                                },
-                                {
-                                    "weight": 0.804339
-                                },
-                                {
-                                    "weight": 0.136472
-                                },
-                                {
-                                    "weight": 0.279787
-                                },
-                                {
-                                    "weight": 1.054957
-                                },
-                                {
-                                    "weight": 0.318423
-                                },
-                                {
-                                    "weight": 0.49897
-                                },
-                                {
-                                    "weight": -0.557153
-                                },
-                                {
-                                    "weight": 0.16522
-                                },
-                                {
-                                    "weight": -0.129222
-                                },
-                                {
-                                    "weight": 0.538096
-                                },
-                                {
-                                    "weight": 0.688979
-                                },
-                                {
-                                    "weight": -0.044075
-                                },
-                                {
-                                    "weight": -0.046639
-                                },
-                                {
-                                    "weight": 0.010125
-                                },
-                                {
-                                    "weight": -0.222853
-                                },
-                                {
-                                    "weight": -0.161879
-                                },
-                                {
-                                    "weight": -0.530425
-                                },
-                                {
-                                    "weight": 0.873732
-                                },
-                                {
-                                    "weight": 0.788281
-                                },
-                                {
-                                    "weight": 0.616833
-                                },
-                                {
-                                    "weight": 0.36707
-                                },
-                                {
-                                    "weight": 0.985253
-                                },
-                                {
-                                    "weight": -0.61764
-                                },
-                                {
-                                    "weight": -0.188978
-                                },
-                                {
-                                    "weight": -0.479697
-                                },
-                                {
-                                    "weight": 1.04397
-                                },
-                                {
-                                    "weight": -0.693204
-                                },
-                                {
-                                    "weight": 0.224243
-                                },
-                                {
-                                    "weight": -0.136241
-                                },
-                                {
-                                    "weight": 0.787615
-                                },
-                                {
-                                    "weight": 0.153684
-                                },
-                                {
-                                    "weight": -0.235366
-                                },
-                                {
-                                    "weight": 0.774492
-                                },
-                                {
-                                    "weight": 0.437507
-                                },
-                                {
-                                    "weight": 0.368108
-                                },
-                                {
-                                    "weight": 0.515573
-                                },
-                                {
-                                    "weight": -0.295188
-                                },
-                                {
-                                    "weight": -0.606172
-                                },
-                                {
-                                    "weight": -0.494412
-                                },
-                                {
-                                    "weight": 1.055567
-                                },
-                                {
-                                    "weight": 1.065577
-                                },
-                                {
-                                    "weight": 0.181272
-                                },
-                                {
-                                    "weight": -0.25972
-                                },
-                                {
-                                    "weight": 0.028863
-                                },
-                                {
-                                    "weight": 0.358463
-                                },
-                                {
-                                    "weight": -0.356097
-                                },
-                                {
-                                    "weight": 0.622388
-                                },
-                                {
-                                    "weight": 0.965904
-                                },
-                                {
-                                    "weight": -0.440816
-                                },
-                                {
-                                    "weight": -0.609339
-                                },
-                                {
-                                    "weight": 1.086086
-                                },
-                                {
-                                    "weight": 0.353153
-                                },
-                                {
-                                    "weight": -0.249892
-                                },
-                                {
-                                    "weight": -0.509117
-                                },
-                                {
-                                    "weight": 0.707595
-                                },
-                                {
-                                    "weight": 0.953819
-                                },
-                                {
-                                    "weight": 1.003076
-                                },
-                                {
-                                    "weight": -0.580713
-                                },
-                                {
-                                    "weight": 0.212585
-                                },
-                                {
-                                    "weight": 0.378056
-                                },
-                                {
-                                    "weight": -0.487876
-                                },
-                                {
-                                    "weight": 0.251404
-                                },
-                                {
-                                    "weight": -0.765594
-                                },
-                                {
-                                    "weight": 0.903219
-                                },
-                                {
-                                    "weight": -0.023323
-                                },
-                                {
-                                    "weight": 0.108883
-                                },
-                                {
-                                    "weight": -0.678433
-                                },
-                                {
-                                    "weight": 0.544138
-                                },
-                                {
-                                    "weight": -0.766082
-                                },
-                                {
-                                    "weight": 0.855061
-                                },
-                                {
-                                    "weight": 0.195739
-                                },
-                                {
-                                    "weight": -0.62643
-                                },
-                                {
-                                    "weight": -0.858187
-                                },
-                                {
-                                    "weight": 0.039667
-                                },
-                                {
-                                    "weight": -0.740691
-                                },
-                                {
-                                    "weight": 1.092617
-                                },
-                                {
-                                    "weight": 0.712051
-                                },
-                                {
-                                    "weight": 0.094906
-                                },
-                                {
-                                    "weight": 0.353703
-                                },
-                                {
-                                    "weight": -0.149486
-                                },
-                                {
-                                    "weight": -0.507774
-                                },
-                                {
-                                    "weight": 0.780046
-                                },
-                                {
-                                    "weight": -0.233412
-                                },
-                                {
-                                    "weight": 0.315555
-                                },
-                                {
-                                    "weight": 0.199767
-                                },
-                                {
-                                    "weight": 0.877278
-                                },
-                                {
-                                    "weight": -0.509849
-                                },
-                                {
-                                    "weight": 0.99508
-                                },
-                                {
-                                    "weight": 0.603649
-                                },
-                                {
-                                    "weight": -0.863314
-                                },
-                                {
-                                    "weight": -0.271316
-                                },
-                                {
-                                    "weight": 0.805865
-                                },
-                                {
-                                    "weight": 0.657783
+                                    "weight": 0.882465
                                 }
                             ],
                             "neurons": 2
@@ -2426,13 +2426,13 @@
                         {
                             "input_weights": [
                                 {
-                                    "weight": 0.654519
+                                    "weight": 0.91449
                                 },
                                 {
-                                    "weight": 0.810946
+                                    "weight": -0.228899
                                 },
                                 {
-                                    "weight": -0.209536
+                                    "weight": 1.143497
                                 }
                             ],
                             "neurons": 1

@@ -30,7 +30,7 @@ public:
 	void backwards_propagate(vector<float>& target_values);
 	void print_network_results(vector<char>& res);
 	void show_filters(string prefix);
-	void json_dump_network(string file_name);
+	bool json_dump_network(string file_name);
 	void setTrainingSamples(vector<DataSample>& dataSamples);
 	void setTestingSamples(vector<DataSample>& dataSamples);
 	void setMapping(vector<char>& mapping);

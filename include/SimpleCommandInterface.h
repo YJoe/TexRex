@@ -26,7 +26,6 @@ private:
 	void set_evaluation(vector<string>& input);
 	void loadnet(vector<string>& input);
 	void createnet(vector<string>& input);
-	void formatset(vector<string>& input);
 	void loadset(vector<string>& input);
 	void trainnet(vector<string>& input);
 	void testnet(vector<string>& input);

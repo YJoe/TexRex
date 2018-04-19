@@ -17,11 +17,11 @@
         "details": {
           "sub_layers": [
             {
-              "neurons": 2,
+              "neurons": 30,
               "input_weights": []
             },
             {
-              "neurons": 1,
+              "neurons": 10,
               "input_weights": []
             }
           ],

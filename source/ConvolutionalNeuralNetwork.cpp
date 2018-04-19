@@ -48,8 +48,15 @@ ConvolutionalNeuralNetwork::ConvolutionalNeuralNetwork(string conf_file, OCLFunc
 	error = 1.0;
 
 	// parse the file into a json object
-	json cnn_json = json::parse(buffer.str());
-	//cout << "Loading config [" << cnn_json.dump() << "]" << endl;
+	json cnn_json;
+	try{
+		cnn_json = json::parse(buffer.str());
+	}
+	catch(...){
+		cout << "error - the input json structure could not be read" << endl;
+		is_defined = false;
+		return;
+	}
 
 	// read the terminating condition of the network
 	if (cnn_json["cnn"]["terminator"]["type"] == "iteration") {
@@ -666,7 +673,7 @@ void ConvolutionalNeuralNetwork::show_filters(string prefix) {
 		}
 
 		cv::Mat temp = cv::Mat(size.height, size.width * filter_images.size() + (5 * (filter_images.size() - 1)), CV_32FC1, cv::Scalar(0.0f));
-		for (int i = 0; i < filter_images.size(); i++) {
+		for(int i = 0; i < filter_images.size(); i++){
 			filter_images[i].copyTo(temp(cv::Rect(i * size.width + (i * 5), 0, filter_images[i].rows, filter_images[i].cols)));
 		}
 
@@ -675,7 +682,8 @@ void ConvolutionalNeuralNetwork::show_filters(string prefix) {
 
 	cv::waitKey();
 }
-void ConvolutionalNeuralNetwork::json_dump_network(string file_name) {
+
+bool ConvolutionalNeuralNetwork::json_dump_network(string file_name) {
 	cout << "Saving the network" << endl;
 
 	// start the json object
@@ -769,7 +777,14 @@ void ConvolutionalNeuralNetwork::json_dump_network(string file_name) {
 	// write the json object to the file we defined
 	cout << "Writing network json to [" << file_name << "]" << endl;
 	std::ofstream o(file_name);
-	o << std::setw(4) << network << std::endl;
+	if(o.is_open()){
+		o << std::setw(4) << network << std::endl;
+		o.flush();
+		o.close();
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void ConvolutionalNeuralNetwork::setTrainingSamples(vector<DataSample>& trainingSamples) {

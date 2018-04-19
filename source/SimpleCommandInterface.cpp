@@ -60,7 +60,6 @@ SimpleCommandInterface::SimpleCommandInterface() {
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("help", "<function name>", "will provide some help on a function", &SimpleCommandInterface::help),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadnet", "<file location>", "loads an already defined json network from the given directory", &SimpleCommandInterface::loadnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("createnet", "<file location>", "creates and loads a json network from a simple template", &SimpleCommandInterface::createnet),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("formatset", "<input folder> <output folder> <image width> <image height>", "resizes a training set found in a folder", &SimpleCommandInterface::formatset),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("loadset", "<input folder> <testing||training> <sample size> (<target> <representation> || <representation>", "loads a data set from a given directory to the training or testing slot", &SimpleCommandInterface::loadset),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("trainnet", "<data output> <evaluation every n iterations> <number of unseen problems to test>", "begins the training proccess and logs into the given data file", &SimpleCommandInterface::trainnet),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testnet", "", "begins the testing proccess for a loaded network and data set", &SimpleCommandInterface::testnet),
@@ -69,8 +68,7 @@ SimpleCommandInterface::SimpleCommandInterface() {
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setseed", "\"random\" or <number>", "sets the seed for which to make random choicess", &SimpleCommandInterface::setseed),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("evaluate", "<number of samples>", "shows the guesses made by the network for a given image", &SimpleCommandInterface::view_evaluations),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("savenet", "<save location>", "saves the network structure and weights", &SimpleCommandInterface::savenet),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("setevaluation", "<softmax||threshold>", "the type of evaluation used to score the network, softmax for multiple, threshold or single", &SimpleCommandInterface::set_evaluation),
-		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testgroupnet", "<network directory> <network extension \"*.json\"> <network mapping>", "a test", &SimpleCommandInterface::group_net_test),
+		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("testgroupnet", "<network directory> <network extension \"*.json\"> <network mapping> <sample number> <show || dontshow>", "loads a sample set and tests a group of binary networks, outputs results to a scores file", &SimpleCommandInterface::group_net_test),
 		tuple<string, string, string, void (SimpleCommandInterface::*)(vector<string>& s)>("demo", "<demo number>", "for presentation", &SimpleCommandInterface::demo)
 	};
 }
@@ -101,7 +99,7 @@ boolean SimpleCommandInterface::evaluate_command(string input) {
 	else {
 		bool ret = handle_input(regex_split(input));
 		cout << endl;
-		return ret;
+		return true;
 	}
 }
 
@@ -121,6 +119,7 @@ void SimpleCommandInterface::begin() {
 
 	// exit the interface
 	cout << "bye :(" << endl;
+	cin.get();
 }
 
 void SimpleCommandInterface::test(){
@@ -199,10 +198,6 @@ void SimpleCommandInterface::set_evaluation(vector<string>& input) {
 	}
 }
 
-void SimpleCommandInterface::formatset(vector<string>& input) {
-	cout << "formatting set not yet complete" << endl;
-}
-
 bool replace(string& str, const string& find, const string& put) {
 	//https://stackoverflow.com/questions/3418231/replace-part-of-a-string-with-another-string
 	size_t start_pos = str.find(find);
@@ -249,6 +244,11 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 				for (int i = 0; i < input[4].size(); i++) {
 					mapping.emplace_back(input[4][i]);
 				}
+
+				if(mapping.size() == 0){
+					cout << "error - no mapping set" << endl;
+					return;
+				}
 			}
 
 			// we are using a single problem network
@@ -268,8 +268,7 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 				// validate that we are only using one target
 				if (input[4].size() > 1) {
 					cout << "error - only one target can be selected -> [" << input[4] << "] is the issue" << endl;
-					cin.get();
-					exit(-1);
+					return;
 				}
 
 				// input[4] in this case should be one char anyway so just take the first (and only index of the string)
@@ -280,6 +279,11 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 				load_nist_binary(data_samples, input[2], input[4], input[5], atoi(input[3].c_str()), cnn.input_size);
 			}
 
+			if(data_samples.size() == 0){
+				cout << "error - no data samples were found" << endl;
+				return;
+			}
+
 			if (input[1] == "training") {
 				cnn.setTrainingSamples(data_samples);
 			}
@@ -288,6 +292,7 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 			}
 			else {
 				cout << "error - the data slot [" << input[1] << "] was not recognised, this should be either \"testing\" or \"training\"" << endl;
+				return;
 			}
 
 			cnn.setMapping(mapping);
@@ -304,7 +309,7 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 void SimpleCommandInterface::trainnet(vector<string>& input) {
 	if (input.size() == 4) {
 		if (cnn.is_defined) {
-			if (is_number(input[2])) {
+			if (is_number(input[2]) && is_number(input[3])) {
 				ofstream data_file_clear(input[1]);
 				data_file_clear.close();
 				ofstream data_file(input[1], ios::app);
@@ -318,11 +323,11 @@ void SimpleCommandInterface::trainnet(vector<string>& input) {
 				cnn.train(data_file, atoi(input[2].c_str()), atoi(input[3].c_str()));
 			}
 			else {
-				cout << "error - [" << input[1] << "] is not a number" << endl;
+				cout << "error - [" << input[2] << "] and/or [" << input[3] << "] are not valid numbers" << endl;
 			}
 		}
 		else {
-			cout << "error - try loading or creating a network first" << endl;
+			cout << "error - no network has been loaded try \"help loadnet\" or \"help createnet\"" << endl;
 		}
 	}
 	else {
@@ -331,16 +336,29 @@ void SimpleCommandInterface::trainnet(vector<string>& input) {
 }
 
 void SimpleCommandInterface::testnet(vector<string>& input) {
-	if (input.size() == 2) {
-		if(is_number(input[1])){
-			cnn.test(atoi(input[1].c_str()));
+	if(cnn.is_defined){
+		if (input.size() == 2) {
+			if(is_number(input[1])){
+				if(cnn.testingSamples.size() != 0){
+					cnn.test(atoi(input[1].c_str()));
+				} else {
+					cout << "error - no testing set has been loaded" << endl;
+				}
+			}
+			else {
+				cout << "error - [" << input[1] << "] is not a number" << endl;
+			}
 		}
 		else {
-			cout << "error - [" << input[1] << "] is not a number" << endl;
+			if(cnn.testingSamples.size() != 0){
+				cnn.test(-1);
+			} else {
+				cout << "error - no testing set has been loaded" << endl;
+			}
 		}
 	}
 	else {
-		cnn.test(-1);
+		cout << "error - no network has been loaded try \"help loadnet\" or \"help createnet\"" << endl;
 	}
 }
 
@@ -353,7 +371,7 @@ void SimpleCommandInterface::setiteration(vector<string>& input) {
 				cout << "the network will terminate training after [" << input[1] << "] iterations" << endl;
 			}
 			else {
-				cout << "error - [" << input[1] << "] is not a number" << endl;
+				cout << "error - [" << input[1] << "] is not a valid number" << endl;
 			}
 		}
 		else {
@@ -367,11 +385,11 @@ void SimpleCommandInterface::setiteration(vector<string>& input) {
 
 void SimpleCommandInterface::viewgraph(vector<string>& input) {
 	if (input.size() == 2) {
-		if (file_exists(input[1])) {
+		if (file_exists(input[1]) && input[1].substr(input[1].size() - 4) == ".plt") {
 			ShellExecute(0, 0, input[1].c_str(), 0, 0, SW_SHOW);
 		}
 		else {
-			cout << "the file [" << input[1].c_str() << "] does not exist" << endl; 
+			cout << "the file [" << input[1].c_str() << "] does not exist or is not a .plt file" << endl; 
 		}
 	}
 	else {
@@ -400,7 +418,13 @@ void SimpleCommandInterface::setseed(vector<string>& input) {
 
 void SimpleCommandInterface::savenet(vector<string>& input) {
 	if (input.size() == 2) {
-		cnn.json_dump_network(input[1]);
+		if(cnn.is_defined){
+			if (!cnn.json_dump_network(input[1])){
+				cout << "error - the network was not saved check that the output location is valid" << endl;
+			}
+		} else {
+			cout << "error - there is no network to save try \"help loadnet\" or \"help createnet\"" << endl;
+		}
 	}
 	else {
 		error_message(input[0]);
@@ -431,10 +455,36 @@ void SimpleCommandInterface::help(vector<string>& input) {
 }
 
 void SimpleCommandInterface::view_evaluations(vector<string>& input) {
-	cnn.evaluate_random_set(atoi(input[1].c_str()));
+	if(input.size() == 2){
+		if(cnn.is_defined){
+			if(cnn.testingSamples.size() != 0){
+				if(is_number(input[1])){
+					cnn.evaluate_random_set(atoi(input[1].c_str()));
+				} else {
+					cout << "error - [" << input [1] << "] is not a valid number" << endl;
+				}
+			} else {
+				cout << "error - there are no testing samples loaded" << endl;
+			}
+		} else {
+			cout << "error - no network has been loaded" << endl;
+		}
+	} else {
+		error_message(input[0]);
+	}
 }
 
 void SimpleCommandInterface::group_net_test(vector<string>& input){
+
+	if(input.size() != 6){
+		error_message(input[0]);
+		return;
+	}
+
+	if(!is_number(input[4])){
+		cout << "error - [" << input[4] << "] is not a valid number" << endl;
+		return;
+	}
 
 	int test_count = stoi(input[4]);
 
@@ -442,7 +492,7 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 	vector<string> files = files_in_dir(input[1] + input[2]);
 	
 	// create an object to use the GPU or CPU used by all networks in the group
-	OCLFunctions ocl_functions = OCLFunctions(CL_DEVICE_TYPE_GPU);
+	OCLFunctions ocl_functions = OCLFunctions(CL_DEVICE_TYPE_CPU);
 
 	// create and store all networks
 	ConvolutionalNeuralNetwork networks[26];
@@ -450,11 +500,17 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 		networks[i] = ConvolutionalNeuralNetwork(input[1] + files[i], ocl_functions, 0);
 	}
 
+	if(input[3].size() != files.size()){
+		cout << "error - the mapping size does not equal the number of loaded networks, check that [" << input[3] << "] is the correct mapping and "
+			"that the correct number of networks are within the folder [" << input[1] << "] using the network extension [" << input [2] << "]" << endl;
+		return;
+	}
+
 	// load data samples to test the network group with
 	vector<DataSample> data_samples;
 	//string input_folder = "data/NIST2/testing/";
 	string input_folder = "data/MNIST/testing/";
-	load_nist(data_samples, input_folder, input[3], 30, false, networks[0].input_size);
+	load_nist(data_samples, input_folder, input[3], test_count / 10, false, networks[0].input_size);
 
 	int correct_count = 0;
 
@@ -462,7 +518,7 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 	for (int i = 0; i < test_count; i++) {
 
 		// pick and random sample and get the scores from each network
-		int random_index = random_i(0, data_samples.size());
+		int random_index = i;//random_i(0, data_samples.size() - 1);
 		int highest_index = 0;
 		float highest_probability = 0;
 
@@ -481,7 +537,7 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 		}
 
 		cout << "[" << i << "/" << test_count << "]" << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl;
-		cout << "Corrent index is [" << data_samples[random_index].correct_index << "] which is [" << input[3][data_samples[random_index].correct_index] << "] so the network was [" << (data_samples[random_index].correct_index == highest_index ? "correct" : "incorrect") << "]" << endl << endl;
+		cout << "Correct index is [" << data_samples[random_index].correct_index << "] which is [" << input[3][data_samples[random_index].correct_index] << "] so the network was [" << (data_samples[random_index].correct_index == highest_index ? "correct" : "incorrect") << "]" << endl << endl;
 		if (data_samples[random_index].correct_index == highest_index) {
 			correct_count++;
 		}
@@ -497,51 +553,55 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 
 	cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;
 
-	//////////////////////////////////////////////////////////////////////
+	ofstream outputFile("scores.txt", ios::app);
+	outputFile << input[1] << ", " << (float)correct_count / (float)test_count * 100 << "%\n";
+	outputFile.close();
 
-	cout << "\nTesting network with noise problems" << endl;
-	
-	// define paths to files
-	vector<string> noise_problem_dirs = {
-		"data/MNIST/noise/2_noise.png",
-		"data/MNIST/noise/3_noise.png",
-		"data/MNIST/noise/4_noise.png",
-		"data/MNIST/noise/5_noise.png",
-		"data/MNIST/noise/7_noise.png"
-	};
+	////////////////////////////////////////////////////////////////////////
 
-	vector<DataSample> samples;
-	for (string dir : noise_problem_dirs) {
-		samples.emplace_back(DataSample());
-		load_sized_data_sample(samples.back(), dir, cv::Size(20, 20));
-	}
+	//cout << "\nTesting network with noise problems" << endl;
+	//
+	//// define paths to files
+	//vector<string> noise_problem_dirs = {
+	//	"data/MNIST/noise/2_noise.png",
+	//	"data/MNIST/noise/3_noise.png",
+	//	"data/MNIST/noise/4_noise.png",
+	//	"data/MNIST/noise/5_noise.png",
+	//	"data/MNIST/noise/7_noise.png"
+	//};
 
-	for (int i = 0; i < noise_problem_dirs.size(); i++) {
+	//vector<DataSample> samples;
+	//for (string dir : noise_problem_dirs) {
+	//	samples.emplace_back(DataSample());
+	//	load_sized_data_sample(samples.back(), dir, cv::Size(20, 20));
+	//}
 
-		cv::destroyAllWindows();
-		float highest_probability = 0.0f;
-		int highest_index = 0;
-		for (int j = 0; j < files.size(); j++) {
+	//for (int i = 0; i < noise_problem_dirs.size(); i++) {
 
-			// get the probability that the image is the char of this network
-			float current_probability = networks[j].highest_probability(samples[i].image_segment.float_m_mini);
-			cout << input[3][j] << " -> " << current_probability << endl;
+	//	cv::destroyAllWindows();
+	//	float highest_probability = 0.0f;
+	//	int highest_index = 0;
+	//	for (int j = 0; j < files.size(); j++) {
 
-			// check to see if this new network has a higher score
-			if (current_probability > highest_probability) {
-				highest_probability = current_probability;
-				highest_index = j;
-			}
+	//		// get the probability that the image is the char of this network
+	//		float current_probability = networks[j].highest_probability(samples[i].image_segment.float_m_mini);
+	//		cout << input[3][j] << " -> " << current_probability << endl;
 
-		}
-		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl << endl;
+	//		// check to see if this new network has a higher score
+	//		if (current_probability > highest_probability) {
+	//			highest_probability = current_probability;
+	//			highest_index = j;
+	//		}
 
-		cv::Mat temp;
-		cv::resize(samples[i].image_segment.m, temp, cv::Size(200, 200));
-		cv::imshow("", temp);
-		cv::waitKey();
-	}
-	cv::destroyAllWindows();
+	//	}
+	//	cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl << endl;
+
+	//	cv::Mat temp;
+	//	cv::resize(samples[i].image_segment.m, temp, cv::Size(200, 200));
+	//	cv::imshow("", temp);
+	//	cv::waitKey();
+	//}
+	//cv::destroyAllWindows();
 
 }
 
@@ -569,7 +629,7 @@ void SimpleCommandInterface::demo(vector<string>& input){
 
 		else if (input[1] == "3") {
 			OCLFunctions ocl = OCLFunctions(CL_DEVICE_TYPE_GPU);
-			ConvolutionalNeuralNetwork c = ConvolutionalNeuralNetwork("data/cnn_json/MNUM_LOCMAX5/mnum_locmax50LOCMAX.json", ocl, 0);
+			ConvolutionalNeuralNetwork c = ConvolutionalNeuralNetwork("data/cnn_json/MNUM_LARGE/mnum_large_" + input[2] + ".json", ocl, 0);
 			c.show_filters("f");
 		}
 
