@@ -13,6 +13,33 @@
         }
       },
       {
+        "type": "C",
+        "details": {
+          "filters": [
+            {
+              "filter_width": 3,
+              "filter_height": 3,
+              "filter_obj": []
+            },
+            {
+              "filter_width": 3,
+              "filter_height": 3,
+              "filter_obj": []
+            },
+            {
+              "filter_width": 3,
+              "filter_height": 3,
+              "filter_obj": []
+            }
+          ],
+          "learning_rate": 0.1
+        }
+      },
+      { 
+        "type": "P",
+        "details": { "sample_size": 4 }
+      },
+      {
         "type": "F",
         "details": {
           "sub_layers": [
@@ -25,7 +52,7 @@
               "input_weights": []
             }
           ],
-          "learning_rate": 0.4
+          "learning_rate": 0.1
         }
       }
     ]
