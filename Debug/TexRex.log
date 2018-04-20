@@ -1,0 +1,5 @@
+﻿  TexRex.cpp
+c:\users\joe\source\repos\texrex\texrex\source\texrex.cpp(9): warning C4018: '<': signed/unsigned mismatch
+c:\users\joe\source\repos\texrex\texrex\source\texrex.cpp(11): warning C4018: '<': signed/unsigned mismatch
+c:\users\joe\source\repos\texrex\texrex\source\texrex.cpp(84): warning C4018: '<': signed/unsigned mismatch
+  TexRex.vcxproj -> C:\Users\Joe\Source\Repos\TexRex\TexRex\build\TexRex.exe

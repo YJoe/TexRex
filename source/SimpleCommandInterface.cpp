@@ -285,10 +285,10 @@ void SimpleCommandInterface::loadset(vector<string>& input) {
 			}
 
 			if (input[1] == "training") {
-				cnn.setTrainingSamples(data_samples);
+				cnn.set_training_samples(data_samples);
 			}
 			else if (input[1] == "testing") {
-				cnn.setTestingSamples(data_samples);
+				cnn.set_testing_samples(data_samples);
 			}
 			else {
 				cout << "error - the data slot [" << input[1] << "] was not recognised, this should be either \"testing\" or \"training\"" << endl;
@@ -514,77 +514,19 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 
 	int correct_count = 0;
 
-	// for the number of samples we want to test with
-	for (int i = 0; i < test_count; i++) {
+	//// for the number of samples we want to test with
+	//for (int i = 0; i < test_count; i++) {
 
-		// pick and random sample and get the scores from each network
-		int random_index = i;//random_i(0, data_samples.size() - 1);
-		int highest_index = 0;
-		float highest_probability = 0;
-
-		cv::destroyAllWindows();
-		for (int j = 0; j < files.size(); j++) {
-			
-			// get the probability that the image is the char of this network
-			float current_probability = networks[j].highest_probability(data_samples[random_index].image_segment.float_m_mini);
-			cout << input[3][j] << " -> " << current_probability << endl;
-
-			// check to see if this new network has a higher score
-			if (current_probability > highest_probability) {
-				highest_probability = current_probability;
-				highest_index = j;
-			}
-		}
-
-		cout << "[" << i << "/" << test_count << "]" << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl;
-		cout << "Correct index is [" << data_samples[random_index].correct_index << "] which is [" << input[3][data_samples[random_index].correct_index] << "] so the network was [" << (data_samples[random_index].correct_index == highest_index ? "correct" : "incorrect") << "]" << endl << endl;
-		if (data_samples[random_index].correct_index == highest_index) {
-			correct_count++;
-		}
-
-		if(input[5] == "show"){
-			cv::Mat temp;
-			cv::resize(data_samples[random_index].image_segment.m, temp, cv::Size(200, 200));
-			cv::imshow("", temp);
-			cv::waitKey();
-		}
-	}
-	cv::destroyAllWindows();
-
-	cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;
-
-	ofstream outputFile("scores.txt", ios::app);
-	outputFile << input[1] << ", " << (float)correct_count / (float)test_count * 100 << "%\n";
-	outputFile.close();
-
-	////////////////////////////////////////////////////////////////////////
-
-	//cout << "\nTesting network with noise problems" << endl;
-	//
-	//// define paths to files
-	//vector<string> noise_problem_dirs = {
-	//	"data/MNIST/noise/2_noise.png",
-	//	"data/MNIST/noise/3_noise.png",
-	//	"data/MNIST/noise/4_noise.png",
-	//	"data/MNIST/noise/5_noise.png",
-	//	"data/MNIST/noise/7_noise.png"
-	//};
-
-	//vector<DataSample> samples;
-	//for (string dir : noise_problem_dirs) {
-	//	samples.emplace_back(DataSample());
-	//	load_sized_data_sample(samples.back(), dir, cv::Size(20, 20));
-	//}
-
-	//for (int i = 0; i < noise_problem_dirs.size(); i++) {
+	//	// pick and random sample and get the scores from each network
+	//	int random_index = i;//random_i(0, data_samples.size() - 1);
+	//	int highest_index = 0;
+	//	float highest_probability = 0;
 
 	//	cv::destroyAllWindows();
-	//	float highest_probability = 0.0f;
-	//	int highest_index = 0;
 	//	for (int j = 0; j < files.size(); j++) {
-
+	//		
 	//		// get the probability that the image is the char of this network
-	//		float current_probability = networks[j].highest_probability(samples[i].image_segment.float_m_mini);
+	//		float current_probability = networks[j].highest_probability(data_samples[random_index].image_segment.float_m_mini);
 	//		cout << input[3][j] << " -> " << current_probability << endl;
 
 	//		// check to see if this new network has a higher score
@@ -592,16 +534,74 @@ void SimpleCommandInterface::group_net_test(vector<string>& input){
 	//			highest_probability = current_probability;
 	//			highest_index = j;
 	//		}
-
 	//	}
-	//	cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl << endl;
 
-	//	cv::Mat temp;
-	//	cv::resize(samples[i].image_segment.m, temp, cv::Size(200, 200));
-	//	cv::imshow("", temp);
-	//	cv::waitKey();
+	//	cout << "[" << i << "/" << test_count << "]" << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl;
+	//	cout << "Correct index is [" << data_samples[random_index].correct_index << "] which is [" << input[3][data_samples[random_index].correct_index] << "] so the network was [" << (data_samples[random_index].correct_index == highest_index ? "correct" : "incorrect") << "]" << endl << endl;
+	//	if (data_samples[random_index].correct_index == highest_index) {
+	//		correct_count++;
+	//	}
+
+	//	if(input[5] == "show"){
+	//		cv::Mat temp;
+	//		cv::resize(data_samples[random_index].image_segment.m, temp, cv::Size(200, 200));
+	//		cv::imshow("", temp);
+	//		cv::waitKey();
+	//	}
 	//}
 	//cv::destroyAllWindows();
+
+	//cout << "Finished testing, network was correct [" << (float)correct_count / (float)test_count * 100 << "%] of the time" << endl;
+
+	//ofstream outputFile("scores.txt", ios::app);
+	//outputFile << input[1] << ", " << (float)correct_count / (float)test_count * 100 << "%\n";
+	//outputFile.close();
+
+	////////////////////////////////////////////////////////////////////////
+
+	cout << "\nTesting network with noise problems" << endl;
+	
+	// define paths to files
+	vector<string> noise_problem_dirs = {
+		"data/MNIST/noise/2_noise.png",
+		"data/MNIST/noise/3_noise.png",
+		"data/MNIST/noise/4_noise.png",
+		"data/MNIST/noise/5_noise.png",
+		"data/MNIST/noise/7_noise.png"
+	};
+
+	vector<DataSample> samples;
+	for (string dir : noise_problem_dirs) {
+		samples.emplace_back(DataSample());
+		load_sized_data_sample(samples.back(), dir, cv::Size(20, 20));
+	}
+
+	for (int i = 0; i < noise_problem_dirs.size(); i++) {
+
+		cv::destroyAllWindows();
+		float highest_probability = 0.0f;
+		int highest_index = 0;
+		for (int j = 0; j < files.size(); j++) {
+
+			// get the probability that the image is the char of this network
+			float current_probability = networks[j].highest_probability(samples[i].image_segment.float_m_mini);
+			cout << input[3][j] << " -> " << current_probability << endl;
+
+			// check to see if this new network has a higher score
+			if (current_probability > highest_probability) {
+				highest_probability = current_probability;
+				highest_index = j;
+			}
+
+		}
+		cout << "The highest score was [" << highest_probability << "] from index [" << highest_index << "] which is [" << input[3][highest_index] << "]" << endl << endl;
+
+		cv::Mat temp;
+		cv::resize(samples[i].image_segment.m, temp, cv::Size(200, 200));
+		cv::imshow("", temp);
+		cv::waitKey();
+	}
+	cv::destroyAllWindows();
 
 }
 
@@ -629,7 +629,7 @@ void SimpleCommandInterface::demo(vector<string>& input){
 
 		else if (input[1] == "3") {
 			OCLFunctions ocl = OCLFunctions(CL_DEVICE_TYPE_GPU);
-			ConvolutionalNeuralNetwork c = ConvolutionalNeuralNetwork("data/cnn_json/MNUM_LARGE/mnum_large_" + input[2] + ".json", ocl, 0);
+			ConvolutionalNeuralNetwork c = ConvolutionalNeuralNetwork("data/cnn_json/mnum_locmax16/mnum_locmax16" + input[2] + "LOCMAX.json", ocl, 0);
 			c.show_filters("f");
 		}
 

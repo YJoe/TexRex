@@ -31,8 +31,8 @@ public:
 	void print_network_results(vector<char>& res);
 	void show_filters(string prefix);
 	bool json_dump_network(string file_name);
-	void setTrainingSamples(vector<DataSample>& dataSamples);
-	void setTestingSamples(vector<DataSample>& dataSamples);
+	void set_training_samples(vector<DataSample>& dataSamples);
+	void set_testing_samples(vector<DataSample>& dataSamples);
 	void setMapping(vector<char>& mapping);
 	void train(ofstream& data_file, int sample_count, int random_sample_count);
 	float highest_probability(vector<vector<float>>& image);

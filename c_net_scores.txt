@@ -1,0 +1,3 @@
+data/cnn_json/char_nets/char_net_trained2.json, 40%
+data/cnn_json/char_nets/char_net_trained.json, 11.5385%
+data/cnn_json/char_nets/char_net.json, 4.61538%

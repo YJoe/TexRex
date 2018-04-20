@@ -1,0 +1,25 @@
+﻿  SimpleCommandInterface.cpp
+c:\users\joe\source\repos\texrex\texrex\source\simplecommandinterface.cpp(134): warning C4129: '.': unrecognized character escape sequence
+c:\users\joe\source\repos\texrex\texrex\source\simplecommandinterface.cpp(225): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\joe\source\repos\texrex\texrex\source\simplecommandinterface.cpp(403): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.12.25827\include\xmemory0(945): warning C4244: 'initializing': conversion from 'std::ios_base::iostate' to 'float', possible loss of data
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.12.25827\include\vector(957): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int>(_Alloc &,_Objty *const ,int &&)' being compiled
+          with
+          [
+              _Alloc=std::allocator<float>,
+              _Ty=float,
+              _Objty=float
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.12.25827\include\vector(957): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int>(_Alloc &,_Objty *const ,int &&)' being compiled
+          with
+          [
+              _Alloc=std::allocator<float>,
+              _Ty=float,
+              _Objty=float
+          ]
+  c:\users\joe\source\repos\texrex\texrex\source\simplecommandinterface.cpp(748): note: see reference to function template instantiation 'void std::vector<float,std::allocator<_Ty>>::emplace_back<int>(int &&)' being compiled
+          with
+          [
+              _Ty=float
+          ]
+  TexRex.vcxproj -> C:\Users\Joe\Source\Repos\TexRex\x64\Debug\TexRex2.exe

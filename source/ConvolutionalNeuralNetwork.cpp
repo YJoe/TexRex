@@ -251,15 +251,14 @@ void ConvolutionalNeuralNetwork::testing_stuff() {
 	cout << "fulliy connected network [" << fully_connected_networks[0].layers[2][0]->get_output_value() << "]" << endl;
 }
 
-bool super_serious_logging = true;
-
 int random_int(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
 
 void print_layer(vector<vector<vector<float>>>& layer) {
 
-	if (super_serious_logging) {
+	bool show_layers = false;
+	if (show_layers) {
 		cout << "The operation created [" << layer.size() << "] 2D values" << endl;
 		for (int i = 0; i < layer.size(); i++) {
 			for (int j = 0; j < layer[i].size(); j++) {
@@ -787,11 +786,11 @@ bool ConvolutionalNeuralNetwork::json_dump_network(string file_name) {
 	}
 }
 
-void ConvolutionalNeuralNetwork::setTrainingSamples(vector<DataSample>& trainingSamples) {
+void ConvolutionalNeuralNetwork::set_training_samples(vector<DataSample>& trainingSamples) {
 	this->trainingSamples = trainingSamples;
 }
 
-void ConvolutionalNeuralNetwork::setTestingSamples(vector<DataSample>& dataSamples) {
+void ConvolutionalNeuralNetwork::set_testing_samples(vector<DataSample>& dataSamples) {
 	this->testingSamples = dataSamples;
 }
 
@@ -920,7 +919,7 @@ void ConvolutionalNeuralNetwork::test(int sample_count) {
 		sample_count = (int)testingSamples.size();
 	}
 	else {
-		be_random = true;
+		//be_random = true;
 	}
 
 	cout << "testing on loaded test set with sample count of [" << sample_count << "] and random sampling is [" << be_random << "]" << endl;
@@ -939,6 +938,10 @@ void ConvolutionalNeuralNetwork::test(int sample_count) {
 
 	// helpful logging
 	cout << "network success rate [" << (float)correct_count / (float)sample_count * 100.0f << "%]" << endl;
+
+	ofstream outputFile("c_net_scores.txt", ios::app);
+	outputFile << this_net_dir << ", " << (float)correct_count / (float)sample_count * 100 << "%\n";
+	outputFile.close();
 }
 
 int ConvolutionalNeuralNetwork::evaluate_single_word(DataSample input) {

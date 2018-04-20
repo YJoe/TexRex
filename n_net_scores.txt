@@ -1,0 +1,8 @@
+data/cnn_json/n_nets/n_net_f.json, 10%
+data/cnn_json/n_nets/n_net_f2.json, 15%
+data/cnn_json/n_nets/n_net_cpf.json, 76%
+data/cnn_json/n_nets/n_net_cpf2.json, 71%
+data/cnn_json/n_nets/n_net_cpf3.json, 69%
+data/cnn_json/n_nets/n_net_cpf4.json, 69%
+data/cnn_json/n_nets/n_net_cpf5.json, 80%
+data/cnn_json/n_nets/n_net_cpf6.json, 82%
